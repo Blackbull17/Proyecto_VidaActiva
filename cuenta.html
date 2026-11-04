@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaActiva — Mi cuenta</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body data-onboarding="true">
+    <header>
+        <a href="principal.html" class="volver">← Volver</a>
+        <h1>Mi cuenta</h1>
+    </header>
+
+    <main class="contenedor">
+        <section class="tarjeta">
+            <h3>👤 Cuenta</h3>
+            <p class="perfil-resumen" id="resumenCuenta">Cargando…</p>
+            <p class="perfil-resumen" id="modoCuenta"></p>
+            <a href="perfil.html" class="btn btn-secundario" style="margin-top:12px; display:block;">Editar perfil y metas</a>
+            <button type="button" class="btn btn-secundario" id="btnCerrarSesion" style="margin-top:12px; width:100%;">Cerrar sesión</button>
+        </section>
+
+        <section class="tarjeta cuenta-bloque">
+            <h3>💾 Tus datos</h3>
+            <p class="perfil-ayuda">Exporta un respaldo antes de cambiar de dispositivo o antes de conectar la base de datos.</p>
+            <button type="button" class="btn btn-principal" id="btnExportar">Exportar mis datos (JSON)</button>
+
+            <label class="btn btn-secundario" for="archivoImportar">Importar un respaldo JSON</label>
+            <input type="file" id="archivoImportar" accept="application/json,.json">
+
+            <button type="button" class="btn btn-secundario" id="btnBorrar" style="color:#c53030;">Borrar datos de este dispositivo</button>
+            <p id="estadoCuenta" class="auth-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="tarjeta cuenta-bloque">
+            <h3>🔐 Privacidad</h3>
+            <p class="perfil-ayuda">
+                Cada cuenta tendrá su propio espacio en la base de datos. Las condiciones de salud y alergias
+                no se guardan; solo se usan para generar el menú en la pantalla de plan personalizado.
+            </p>
+        </section>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/cuenta.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaActiva — Acceso</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body data-public="true">
+    <main class="auth-wrap">
+        <section class="auth-card">
+            <h1>🟢 VidaActiva</h1>
+            <p>Entra a tu cuenta privada. Tus datos se sincronizan con Supabase.</p>
+
+            <div id="accesoLocal" hidden>
+                <div class="auth-notice">
+                    <strong>Modo local</strong>
+                    Esta copia todavía no está conectada a Supabase. Tus datos se guardan solo en este dispositivo.
+                    El acceso por cuenta y la sincronización se activan cuando configuras la URL y la publishable key en <code>js/config.js</code>.
+                </div>
+                <a href="principal.html" class="btn btn-principal">Continuar en modo local</a>
+                <a href="onboarding.html" class="btn btn-secundario">Completar mi perfil</a>
+            </div>
+
+            <form id="formAcceso" hidden>
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
+
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" autocomplete="current-password" required>
+
+                <button class="btn btn-principal" type="submit" id="btnEntrar">Iniciar sesión</button>
+                <button class="btn btn-secundario" type="button" id="btnRecuperar">Olvidé mi contraseña</button>
+                <p id="mensajeAcceso" class="auth-status" role="status" aria-live="polite"></p>
+            </form>
+
+            <form id="formPassword" hidden>
+                <h2>Establece tu contraseña</h2>
+                <p class="perfil-ayuda">Si vienes de una invitación o de un correo de recuperación, escribe aquí tu nueva contraseña.</p>
+
+                <label for="passwordNueva">Nueva contraseña</label>
+                <input type="password" id="passwordNueva" autocomplete="new-password" minlength="8" required>
+
+                <label for="passwordConfirmar">Repite la contraseña</label>
+                <input type="password" id="passwordConfirmar" autocomplete="new-password" minlength="8" required>
+
+                <button class="btn btn-principal" type="submit">Guardar contraseña</button>
+                <p id="mensajePassword" class="auth-status" role="status" aria-live="polite"></p>
+            </form>
+
+            <div class="auth-notice">
+                <strong>Acceso por invitación</strong>
+                No hay registro público. Las cuentas se crean manualmente para mantener la aplicación privada.
+            </div>
+
+            <p class="auth-links">
+                <a href="index.html">Volver al inicio</a>
+            </p>
+        </section>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/acceso.js"></script>
+</body>
+</html>

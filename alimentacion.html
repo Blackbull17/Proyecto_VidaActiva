@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaActiva — Alimentación</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header>
+        <a href="principal.html" class="volver">← Volver</a>
+        <h1>Alimentación</h1>
+    </header>
+
+    <main class="contenedor">
+        <div class="tarjeta enlace-plan">
+            <h3>🩺 ¿Comes según tu salud y presupuesto?</h3>
+            <p>Crea un plan adaptado a tus condiciones de salud, tu presupuesto y tus horarios.</p>
+            <a href="cambio_fisico.html" class="btn btn-secundario">🥗 Crear mi plan personalizado</a>
+        </div>
+
+        <!-- 🧮 SECCIÓN: CALCULADORA DE CALORÍAS -->
+        <div class="tarjeta">
+            <h3>🧮 Calculadora de Calorías</h3>
+
+            <label>Selecciona un alimento:</label>
+            <select id="selectorAlimento" onchange="autocompletarCalorias()">
+                <option value="">-- Elige un alimento --</option>
+                <option value="75">Arroz cocido (100g)</option>
+                <option value="165">Pasta cocida (100g)</option>
+                <option value="78">Huevo cocido (1 unidad mediana)</option>
+                <option value="145">Pechuga de pollo a la plancha (100g)</option>
+                <option value="250">Carne de res magra cocida (100g)</option>
+                <option value="82">Pescado blanco cocido (100g)</option>
+                <option value="105">Plátano (1 unidad mediana)</option>
+                <option value="52">Manzana (1 unidad mediana)</option>
+                <option value="45">Naranja (1 unidad mediana)</option>
+                <option value="30">Pepino (100g)</option>
+                <option value="20">Lechuga (100g)</option>
+                <option value="22">Jitomate (100g)</option>
+                <option value="41">Zanahoria (100g)</option>
+                <option value="340">Frijoles cocidos (100g)</option>
+                <option value="75">Pan integral (1 rebanada ≈ 30g)</option>
+                <option value="61">Yogur natural (100g)</option>
+                <option value="122">Leche entera (250ml / 1 vaso)</option>
+                <option value="540">Aguacate (1 unidad mediana ≈ 150g)</option>
+                <option value="90">Avena en hojuelas (30g)</option>
+                <option value="380">Aceite de oliva / vegetal (1 cucharada ≈ 10g)</option>
+                <option value="20">Café solo (1 taza)</option>
+                <option value="40">Café con 1 cucharada de azúcar</option>
+            </select>
+
+            <label>O escribe tu propio alimento:</label>
+            <input type="text" id="nombreAlimento" placeholder="Ej: Torta de jamón">
+
+            <label>Cantidad (en gramos o porciones):</label>
+            <input type="number" id="cantidadGramos" placeholder="Ej: 100" value="100">
+
+            <label>Calorías por cada 100g o porción:</label>
+            <input type="number" id="caloriasPorPorcion" placeholder="Ej: 250">
+
+            <label>Precio de lo que vas a comer (opcional):</label>
+            <input type="number" id="precioAlimento" min="0" step="0.5" placeholder="Ej: 25">
+
+            <button class="btn btn-principal" style="width:100%; margin-top:10px;" onclick="calcularTotal()">
+                🔢 Calcular calorías
+            </button>
+
+            <div id="resultadoCalculo" style="margin-top:15px; padding:12px; background:#f0fff4; border-radius:8px; display:none;">
+                <strong>✅ Total estimado: <span id="totalCalorias">0</span> kcal</strong>
+                <div class="agregar-a-comida">
+                    <select id="comidaDestino" aria-label="Comida a la que agregar">
+                        <option value="desayuno">🌅 Desayuno</option>
+                        <option value="almuerzo">☀️ Almuerzo</option>
+                        <option value="cena">🌙 Cena</option>
+                    </select>
+                    <button class="btn btn-secundario pequeño" onclick="agregarALista()">➕ Agregar a mi comida</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESUMEN DE CALORÍAS DEL DÍA -->
+        <div class="resumen-calorias">
+            <h3>Hoy: <span id="fechaComida"></span></h3>
+            <div class="barra-progreso-calorias">
+                <div class="relleno" id="barraCalorias" style="width: 0%"></div>
+            </div>
+            <p><span id="caloriasConsumidas">0</span> de <span id="caloriasMeta">1,800</span> kcal</p>
+            <p class="gasto-resumen">💵 Gasto de hoy: <strong id="gastoHoy">$0</strong> · Semana: <strong id="gastoSemana">$0</strong></p>
+            <p id="presupuestoPlan" class="presupuesto-plan" style="display:none;"></p>
+            <div class="barra-progreso-calorias barra-presupuesto" id="barraPresupuestoContenedor" style="display:none;">
+                <div class="relleno" id="barraPresupuesto" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="agregar-comida">
+            <select id="comidaManual" aria-label="Comida">
+                <option value="desayuno">🌅 Desayuno</option>
+                <option value="almuerzo">☀️ Almuerzo</option>
+                <option value="cena">🌙 Cena</option>
+            </select>
+            <input type="text" id="nombreComida" placeholder="Alimento">
+            <input type="number" id="cantidadCalorias" placeholder="Calorías">
+            <input type="number" id="precioComida" min="0" step="0.5" placeholder="Precio $">
+            <button class="btn btn-principal pequeño" onclick="agregarComida()">+ Agregar</button>
+        </div>
+
+        <div class="seccion-comida">
+            <h3>🌅 Desayuno</h3>
+            <div id="listaDesayuno" class="lista-comida"></div>
+        </div>
+
+        <div class="seccion-comida">
+            <h3>☀️ Almuerzo</h3>
+            <div id="listaAlmuerzo" class="lista-comida"></div>
+        </div>
+
+        <div class="seccion-comida">
+            <h3>🌙 Cena</h3>
+            <div id="listaCena" class="lista-comida"></div>
+        </div>
+
+        <div class="tarjeta recomendacion-comida">
+            <h3>💡 Recomendación del día</h3>
+            <p id="textoRecomendacion">¡Excelente! Vas muy bien hoy. Sigue así 💪</p>
+        </div>
+    </main>
+
+    <nav class="menu-inferior">
+        <a href="principal.html">Inicio</a>
+        <a href="alimentacion.html" class="activo">Alimentación</a>
+        <a href="ejercicios.html">Ejercicios</a>
+        <a href="habitos.html">Hábitos</a>
+        <a href="progreso.html">Progreso</a>
+    </nav>
+
+    <script src="js/config.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

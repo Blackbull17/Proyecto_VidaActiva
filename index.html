@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaActiva — Inicio</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body data-public="true">
+    <div class="pantalla-inicio">
+        <h1 class="logo">🟢 VidaActiva</h1>
+        <p class="eslogan">Tu compañero para hábitos saludables y entrenamiento personal</p>
+
+        <div class="botones-inicio">
+            <a href="acceso.html" class="btn btn-principal">Iniciar sesión</a>
+            <a href="acceso.html?modo=invitacion" class="btn btn-secundario">Tengo una invitación</a>
+        </div>
+
+        <p class="nota">🔒 Cuentas privadas por invitación. Tu perfil, plan, comidas, hábitos y entrenamientos se guardan en tu cuenta y se sincronizan con Supabase.</p>
+    </div>
+
+    <script>
+        // Si Supabase redirige aquí con tokens de invitación o recuperación,
+        // los enviamos a acceso.html para que la persona establezca su contraseña.
+        if (window.location.hash && /(access_token|type=invite|type=recovery)/.test(window.location.hash)) {
+            window.location.replace('acceso.html' + window.location.hash);
+        }
+    </script>
+</body>
+</html>

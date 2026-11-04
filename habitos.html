@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaActiva — Hábitos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header>
+        <a href="principal.html" class="volver">← Volver</a>
+        <h1>Mis Hábitos</h1>
+        <button type="button" class="btn-ajustes" onclick="abrirAjustesHabito()" aria-label="Ajustes" title="Ajustes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6h.09A1.65 1.65 0 0 0 10.6 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 16.11 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 20.4 9v.09A1.65 1.65 0 0 0 21.91 10.6H21a2 2 0 1 1 0 4h-.09A1.65 1.65 0 0 0 19.4 15z"></path>
+            </svg>
+        </button>
+    </header>
+
+    <main class="contenedor">
+        <section class="resumen-habitos-card" id="resumenHabitosCard" aria-label="Progreso de hábitos de hoy" hidden>
+            <div class="resumen-habitos-fila">
+                <p class="resumen-habitos" id="resumenHabitos">
+                    <strong id="hechosHabitosHoy">0</strong> de <strong id="totalHabitosHoy">0</strong> hábitos hoy
+                </p>
+                <span class="porcentaje-habitos" id="porcentajeHabitos">0%</span>
+            </div>
+            <div class="barra-habitos" id="barraHabitosContenedor" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso de hábitos de hoy">
+                <i id="barraHabitos"></i>
+            </div>
+            <p class="mensaje-motivacional" id="mensajeMotivacional" aria-live="polite"></p>
+        </section>
+
+        <div class="agregar-elemento">
+            <input type="text" id="nuevoHabito" placeholder="Escribe un nuevo hábito...">
+            <button class="btn btn-principal pequeño" onclick="agregarHabito()">Agregar</button>
+        </div>
+
+        <div id="listaHabitos" class="lista-elementos">
+            <!-- Aquí se cargan los hábitos con JavaScript -->
+        </div>
+
+        <section class="catalogo-habitos">
+            <div class="recomendacion-habito" id="recomendacionHabito">
+                <button type="button" class="reco-habito-banner" id="recoHabitoBanner" onclick="alternarRecomendacionHabito()" aria-expanded="false" aria-controls="recoHabitoPanel">
+                    <span class="reco-habito-bombilla" aria-hidden="true">💡</span>
+                    <span class="reco-habito-texto">
+                        <strong>¿No sabes con qué empezar?</strong>
+                        <span class="reco-habito-sub"><span id="recoHabitoPrefijo">Te recomendamos:</span> <b id="recoHabitoNombreBanner"></b></span>
+                    </span>
+                    <span class="reco-habito-flecha" aria-hidden="true">▾</span>
+                </button>
+
+                <div class="reco-habito-panel" id="recoHabitoPanel" hidden>
+                    <div class="reco-habito-card">
+                        <div class="sugerencia-icono" id="recoHabitoIcono" aria-hidden="true"></div>
+                        <div class="sugerencia-texto">
+                            <h3 id="recoHabitoNombre"></h3>
+                            <p id="recoHabitoResumen"></p>
+                        </div>
+                        <button type="button" class="btn-sugerencia" id="recoHabitoAgregar" onclick="agregarRecomendadoHabito()">+ Agregar</button>
+                    </div>
+                    <p class="reco-habito-porque" id="recoHabitoPorque"></p>
+                    <div class="reco-habito-acciones">
+                        <button type="button" class="enlace-reco" onclick="abrirDetalleRecomendadoHabito()">Ver detalle</button>
+                        <button type="button" class="enlace-reco" id="recoHabitoOtra" onclick="otraRecomendacionHabito()">Ver otra opción</button>
+                    </div>
+                    <p class="reco-habito-aviso" id="recoHabitoAviso" hidden></p>
+                </div>
+            </div>
+
+            <h2>Ideas para empezar</h2>
+            <p class="catalogo-sub">Toca una para ver qué es y cómo empezar. Elige solo una.</p>
+            <div class="chips-habitos" id="chipsHabitos"></div>
+            <div id="listaSugerenciasHabitos"></div>
+            <p class="nota-limite-habitos" id="notaLimiteHabitos">Con 3 hábitos es suficiente para empezar. Mejor pocos y constantes.</p>
+            <p class="nota-profesional">Esta información es general y educativa. No sustituye la valoración de un profesional de la salud. Si tienes una condición médica, consulta con tu médico o nutriólogo.</p>
+        </section>
+
+        <div class="tarjeta semana-inicio">
+            <h3>🌟 Semana 1: El Inicio del Cambio</h3>
+            <p>Tu objetivo: crear el hábito de mover tu cuerpo todos los días.</p>
+            <div class="calendario-semana" id="calendarioSemana">
+                <!-- Lun, Mar, Mié... -->
+            </div>
+        </div>
+    </main>
+
+    <nav class="menu-inferior">
+        <a href="principal.html">Inicio</a>
+        <a href="alimentacion.html">Alimentación</a>
+        <a href="ejercicios.html">Ejercicios</a>
+        <a href="habitos.html" class="activo">Hábitos</a>
+        <a href="progreso.html">Progreso</a>
+    </nav>
+
+    <div class="hoja-fondo" id="hojaHabitoFondo">
+        <div class="hoja-habito" role="dialog" aria-modal="true" aria-labelledby="hojaHabitoNombre">
+            <button class="cerrar-hoja" onclick="cerrarHojaHabito()" aria-label="Cerrar">✕</button>
+            <div class="hoja-icono" id="hojaHabitoIcono"></div>
+            <h3 id="hojaHabitoNombre"></h3>
+            <p class="hoja-tipo" id="hojaHabitoTipo"></p>
+
+            <div class="bloque-hoja"><span>Qué es</span><p id="hojaHabitoQue"></p></div>
+            <div class="bloque-hoja"><span>Por qué cuesta</span><p id="hojaHabitoCuesta"></p></div>
+            <div class="bloque-hoja"><span>Cómo empezar</span><p id="hojaHabitoEmpezar"></p></div>
+
+            <p class="nota-hoja">Consejo general. Si tu caso necesita cuidados especiales, lo mejor siempre es acudir con un profesional.</p>
+            <button class="btn btn-principal btn-grande" id="hojaHabitoBoton">Agregar a mis hábitos</button>
+        </div>
+    </div>
+
+    <div class="hoja-fondo" id="hojaAjustesFondo">
+        <div class="hoja-habito" role="dialog" aria-modal="true" aria-labelledby="tituloAjustesHabito">
+            <button class="cerrar-hoja" onclick="cerrarAjustesHabito()" aria-label="Cerrar">✕</button>
+            <div class="hoja-icono" aria-hidden="true">⏰</div>
+            <h3 id="tituloAjustesHabito">Ajustes</h3>
+            <p class="hoja-tipo">Un recordatorio para todos tus hábitos.</p>
+
+            <div class="ajuste-recordatorio">
+                <div class="fila-ajuste">
+                    <div>
+                        <h4 id="tituloRecordatorioHabito">Recordatorio diario</h4>
+                        <p>Un solo aviso, a la hora que elijas.</p>
+                    </div>
+                    <button type="button" class="switch" id="switchRecordatorioHabito" role="switch" aria-checked="false" aria-labelledby="tituloRecordatorioHabito" onclick="alternarRecordatorioHabito()">
+                        <span></span>
+                    </button>
+                </div>
+
+                <div class="fila-hora">
+                    <label for="horaRecordatorioHabito">Hora del aviso</label>
+                    <input type="time" id="horaRecordatorioHabito" value="20:00" onchange="cambiarHoraRecordatorio()" disabled>
+                </div>
+
+                <p class="estado-recordatorio" id="estadoRecordatorioHabito" aria-live="polite">Desactivado</p>
+            </div>
+
+            <div class="vista-previa" id="vistaPreviaRecordatorio" hidden>
+                <p class="vista-previa-titulo">Así se vería</p>
+                <div class="aviso-simulado">
+                    <div class="aviso-cabecera"><span>🌱 VidaActiva</span><span>ahora</span></div>
+                    <p>Un momento para tus hábitos. Sin prisas.</p>
+                </div>
+            </div>
+
+            <button type="button" class="btn-probar-aviso" id="btnProbarRecordatorio" onclick="probarAvisoHabito()" disabled>Probar aviso</button>
+
+            <p class="nota-hoja">Un solo recordatorio para todos. Si hoy no puedes, no pasa nada: mañana sigue ahí.</p>
+        </div>
+    </div>
+
+    <div class="toast-habito" id="toastHabito" role="status" aria-live="polite"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

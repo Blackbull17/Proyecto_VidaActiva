@@ -1,0 +1,1401 @@
+/* ===== ESTILOS GENERALES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f0f8f4;
+    color: #2d3748;
+    padding-bottom: 70px;
+}
+
+.contenedor {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ===== PANTALLA DE INICIO ===== */
+.pantalla-inicio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 20px;
+}
+
+.logo {
+    font-size: 2.5rem;
+    color: #2f855a;
+    margin-bottom: 10px;
+}
+
+.eslogan {
+    font-size: 1rem;
+    color: #4a5568;
+    margin-bottom: 40px;
+}
+
+.botones-inicio {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.nota {
+    margin-top: 30px;
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+/* ===== BOTONES ===== */
+.btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-principal {
+    background-color: #2f855a;
+    color: white;
+}
+
+.btn-principal:hover {
+    background-color: #276749;
+}
+
+.btn-secundario {
+    background-color: #e2e8f0;
+    color: #2d3748;
+}
+
+.btn-grande {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
+
+.pequeño {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
+
+.btn-accion {
+    display: block;
+    background-color: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #2d3748;
+    text-align: center;
+    font-weight: 500;
+}
+
+.btn-accion:hover {
+    border-color: #2f855a;
+    background-color: #f7fafc;
+}
+
+/* ===== TARJETAS ===== */
+.tarjeta {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.resumen p {
+    margin: 8px 0;
+}
+
+/* ===== CABECERA Y NAVEGACIÓN ===== */
+header {
+    background: white;
+    padding: 15px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.volver {
+    color: #2f855a;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+header .btn-ajustes {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: #f0fff4;
+    color: #2f855a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+header .btn-ajustes:hover {
+    background: #c6f6d5;
+}
+
+header .btn-ajustes:focus-visible {
+    outline: 2px solid #2f855a;
+    outline-offset: 2px;
+}
+
+header .btn-ajustes svg {
+    display: block;
+}
+
+.logo-pequeño {
+    font-size: 1.2rem;
+    color: #2f855a;
+}
+
+.menu-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+}
+
+.menu-inferior a {
+    text-decoration: none;
+    color: #718096;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.menu-inferior a.activo {
+    color: #2f855a;
+    font-weight: 600;
+}
+
+/* ===== FORMULARIOS ===== */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+label {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+/* ===== CATEGORÍAS DE EJERCICIOS ===== */
+.categorias-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.tarjeta-categoria {
+    background: white;
+    border-radius:  10px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tarjeta-categoria .icono {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.tarjeta-categoria h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.tarjeta-categoria.proximo {
+    opacity: 0.6;
+    background: #e2e8f0;
+}
+
+.nivel {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+.nivel-principiante {
+    background: #f0fff4;
+    color: #276749;
+}
+
+/* ===== LISTA DE EJERCICIOS ===== */
+.item-ejercicio {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.item-ejercicio .numero {
+    background: #2f855a;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* ===== CALENDARIO SEMANA ===== */
+.calendario-semana {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.dia-semana {
+    width: 40px;
+    height: 50px;
+    border-radius: 8px;
+    background: #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.dia-semana.completo {
+    background: #9ae6b4;
+    color: #22543d;
+}
+
+.mensaje-motivacional {
+    font-style: italic;
+    color: #2f855a;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    text-align: left;
+    margin: 10px 0 0;
+    min-height: 1.2em;
+}
+
+.mensaje-motivacional.completo {
+    font-style: normal;
+    font-weight: 600;
+}
+
+.mensaje-motivacional:empty {
+    display: none;
+}
+
+/* ===== ALIMENTACIÓN: CALCULADORA Y COMIDAS ===== */
+.enlace-plan p {
+    margin: 6px 0 12px;
+    color: #4a5568;
+    font-size: 0.95rem;
+}
+
+.resumen-calorias {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.barra-progreso-calorias {
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 12px 0 8px;
+}
+
+.barra-progreso-calorias .relleno {
+    height: 100%;
+    background: #2f855a;
+    border-radius: 6px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.agregar-comida {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.agregar-comida select,
+.agregar-comida input[type="text"],
+.agregar-comida .btn {
+    grid-column: 1 / -1;
+}
+
+.agregar-comida select {
+    margin: 0;
+}
+
+.agregar-comida input,
+#resultadoCalculo select {
+    margin: 0;
+}
+
+.agregar-a-comida {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.agregar-a-comida select {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.agregar-a-comida .btn {
+    flex-shrink: 0;
+}
+
+.seccion-comida {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.seccion-comida h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.lista-comida:empty {
+    display: none;
+}
+
+.lista-vacia {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.item-comida {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 0.95rem;
+}
+
+.item-comida:last-child {
+    border-bottom: none;
+}
+
+.item-comida .nombre {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.item-comida .kcal {
+    color: #2f855a;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.item-comida .precio {
+    color: #718096;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.gasto-resumen {
+    margin-top: 6px;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.presupuesto-plan {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 4px;
+}
+
+.presupuesto-plan.excedido {
+    color: #c53030;
+    font-weight: 600;
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: #cbd5e0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 1;
+}
+
+.btn-eliminar:hover {
+    color: #e53e3e;
+}
+
+.recomendacion-comida p {
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+/* ===== SELECCIÓN DE ENTRENAMIENTO ===== */
+.seleccion-entrenamiento h3 {
+    margin-bottom: 12px;
+}
+
+.seleccion-entrenamiento select {
+    margin-bottom: 10px;
+}
+
+.seleccion-entrenamiento .btn {
+    margin-top: 5px;
+}
+
+/* ===== ENTRENADOR / CRONÓMETRO ===== */
+.entrenador {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    text-align: center;
+    border-left: 4px solid #e2e8f0;
+    transition: border-color 0.2s ease;
+}
+
+.entrenador.en-marcha {
+    border-left-color: #2f855a;
+}
+
+.entrenador.en-descanso {
+    border-left-color: #3182ce;
+}
+
+.entrenador-progreso {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #718096;
+}
+
+.cronometro {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 6px 0;
+    color: #2d3748;
+    font-variant-numeric: tabular-nums;
+}
+
+.entrenador.en-marcha .cronometro {
+    color: #2f855a;
+}
+
+.entrenador.en-descanso .cronometro {
+    color: #3182ce;
+}
+
+.entrenador.pausado .cronometro {
+    opacity: 0.45;
+}
+
+.entrenador-fase {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.entrenador-detalle {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-top: 4px;
+    min-height: 1.2em;
+}
+
+.controles-entrenador {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.controles-entrenador .btn {
+    flex: 1 1 auto;
+}
+
+.estado-entrenamiento {
+    font-size: 0.85rem;
+    margin-top: 10px;
+    min-height: 1.2em;
+    color: #718096;
+}
+
+.estado-entrenamiento.exito {
+    color: #276749;
+    font-weight: 600;
+}
+
+.item-ejercicio {
+    border-left: 4px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.item-ejercicio.activo {
+    background: #f0fff4;
+    border-left-color: #2f855a;
+}
+
+.item-ejercicio.completado {
+    opacity: 0.6;
+}
+
+.item-ejercicio.completado h4 {
+    text-decoration: line-through;
+}
+
+.item-ejercicio.completado .numero {
+    background: #9ae6b4;
+    color: #22543d;
+}
+
+/* ===== HÁBITOS ===== */
+.agregar-elemento {
+    display: flex;
+    gap: 8px;
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.agregar-elemento input {
+    margin: 0;
+}
+
+.agregar-elemento .btn {
+    flex-shrink: 0;
+}
+
+.resumen-habitos-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.resumen-habitos-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.resumen-habitos {
+    font-size: 0.9rem;
+    color: #718096;
+    margin: 0;
+}
+
+.resumen-habitos strong {
+    font-size: 1.5rem;
+    color: #2f855a;
+}
+
+.porcentaje-habitos {
+    font-size: 0.85rem;
+    color: #718096;
+    white-space: nowrap;
+}
+
+.barra-habitos {
+    height: 10px;
+    border-radius: 6px;
+    background: #e2e8f0;
+    overflow: hidden;
+}
+
+.barra-habitos i {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #2f855a;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .barra-habitos i {
+        transition: none;
+    }
+}
+
+.lista-elementos {
+    margin-bottom: 20px;
+}
+
+.item-habito {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.check-habito {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #cbd5e0;
+    background: white;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.item-habito.hecho .check-habito {
+    background: #2f855a;
+    border-color: #2f855a;
+}
+
+.item-habito .nombre {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.item-habito.hecho .nombre {
+    text-decoration: line-through;
+    color: #718096;
+}
+
+.item-habito .racha {
+    font-size: 0.78rem;
+    color: #dd6b20;
+    white-space: nowrap;
+}
+
+/* ===== AVISO BREVE AL MARCAR UN HÁBITO ===== */
+.toast-habito {
+    position: fixed;
+    left: 50%;
+    bottom: 80px;
+    transform: translateX(-50%) translateY(10px);
+    max-width: min(90vw, 380px);
+    background: #2d3748;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 0.86rem;
+    line-height: 1.3;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 80;
+}
+
+.toast-habito.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-habito.hito {
+    background: #276749;
+    font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast-habito {
+        transition: none;
+    }
+}
+
+/* ===== CATÁLOGO DE HÁBITOS SUGERIDOS ===== */
+.catalogo-habitos {
+    margin-top: 26px;
+}
+
+.recomendacion-habito {
+    background: white;
+    border: 1px solid #c6f6d5;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.recomendacion-habito[hidden] {
+    display: none;
+}
+
+.reco-habito-banner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0fff4;
+    border: none;
+    padding: 12px 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.reco-habito-banner:focus-visible {
+    outline: 2px solid #2f855a;
+    outline-offset: -2px;
+}
+
+.reco-habito-bombilla {
+    font-size: 1rem;
+}
+
+.reco-habito-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.reco-habito-texto strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #2f855a;
+}
+
+.reco-habito-sub {
+    display: block;
+    font-size: 0.78rem;
+    color: #4a5568;
+    margin-top: 2px;
+}
+
+.reco-habito-sub b {
+    color: #2f855a;
+    font-weight: 600;
+}
+
+.reco-habito-flecha {
+    color: #2f855a;
+    transition: transform 0.2s ease;
+}
+
+.recomendacion-habito.abierta .reco-habito-flecha {
+    transform: rotate(180deg);
+}
+
+.reco-habito-panel {
+    padding: 12px 14px 14px;
+}
+
+.reco-habito-panel[hidden] {
+    display: none;
+}
+
+.reco-habito-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.reco-habito-porque {
+    font-size: 0.78rem;
+    color: #4a5568;
+    line-height: 1.4;
+    margin-top: 10px;
+}
+
+.reco-habito-acciones {
+    display: flex;
+    gap: 14px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.enlace-reco {
+    border: none;
+    background: none;
+    color: #2f855a;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 3px 0;
+    cursor: pointer;
+}
+
+.enlace-reco:hover {
+    text-decoration: underline;
+}
+
+.reco-habito-aviso {
+    font-size: 0.78rem;
+    color: #2b6cb0;
+    background: #ebf8ff;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-top: 10px;
+    line-height: 1.35;
+}
+
+.reco-habito-aviso[hidden] {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reco-habito-flecha {
+        transition: none;
+    }
+}
+
+.catalogo-habitos h2 {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.catalogo-sub {
+    color: #718096;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.chips-habitos {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 2px 2px 12px;
+    scrollbar-width: none;
+}
+
+.chips-habitos::-webkit-scrollbar {
+    display: none;
+}
+
+.chip-habito {
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #4a5568;
+    border-radius: 999px;
+    padding: 7px 13px;
+    font-size: 0.8rem;
+    font-family: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.chip-habito.activo {
+    background: #2f855a;
+    border-color: #2f855a;
+    color: white;
+}
+
+.sugerencia-habito {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    border-left: 3px solid transparent;
+    cursor: pointer;
+}
+
+.sugerencia-habito:hover {
+    border-left-color: #9ae6b4;
+}
+
+.sugerencia-icono {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f0fff4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.sugerencia-habito.reducir .sugerencia-icono {
+    background: #fffbeb;
+}
+
+.sugerencia-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.sugerencia-texto h3 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.sugerencia-texto p {
+    font-size: 0.78rem;
+    color: #718096;
+    margin: 2px 0 0;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.etiqueta-reducir {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: #fefcbf;
+    color: #975a16;
+    margin-left: 6px;
+    vertical-align: middle;
+    font-weight: 500;
+}
+
+.btn-sugerencia {
+    border: none;
+    background: #f0fff4;
+    color: #276749;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.btn-sugerencia:hover {
+    background: #c6f6d5;
+}
+
+.nota-limite-habitos {
+    display: none;
+    margin: 8px 0 0;
+    background: #ebf8ff;
+    color: #2b6cb0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+.nota-limite-habitos.visible {
+    display: block;
+}
+
+.nota-profesional {
+    margin: 14px 2px 0;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: #a0aec0;
+}
+
+/* ===== FICHA DE UN HÁBITO SUGERIDO ===== */
+.hoja-fondo {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 60;
+}
+
+.hoja-fondo.abierto {
+    display: flex;
+}
+
+.hoja-habito {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 18px 18px 0 0;
+    padding: 22px 20px 24px;
+    max-height: 88vh;
+    overflow-y: auto;
+    position: relative;
+    animation: subir-hoja 0.22s ease-out;
+}
+
+@keyframes subir-hoja {
+    from {
+        transform: translateY(30px);
+        opacity: 0.6;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.cerrar-hoja {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    border: none;
+    background: #f7fafc;
+    color: #718096;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.hoja-icono {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #f0fff4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.hoja-habito h3 {
+    font-size: 1.15rem;
+    margin-bottom: 2px;
+}
+
+.hoja-tipo {
+    font-size: 0.78rem;
+    color: #718096;
+    margin-bottom: 14px;
+}
+
+.bloque-hoja {
+    margin-bottom: 12px;
+}
+
+.bloque-hoja span {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #a0aec0;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.bloque-hoja p {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #4a5568;
+    margin: 0;
+}
+
+.nota-hoja {
+    font-size: 0.7rem;
+    color: #a0aec0;
+    line-height: 1.4;
+    margin: 14px 0 16px;
+}
+
+.hoja-habito .btn-grande {
+    width: 100%;
+}
+
+.hoja-habito .btn:disabled {
+    background: #cbd5e0;
+    cursor: default;
+}
+
+/* ===== AJUSTES: RECORDATORIO DIARIO ===== */
+.ajuste-recordatorio {
+    background: #f7fafc;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 4px;
+}
+
+.fila-ajuste {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.fila-ajuste h4 {
+    font-size: 0.95rem;
+}
+
+.fila-ajuste p {
+    font-size: 0.78rem;
+    color: #718096;
+    margin-top: 2px;
+    line-height: 1.35;
+}
+
+.switch {
+    width: 48px;
+    height: 28px;
+    border-radius: 999px;
+    border: none;
+    background: #cbd5e0;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.switch span {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+
+.switch[aria-checked="true"] {
+    background: #2f855a;
+}
+
+.switch[aria-checked="true"] span {
+    transform: translateX(20px);
+}
+
+.switch:focus-visible {
+    outline: 2px solid #2f855a;
+    outline-offset: 2px;
+}
+
+.fila-hora {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.fila-hora label {
+    font-size: 0.86rem;
+    color: #4a5568;
+}
+
+.fila-hora input {
+    width: auto;
+    margin: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 7px 9px;
+    font-size: 0.9rem;
+    color: #2d3748;
+    background: white;
+    font-family: inherit;
+}
+
+.fila-hora input:disabled {
+    color: #a0aec0;
+    background: white;
+    border-color: #edf2f7;
+}
+
+.estado-recordatorio {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-top: 10px;
+}
+
+.estado-recordatorio.activo {
+    color: #2f855a;
+    font-weight: 600;
+}
+
+.vista-previa {
+    margin-top: 16px;
+}
+
+.vista-previa[hidden] {
+    display: none;
+}
+
+.vista-previa-titulo {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #a0aec0;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.aviso-simulado {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.aviso-cabecera {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #718096;
+    margin-bottom: 4px;
+}
+
+.aviso-simulado p {
+    font-size: 0.86rem;
+    line-height: 1.35;
+    color: #2d3748;
+}
+
+.btn-probar-aviso {
+    width: 100%;
+    border: 1px solid #c6f6d5;
+    background: #f0fff4;
+    color: #276749;
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 14px;
+}
+
+.btn-probar-aviso:hover:not(:disabled) {
+    background: #c6f6d5;
+}
+
+.btn-probar-aviso:disabled {
+    background: #f7fafc;
+    border-color: #e2e8f0;
+    color: #a0aec0;
+    cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hoja-habito {
+        animation: none;
+    }
+
+    .switch,
+    .switch span {
+        transition: none;
+    }
+}
+
+.dia-semana .dia-letra {
+    font-size: 0.65rem;
+    color: #718096;
+}
+
+.dia-semana .dia-numero {
+    font-weight: 600;
+}
+
+.dia-semana.hoy {
+    outline: 2px solid #2f855a;
+    outline-offset: 1px;
+}
+
+/* ===== HISTORIAL Y PROGRESO ===== */
+.item-historial {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 0.9rem;
+}
+
+.item-historial:last-child {
+    border-bottom: none;
+}
+
+.item-historial .fecha {
+    color: #718096;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.sin-datos {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* ===== BARRA DE PRESUPUESTO ===== */
+.barra-presupuesto {
+    margin-top: 8px;
+}
+
+/* ===== RESPONSIVO ===== */
+@media(max-width: 400px) {
+    .categorias-grid {
+        grid-template-columns: 1fr;
+    }
+}

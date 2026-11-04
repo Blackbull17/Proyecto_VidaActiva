@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f0fff4">
+    <title>VidaActiva · Demo de animaciones</title>
+    <link rel="stylesheet" href="animaciones.css">
+</head>
+<body>
+    <div class="contenedor">
+        <header class="hero">
+            <div class="hero-texto">
+                <span class="kicker">Demo visual · Propuesta</span>
+                <h1>Personas dibujadas,<br><span>movimiento más natural</span></h1>
+                <p>
+                    Una muestra de cómo podrían verse las animaciones de los ejercicios:
+                    cuerpo articulado, manos y pies, ropa, sombras y curvas suaves.
+                    Esta página es solo una demo y no modifica la aplicación.
+                </p>
+            </div>
+
+            <div class="hero-acciones" aria-label="Controles de la demo">
+                <button type="button" class="btn btn-pausa" id="btnPausa" aria-pressed="false">Pausar</button>
+                <button type="button" class="btn activo" id="btnNormal" data-velocidad="1" aria-pressed="true">Normal</button>
+                <button type="button" class="btn" id="btnLento" data-velocidad="0.55" aria-pressed="false">Lento</button>
+            </div>
+        </header>
+
+        <main class="galeria" id="galeria" aria-live="polite"></main>
+
+        <div class="nota-final">
+            <span class="nota-icono" aria-hidden="true">💡</span>
+            <div>
+                <strong>Es una muestra de 6 ejercicios.</strong>
+                Si te gusta el estilo, lo aplicaría a los 63 ejercicios manteniendo los controles
+                de pausa y velocidad que ya existen. También podemos ajustar colores, ropa,
+                nivel de detalle o tamaño de la figura.
+            </div>
+        </div>
+    </div>
+
+    <script src="datos.js"></script>
+    <script src="figura.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

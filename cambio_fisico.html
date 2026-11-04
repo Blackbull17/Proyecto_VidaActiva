@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambio Físico y Dieta | VidaActiva</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <header>
+        <a href="principal.html" class="volver">← Volver</a>
+        <h1>Plan Personalizado</h1>
+    </header>
+
+    <main class="contenedor">
+        <form id="formularioDieta">
+            <!-- SECCIÓN 1: INFORMACIÓN DE SALUD -->
+            <div class="tarjeta">
+                <h3>🩺 Condiciones de Salud</h3>
+                
+                <label>¿Tienes alguna enfermedad o condición de salud?</label>
+                <select id="tieneEnfermedad" onchange="mostrarOtrasEnfermedades()">
+                    <option value="no">No, no tengo ninguna enfermedad</option>
+                    <option value="diabetes">Diabetes</option>
+                    <option value="hipertension">Hipertensión arterial</option>
+                    <option value="gastritis">Gastritis / Reflujo</option>
+                    <option value="colesterol">Colesterol alto</option>
+                    <option value="tiroides">Problemas de tiroides</option>
+                    <option value="celiaquia">Celíaquia</option>
+                    <option value="intolerancia_lactosa">Intolerancia a la lactosa</option>
+                    <option value="otra">Otra enfermedad...</option>
+                </select>
+
+                <div id="otraEnfermedadDiv" style="display:none; margin-top:10px;">
+                    <label>Especifica qué enfermedad:</label>
+                    <input type="text" id="otraEnfermedad" placeholder="Ej: Asma, Anemia...">
+                </div>
+
+                <label style="margin-top:15px;">¿Tienes alguna alergia alimentaria?</label>
+                <select id="tieneAlergia" onchange="mostrarOtrasAlergias()">
+                    <option value="no">No, no tengo alergias</option>
+                    <option value="frutos_secos">Alergia a frutos secos</option>
+                    <option value="mariscos">Alergia a mariscos</option>
+                    <option value="huevo">Alergia al huevo</option>
+                    <option value="otra">Otra alergia...</option>
+                </select>
+
+                <div id="otraAlergiaDiv" style="display:none; margin-top:10px;">
+                    <label>Especifica qué alergia:</label>
+                    <input type="text" id="otraAlergia" placeholder="Ej: Alergia al gluten...">
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: PRESUPUESTO -->
+            <div class="tarjeta">
+                <h3>💰 Presupuesto para Alimentos</h3>
+                <label>¿Cuánto presupuesto tienes semanalmente para comprar alimentos?</label>
+                <select id="presupuesto">
+                    <option value="economico">Menos de $500 MXN</option>
+                    <option value="medio">$500 - $1,000 MXN</option>
+                    <option value="amplio">$1,000 - $2,000 MXN</option>
+                    <option value="generoso">Más de $2,000 MXN</option>
+                </select>
+                <p style="font-size:0.85rem; color:#718096; margin-top:8px;">
+                    💡 Se generará una dieta adaptada a tu presupuesto disponible.
+                </p>
+            </div>
+
+            <!-- SECCIÓN 3: HORARIOS DE COMIDA -->
+            <div class="tarjeta">
+                <h3>⏰ Horarios de Comida</h3>
+                
+                <label>Desayuno:</label>
+                <input type="time" id="horarioDesayuno" value="07:30">
+                
+                <label>Almuerzo / Comida:</label>
+                <input type="time" id="horarioComida" value="14:00">
+                
+                <label>Cena:</label>
+                <input type="time" id="horarioCena" value="20:00">
+
+                <label style="margin-top:15px;">¿Te gustaría agregar colaciones (comidas entre horas)?</label>
+                <select id="colaciones" onchange="mostrarColaciones()">
+                    <option value="no">No, prefiero 3 comidas al día</option>
+                    <option value="una">Solo 1 colación al día</option>
+                    <option value="dos">2 colaciones al día (mañana y tarde)</option>
+                </select>
+
+                <div id="colacionesDiv" style="display:none; margin-top:10px;">
+                    <label>Colación de media mañana:</label>
+                    <input type="time" id="horarioColacion1" value="10:30">
+                    
+                    <label id="etiquetaColacion2" style="display:none;">Colación de media tarde:</label>
+                    <input type="time" id="horarioColacion2" value="17:00" style="display:none;">
+                </div>
+            </div>
+
+            <p class="perfil-ayuda">
+                🔒 Tus condiciones de salud y alergias se usan solo para generar el menú en esta pantalla.
+                No se guardan en la base de datos. Sí guardamos tu presupuesto y horarios para no tener que escribirlos otra vez.
+            </p>
+
+            <button type="button" class="btn btn-principal btn-grande" onclick="generarDieta()">
+                🥗 Generar mi dieta personalizada
+            </button>
+        </form>
+
+        <!-- AQUÍ SE MOSTRARÁ LA DIETA GENERADA -->
+        <div id="resultadoDieta" style="display:none; margin-top:25px;">
+            <!-- Se llena con JavaScript -->
+        </div>
+    </main>
+
+    <nav class="menu-inferior">
+        <a href="principal.html">Inicio</a>
+        <a href="alimentacion.html">Alimentación</a>
+        <a href="ejercicios.html">Ejercicios</a>
+        <a href="habitos.html">Hábitos</a>
+        <a href="progreso.html">Progreso</a>
+    </nav>
+
+    <script src="js/config.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

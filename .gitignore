@@ -1,0 +1,20 @@
+# Sistema operativo y editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Variables de entorno y secretos
+.env
+.env.*
+*.local
+
+# Supabase CLI (archivos temporales locales)
+.supabase/
+supabase/.temp/
+
+# Respaldos y comprimidos
+*.zip
+*.7z
+*.rar

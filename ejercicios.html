@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaActiva — Ejercicios</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/ejercicios.css">
+</head>
+<body>
+    <header class="cabecera-ejercicios">
+        <a href="principal.html" class="volver">← Volver</a>
+        <h1>Ejercicios</h1>
+    </header>
+
+    <main class="contenedor" id="appEjercicios">
+        <section class="reco-rapida" aria-labelledby="tituloRecoRapida">
+            <div class="reco-rapida-icono" aria-hidden="true">⚡</div>
+            <div class="reco-rapida-texto">
+                <p class="reco-etiqueta">Recomendación rápida</p>
+                <h2 id="tituloRecoRapida">La rutina de siempre, en versión corta</h2>
+                <p>5 ejercicios · 1 ronda · unos 4 min. Ideal para los días con poco tiempo.</p>
+            </div>
+            <a class="btn btn-principal reco-btn" href="rutina.html?rutina=rapida">Empezar</a>
+        </section>
+
+        <section class="seccion-ejercicios" aria-labelledby="tituloRutinas">
+            <div class="seccion-cabecera">
+                <div>
+                    <h2 id="tituloRutinas">Elige tu rutina</h2>
+                    <p>6 zonas · 3 niveles · 18 rutinas. Toca un nivel para empezar.</p>
+                </div>
+            </div>
+
+            <div class="filtros-nivel" id="filtrosNivel" aria-label="Filtrar rutinas por nivel">
+                <button type="button" class="chip-nivel activo" data-nivel="todos">Todos</button>
+                <button type="button" class="chip-nivel" data-nivel="principiante">🟢 Principiante</button>
+                <button type="button" class="chip-nivel" data-nivel="intermedio">🟡 Intermedio</button>
+                <button type="button" class="chip-nivel" data-nivel="avanzado">🔴 Avanzado</button>
+            </div>
+
+            <div class="zonas-grid" id="zonasGrid"></div>
+        </section>
+
+        <section class="seccion-ejercicios" aria-labelledby="tituloCatalogo">
+            <div class="seccion-cabecera">
+                <div>
+                    <h2 id="tituloCatalogo">Explorar ejercicios</h2>
+                    <p>Busca por nombre o filtra por zona. Toca uno para ver cómo se hace.</p>
+                </div>
+            </div>
+
+            <div class="barra-busqueda">
+                <input type="search" id="buscarEjercicio" placeholder="Buscar ejercicio o material..." autocomplete="off">
+            </div>
+
+            <div class="filtros-zona" id="filtrosZona" aria-label="Filtrar ejercicios por zona"></div>
+            <div class="lista-catalogo" id="listaCatalogo"></div>
+        </section>
+
+        <section class="nota-entrenamiento">
+            <span aria-hidden="true">💡</span>
+            <div>
+                <strong>Antes de empezar</strong>
+                <p>Haz 5 minutos de calentamiento y termina con estiramientos suaves. Si sientes dolor, mareo o falta de aire, para.</p>
+            </div>
+        </section>
+    </main>
+
+    <nav class="menu-inferior">
+        <a href="principal.html">Inicio</a>
+        <a href="alimentacion.html">Alimentación</a>
+        <a href="ejercicios.html" class="activo">Ejercicios</a>
+        <a href="habitos.html">Hábitos</a>
+        <a href="progreso.html">Progreso</a>
+    </nav>
+
+    <div class="hoja-fondo" id="hojaEjercicioFondo">
+        <div class="hoja-habito ficha-ejercicio" role="dialog" aria-modal="true" aria-labelledby="tituloEjercicio">
+            <button type="button" class="cerrar-hoja" id="cerrarEjercicio" aria-label="Cerrar">✕</button>
+            <div class="hoja-icono" id="iconoEjercicio" aria-hidden="true">💪</div>
+            <h3 id="tituloEjercicio">Ejercicio</h3>
+            <p class="hoja-tipo" id="grupoEjercicio"></p>
+            <div id="contenidoEjercicio"></div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ejercicios.js"></script>
+</body>
+</html>

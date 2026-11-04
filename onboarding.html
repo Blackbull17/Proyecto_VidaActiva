@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidaActiva — Empecemos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body data-onboarding="true">
+    <header>
+        <a href="cuenta.html" class="volver">← Cuenta</a>
+        <h1>Empecemos</h1>
+    </header>
+
+    <main class="contenedor perfil-form">
+        <div class="tarjeta">
+            <h3>👤 Tus datos</h3>
+            <p class="perfil-ayuda">Estos datos se usan para estimar tus calorías y personalizar tus metas. Puedes cambiarlos después en tu perfil.</p>
+
+            <form id="formOnboarding">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" autocomplete="name" required>
+
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" min="12" max="100" inputmode="numeric" required>
+
+                <label for="sexo">Sexo (para estimar calorías):</label>
+                <select id="sexo">
+                    <option value="prefiero_no_decir" selected>Prefiero no decirlo</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="masculino">Masculino</option>
+                </select>
+
+                <label for="peso">Peso actual (kg):</label>
+                <input type="number" id="peso" min="30" max="300" step="0.1" inputmode="decimal" required>
+
+                <label for="estatura">Estatura (cm):</label>
+                <input type="number" id="estatura" min="100" max="250" step="1" inputmode="numeric" required>
+
+                <label for="actividad">Nivel de actividad:</label>
+                <select id="actividad">
+                    <option value="sedentario">Sedentario</option>
+                    <option value="ligero">Ligero</option>
+                    <option value="moderado" selected>Moderado</option>
+                    <option value="activo">Activo</option>
+                </select>
+
+                <label for="objetivo">Objetivo:</label>
+                <select id="objetivo">
+                    <option value="bajar">Bajar de peso</option>
+                    <option value="mantener" selected>Mantener peso</option>
+                    <option value="subir">Ganar masa muscular</option>
+                </select>
+
+                <label for="pesoMeta">Peso objetivo (kg, opcional):</label>
+                <input type="number" id="pesoMeta" min="30" max="300" step="0.1" inputmode="decimal">
+
+                <p class="calorias-recomendadas">🔥 Calorías estimadas: <strong id="caloriasObjetivo">1,800 kcal/día</strong></p>
+                <p class="perfil-ayuda">Es una estimación general, no una prescripción médica.</p>
+
+                <button class="btn btn-principal" type="submit" style="width:100%; margin-top:14px;">Guardar y continuar</button>
+                <p id="estadoOnboarding" class="auth-status" role="status" aria-live="polite"></p>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/datos.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/onboarding.js"></script>
+</body>
+</html>

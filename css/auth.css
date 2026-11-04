@@ -1,0 +1,171 @@
+/* ===== ACCESO, ONBOARDING Y CUENTA ===== */
+.auth-wrap {
+    min-height: calc(100vh - 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px 90px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 460px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(45, 55, 72, 0.10);
+    border: 1px solid #e2e8f0;
+}
+
+.auth-card h1,
+.auth-card h2 {
+    color: #2f855a;
+    margin-bottom: 8px;
+}
+
+.auth-card > p {
+    color: #4a5568;
+    line-height: 1.45;
+    margin-bottom: 16px;
+}
+
+.auth-card label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.auth-card input,
+.auth-card select {
+    width: 100%;
+}
+
+.auth-card .btn {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.auth-notice {
+    background: #f0fff4;
+    border: 1px solid #c6f6d5;
+    color: #276749;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 14px 0;
+}
+
+.auth-notice strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.auth-status {
+    min-height: 1.3em;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    line-height: 1.35;
+}
+
+.auth-status.error {
+    color: #c53030;
+}
+
+.auth-status.exito {
+    color: #276749;
+}
+
+.auth-links {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.auth-links a {
+    color: #2f855a;
+}
+
+.auth-links a + a {
+    margin-left: 12px;
+}
+
+.auth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.auth-actions .btn {
+    margin-top: 0;
+}
+
+.auth-secundario {
+    background: #edf2f7;
+    color: #2d3748;
+}
+
+.auth-secundario:hover {
+    background: #e2e8f0;
+}
+
+.estado-perfil {
+    min-height: 1.3em;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    line-height: 1.35;
+}
+
+.estado-perfil.error {
+    color: #c53030;
+}
+
+.estado-perfil.exito {
+    color: #276749;
+}
+
+.perfil-ayuda {
+    color: #718096;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-top: 8px;
+}
+
+.perfil-resumen {
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.perfil-resumen strong {
+    color: #2d3748;
+}
+
+.cuenta-bloque + .cuenta-bloque {
+    margin-top: 16px;
+}
+
+.cuenta-bloque .btn,
+.cuenta-bloque label.btn {
+    width: 100%;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.cuenta-bloque input[type="file"] {
+    display: none;
+}
+
+.perfil-form .tarjeta + .tarjeta {
+    margin-top: 16px;
+}
+
+@media (min-width: 700px) {
+    .auth-card {
+        padding: 30px;
+    }
+}
