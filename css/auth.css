@@ -14,17 +14,17 @@
     border-radius: 18px;
     padding: 24px;
     box-shadow: 0 10px 30px rgba(45, 55, 72, 0.10);
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--linea);
 }
 
 .auth-card h1,
 .auth-card h2 {
-    color: #2f855a;
+    color: var(--verde-700);
     margin-bottom: 8px;
 }
 
 .auth-card > p {
-    color: #4a5568;
+    color: var(--texto-2);
     line-height: 1.45;
     margin-bottom: 16px;
 }
@@ -34,7 +34,7 @@
     margin-top: 12px;
     margin-bottom: 6px;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--texto);
 }
 
 .auth-card input,
@@ -48,9 +48,9 @@
 }
 
 .auth-notice {
-    background: #f0fff4;
-    border: 1px solid #c6f6d5;
-    color: #276749;
+    background: var(--verde-50);
+    border: 1px solid var(--verde-200);
+    color: var(--verde-800);
     border-radius: 10px;
     padding: 12px;
     font-size: 0.9rem;
@@ -71,11 +71,11 @@
 }
 
 .auth-status.error {
-    color: #c53030;
+    color: var(--rojo);
 }
 
 .auth-status.exito {
-    color: #276749;
+    color: var(--verde-800);
 }
 
 .auth-links {
@@ -85,7 +85,7 @@
 }
 
 .auth-links a {
-    color: #2f855a;
+    color: var(--verde-700);
 }
 
 .auth-links a + a {
@@ -104,12 +104,12 @@
 }
 
 .auth-secundario {
-    background: #edf2f7;
-    color: #2d3748;
+    background: var(--linea-suave);
+    color: var(--texto);
 }
 
 .auth-secundario:hover {
-    background: #e2e8f0;
+    background: var(--linea);
 }
 
 .estado-perfil {
@@ -120,28 +120,28 @@
 }
 
 .estado-perfil.error {
-    color: #c53030;
+    color: var(--rojo);
 }
 
 .estado-perfil.exito {
-    color: #276749;
+    color: var(--verde-800);
 }
 
 .perfil-ayuda {
-    color: #718096;
+    color: var(--muted);
     font-size: 0.85rem;
     line-height: 1.4;
     margin-top: 8px;
 }
 
 .perfil-resumen {
-    color: #4a5568;
+    color: var(--texto-2);
     font-size: 0.95rem;
     line-height: 1.5;
 }
 
 .perfil-resumen strong {
-    color: #2d3748;
+    color: var(--texto);
 }
 
 .cuenta-bloque + .cuenta-bloque {
@@ -168,4 +168,44 @@
     .auth-card {
         padding: 30px;
     }
+}
+
+/* ===== REDISEÑO VISUAL ===== */
+.auth-card {
+    border-radius: 24px;
+    box-shadow: var(--sombra-lg);
+    border-color: var(--linea);
+}
+
+.auth-card h1,
+.auth-card h2 {
+    color: var(--verde-900);
+    letter-spacing: -0.02em;
+}
+
+.auth-notice {
+    background: var(--verde-50);
+    border-color: var(--verde-200);
+    color: var(--verde-800);
+    border-radius: 14px;
+}
+
+.auth-secundario {
+    background: var(--superficie-2);
+    color: var(--texto);
+    border: 1px solid var(--linea);
+}
+
+.auth-secundario:hover {
+    background: var(--linea-suave);
+}
+
+.auth-links a {
+    color: var(--verde-700);
+    font-weight: 700;
+}
+
+.perfil-ayuda,
+.perfil-resumen {
+    color: var(--muted);
 }

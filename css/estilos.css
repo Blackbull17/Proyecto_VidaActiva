@@ -1,14 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+
 /* ===== ESTILOS GENERALES ===== */
+:root {
+    /* Verdes */
+    --verde-950: #0f2a1b;
+    --verde-900: #14532d;
+    --verde-800: #166534;
+    --verde-700: #15803d;
+    --verde-600: #16a34a;
+    --verde-500: #22c55e;
+    --verde-400: #4ade80;
+    --verde-300: #86efac;
+    --verde-200: #bbf7d0;
+    --verde-100: #dcfce7;
+    --verde-50: #f0fdf4;
+    --lima: #a3e635;
+
+    /* Acentos cálidos */
+    --naranja: #f97316;
+    --naranja-oscuro: #c2410c;
+    --naranja-100: #ffedd5;
+    --naranja-50: #fff7ed;
+    --ambar: #d97706;
+    --ambar-oscuro: #92400e;
+    --ambar-200: #fcd34d;
+    --ambar-100: #fef3c7;
+    --ambar-50: #fffbeb;
+
+    /* Acentos fríos */
+    --teal: #0d9488;
+    --teal-oscuro: #0f766e;
+    --teal-100: #ccfbf1;
+    --teal-50: #f0fdfa;
+    --azul: #2563eb;
+    --azul-300: #60a5fa;
+    --azul-100: #dbeafe;
+    --azul-50: #eff6ff;
+    --rojo: #dc2626;
+    --rojo-50: #fef2f2;
+
+    /* Neutros */
+    --texto: #1f2937;
+    --texto-2: #374151;
+    --muted: #6b7280;
+    --muted-2: #9ca3af;
+    --linea: #e6ebe4;
+    --linea-suave: #f1f5ef;
+    --linea-fuerte: #cbd5c8;
+    --superficie: #ffffff;
+    --superficie-2: #f6f8f3;
+    --fondo: #f7f9f4;
+
+    /* Forma y profundidad */
+    --radio: 20px;
+    --radio-md: 14px;
+    --radio-sm: 10px;
+    --sombra: 0 10px 30px rgba(20, 83, 45, 0.08);
+    --sombra-sm: 0 4px 14px rgba(20, 83, 45, 0.06);
+    --sombra-lg: 0 18px 45px rgba(20, 83, 45, 0.14);
+    --anillo: 0 0 0 4px rgba(34, 197, 94, 0.18);
+    --fuente: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: var(--fuente);
 }
 
 body {
-    background-color: #f0f8f4;
-    color: #2d3748;
+    background-color: var(--fondo);
+    color: var(--texto);
     padding-bottom: 70px;
 }
 
@@ -31,13 +94,13 @@ body {
 
 .logo {
     font-size: 2.5rem;
-    color: #2f855a;
+    color: var(--verde-700);
     margin-bottom: 10px;
 }
 
 .eslogan {
     font-size: 1rem;
-    color: #4a5568;
+    color: var(--texto-2);
     margin-bottom: 40px;
 }
 
@@ -52,7 +115,7 @@ body {
 .nota {
     margin-top: 30px;
     font-size: 0.85rem;
-    color: #718096;
+    color: var(--muted);
 }
 
 /* ===== BOTONES ===== */
@@ -68,17 +131,17 @@ body {
 }
 
 .btn-principal {
-    background-color: #2f855a;
+    background-color: var(--verde-700);
     color: white;
 }
 
 .btn-principal:hover {
-    background-color: #276749;
+    background-color: var(--verde-800);
 }
 
 .btn-secundario {
-    background-color: #e2e8f0;
-    color: #2d3748;
+    background-color: var(--linea);
+    color: var(--texto);
 }
 
 .btn-grande {
@@ -95,19 +158,19 @@ body {
 .btn-accion {
     display: block;
     background-color: white;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--linea);
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 10px;
     text-decoration: none;
-    color: #2d3748;
+    color: var(--texto);
     text-align: center;
     font-weight: 500;
 }
 
 .btn-accion:hover {
-    border-color: #2f855a;
-    background-color: #f7fafc;
+    border-color: var(--verde-700);
+    background-color: var(--superficie-2);
 }
 
 /* ===== TARJETAS ===== */
@@ -134,7 +197,7 @@ header {
 }
 
 .volver {
-    color: #2f855a;
+    color: var(--verde-700);
     text-decoration: none;
     font-weight: 500;
 }
@@ -144,8 +207,8 @@ header .btn-ajustes {
     height: 34px;
     border: none;
     border-radius: 50%;
-    background: #f0fff4;
-    color: #2f855a;
+    background: var(--verde-50);
+    color: var(--verde-700);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -154,11 +217,11 @@ header .btn-ajustes {
 }
 
 header .btn-ajustes:hover {
-    background: #c6f6d5;
+    background: var(--verde-200);
 }
 
 header .btn-ajustes:focus-visible {
-    outline: 2px solid #2f855a;
+    outline: 2px solid var(--verde-700);
     outline-offset: 2px;
 }
 
@@ -168,7 +231,7 @@ header .btn-ajustes svg {
 
 .logo-pequeño {
     font-size: 1.2rem;
-    color: #2f855a;
+    color: var(--verde-700);
 }
 
 .menu-inferior {
@@ -185,13 +248,13 @@ header .btn-ajustes svg {
 
 .menu-inferior a {
     text-decoration: none;
-    color: #718096;
+    color: var(--muted);
     font-size: 0.85rem;
     text-align: center;
 }
 
 .menu-inferior a.activo {
-    color: #2f855a;
+    color: var(--verde-700);
     font-weight: 600;
 }
 
@@ -200,14 +263,14 @@ input, select {
     width: 100%;
     padding: 10px;
     margin: 8px 0 15px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--linea);
     border-radius: 6px;
     font-size: 1rem;
 }
 
 label {
     font-weight: 500;
-    color: #2d3748;
+    color: var(--texto);
 }
 
 /* ===== CATEGORÍAS DE EJERCICIOS ===== */
@@ -239,7 +302,7 @@ label {
 
 .tarjeta-categoria.proximo {
     opacity: 0.6;
-    background: #e2e8f0;
+    background: var(--linea);
 }
 
 .nivel {
@@ -251,8 +314,8 @@ label {
 }
 
 .nivel-principiante {
-    background: #f0fff4;
-    color: #276749;
+    background: var(--verde-50);
+    color: var(--verde-800);
 }
 
 /* ===== LISTA DE EJERCICIOS ===== */
@@ -266,7 +329,7 @@ label {
 }
 
 .item-ejercicio .numero {
-    background: #2f855a;
+    background: var(--verde-700);
     color: white;
     width: 30px;
     height: 30px;
@@ -290,7 +353,7 @@ label {
     width: 40px;
     height: 50px;
     border-radius: 8px;
-    background: #e2e8f0;
+    background: var(--linea);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -299,13 +362,13 @@ label {
 }
 
 .dia-semana.completo {
-    background: #9ae6b4;
-    color: #22543d;
+    background: var(--verde-300);
+    color: var(--verde-900);
 }
 
 .mensaje-motivacional {
     font-style: italic;
-    color: #2f855a;
+    color: var(--verde-700);
     font-size: 0.9rem;
     line-height: 1.4;
     text-align: left;
@@ -325,7 +388,7 @@ label {
 /* ===== ALIMENTACIÓN: CALCULADORA Y COMIDAS ===== */
 .enlace-plan p {
     margin: 6px 0 12px;
-    color: #4a5568;
+    color: var(--texto-2);
     font-size: 0.95rem;
 }
 
@@ -339,7 +402,7 @@ label {
 
 .barra-progreso-calorias {
     height: 12px;
-    background: #e2e8f0;
+    background: var(--linea);
     border-radius: 6px;
     overflow: hidden;
     margin: 12px 0 8px;
@@ -347,7 +410,7 @@ label {
 
 .barra-progreso-calorias .relleno {
     height: 100%;
-    background: #2f855a;
+    background: var(--verde-700);
     border-radius: 6px;
     transition: width 0.3s ease, background 0.3s ease;
 }
@@ -413,7 +476,7 @@ label {
 }
 
 .lista-vacia {
-    color: #a0aec0;
+    color: var(--muted-2);
     font-size: 0.9rem;
     font-style: italic;
 }
@@ -423,7 +486,7 @@ label {
     align-items: center;
     gap: 10px;
     padding: 8px 0;
-    border-bottom: 1px solid #edf2f7;
+    border-bottom: 1px solid var(--linea-suave);
     font-size: 0.95rem;
 }
 
@@ -438,38 +501,38 @@ label {
 }
 
 .item-comida .kcal {
-    color: #2f855a;
+    color: var(--verde-700);
     font-weight: 600;
     white-space: nowrap;
 }
 
 .item-comida .precio {
-    color: #718096;
+    color: var(--muted);
     font-size: 0.85rem;
     white-space: nowrap;
 }
 
 .gasto-resumen {
     margin-top: 6px;
-    color: #4a5568;
+    color: var(--texto-2);
     font-size: 0.9rem;
 }
 
 .presupuesto-plan {
     font-size: 0.85rem;
-    color: #718096;
+    color: var(--muted);
     margin-top: 4px;
 }
 
 .presupuesto-plan.excedido {
-    color: #c53030;
+    color: var(--rojo);
     font-weight: 600;
 }
 
 .btn-eliminar {
     background: none;
     border: none;
-    color: #cbd5e0;
+    color: var(--linea-fuerte);
     font-size: 0.9rem;
     cursor: pointer;
     padding: 4px 6px;
@@ -477,11 +540,11 @@ label {
 }
 
 .btn-eliminar:hover {
-    color: #e53e3e;
+    color: var(--rojo);
 }
 
 .recomendacion-comida p {
-    color: #4a5568;
+    color: var(--texto-2);
     line-height: 1.5;
 }
 
@@ -506,23 +569,23 @@ label {
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     text-align: center;
-    border-left: 4px solid #e2e8f0;
+    border-left: 4px solid var(--linea);
     transition: border-color 0.2s ease;
 }
 
 .entrenador.en-marcha {
-    border-left-color: #2f855a;
+    border-left-color: var(--verde-700);
 }
 
 .entrenador.en-descanso {
-    border-left-color: #3182ce;
+    border-left-color: var(--azul);
 }
 
 .entrenador-progreso {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #718096;
+    color: var(--muted);
 }
 
 .cronometro {
@@ -530,16 +593,16 @@ label {
     font-weight: 700;
     line-height: 1.1;
     margin: 6px 0;
-    color: #2d3748;
+    color: var(--texto);
     font-variant-numeric: tabular-nums;
 }
 
 .entrenador.en-marcha .cronometro {
-    color: #2f855a;
+    color: var(--verde-700);
 }
 
 .entrenador.en-descanso .cronometro {
-    color: #3182ce;
+    color: var(--azul);
 }
 
 .entrenador.pausado .cronometro {
@@ -549,12 +612,12 @@ label {
 .entrenador-fase {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--texto);
 }
 
 .entrenador-detalle {
     font-size: 0.9rem;
-    color: #718096;
+    color: var(--muted);
     margin-top: 4px;
     min-height: 1.2em;
 }
@@ -575,11 +638,11 @@ label {
     font-size: 0.85rem;
     margin-top: 10px;
     min-height: 1.2em;
-    color: #718096;
+    color: var(--muted);
 }
 
 .estado-entrenamiento.exito {
-    color: #276749;
+    color: var(--verde-800);
     font-weight: 600;
 }
 
@@ -589,8 +652,8 @@ label {
 }
 
 .item-ejercicio.activo {
-    background: #f0fff4;
-    border-left-color: #2f855a;
+    background: var(--verde-50);
+    border-left-color: var(--verde-700);
 }
 
 .item-ejercicio.completado {
@@ -602,8 +665,8 @@ label {
 }
 
 .item-ejercicio.completado .numero {
-    background: #9ae6b4;
-    color: #22543d;
+    background: var(--verde-300);
+    color: var(--verde-900);
 }
 
 /* ===== HÁBITOS ===== */
@@ -643,25 +706,25 @@ label {
 
 .resumen-habitos {
     font-size: 0.9rem;
-    color: #718096;
+    color: var(--muted);
     margin: 0;
 }
 
 .resumen-habitos strong {
     font-size: 1.5rem;
-    color: #2f855a;
+    color: var(--verde-700);
 }
 
 .porcentaje-habitos {
     font-size: 0.85rem;
-    color: #718096;
+    color: var(--muted);
     white-space: nowrap;
 }
 
 .barra-habitos {
     height: 10px;
     border-radius: 6px;
-    background: #e2e8f0;
+    background: var(--linea);
     overflow: hidden;
 }
 
@@ -669,7 +732,7 @@ label {
     display: block;
     height: 100%;
     width: 0%;
-    background: #2f855a;
+    background: var(--verde-700);
     border-radius: 6px;
     transition: width 0.3s ease;
 }
@@ -699,7 +762,7 @@ label {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    border: 2px solid #cbd5e0;
+    border: 2px solid var(--linea-fuerte);
     background: white;
     color: white;
     font-size: 0.9rem;
@@ -714,8 +777,8 @@ label {
 }
 
 .item-habito.hecho .check-habito {
-    background: #2f855a;
-    border-color: #2f855a;
+    background: var(--verde-700);
+    border-color: var(--verde-700);
 }
 
 .item-habito .nombre {
@@ -726,12 +789,12 @@ label {
 
 .item-habito.hecho .nombre {
     text-decoration: line-through;
-    color: #718096;
+    color: var(--muted);
 }
 
 .item-habito .racha {
     font-size: 0.78rem;
-    color: #dd6b20;
+    color: var(--naranja);
     white-space: nowrap;
 }
 
@@ -742,7 +805,7 @@ label {
     bottom: 80px;
     transform: translateX(-50%) translateY(10px);
     max-width: min(90vw, 380px);
-    background: #2d3748;
+    background: var(--texto);
     color: white;
     padding: 10px 16px;
     border-radius: 999px;
@@ -761,7 +824,7 @@ label {
 }
 
 .toast-habito.hito {
-    background: #276749;
+    background: var(--verde-800);
     font-weight: 600;
 }
 
@@ -778,7 +841,7 @@ label {
 
 .recomendacion-habito {
     background: white;
-    border: 1px solid #c6f6d5;
+    border: 1px solid var(--verde-200);
     border-radius: 12px;
     margin-bottom: 22px;
     overflow: hidden;
@@ -794,7 +857,7 @@ label {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #f0fff4;
+    background: var(--verde-50);
     border: none;
     padding: 12px 14px;
     text-align: left;
@@ -802,7 +865,7 @@ label {
 }
 
 .reco-habito-banner:focus-visible {
-    outline: 2px solid #2f855a;
+    outline: 2px solid var(--verde-700);
     outline-offset: -2px;
 }
 
@@ -818,23 +881,23 @@ label {
 .reco-habito-texto strong {
     display: block;
     font-size: 0.85rem;
-    color: #2f855a;
+    color: var(--verde-700);
 }
 
 .reco-habito-sub {
     display: block;
     font-size: 0.78rem;
-    color: #4a5568;
+    color: var(--texto-2);
     margin-top: 2px;
 }
 
 .reco-habito-sub b {
-    color: #2f855a;
+    color: var(--verde-700);
     font-weight: 600;
 }
 
 .reco-habito-flecha {
-    color: #2f855a;
+    color: var(--verde-700);
     transition: transform 0.2s ease;
 }
 
@@ -855,14 +918,14 @@ label {
     align-items: center;
     gap: 10px;
     background: white;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--linea);
     border-radius: 10px;
     padding: 10px 12px;
 }
 
 .reco-habito-porque {
     font-size: 0.78rem;
-    color: #4a5568;
+    color: var(--texto-2);
     line-height: 1.4;
     margin-top: 10px;
 }
@@ -877,7 +940,7 @@ label {
 .enlace-reco {
     border: none;
     background: none;
-    color: #2f855a;
+    color: var(--verde-700);
     font-size: 0.78rem;
     font-weight: 600;
     font-family: inherit;
@@ -891,8 +954,8 @@ label {
 
 .reco-habito-aviso {
     font-size: 0.78rem;
-    color: #2b6cb0;
-    background: #ebf8ff;
+    color: var(--azul);
+    background: var(--azul-50);
     border-radius: 8px;
     padding: 8px 10px;
     margin-top: 10px;
@@ -915,7 +978,7 @@ label {
 }
 
 .catalogo-sub {
-    color: #718096;
+    color: var(--muted);
     font-size: 0.85rem;
     margin-bottom: 12px;
 }
@@ -933,9 +996,9 @@ label {
 }
 
 .chip-habito {
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--linea);
     background: white;
-    color: #4a5568;
+    color: var(--texto-2);
     border-radius: 999px;
     padding: 7px 13px;
     font-size: 0.8rem;
@@ -945,8 +1008,8 @@ label {
 }
 
 .chip-habito.activo {
-    background: #2f855a;
-    border-color: #2f855a;
+    background: var(--verde-700);
+    border-color: var(--verde-700);
     color: white;
 }
 
@@ -964,14 +1027,14 @@ label {
 }
 
 .sugerencia-habito:hover {
-    border-left-color: #9ae6b4;
+    border-left-color: var(--verde-300);
 }
 
 .sugerencia-icono {
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: #f0fff4;
+    background: var(--verde-50);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -997,7 +1060,7 @@ label {
 
 .sugerencia-texto p {
     font-size: 0.78rem;
-    color: #718096;
+    color: var(--muted);
     margin: 2px 0 0;
     line-height: 1.3;
     overflow-wrap: anywhere;
@@ -1008,8 +1071,8 @@ label {
     font-size: 0.65rem;
     padding: 2px 6px;
     border-radius: 6px;
-    background: #fefcbf;
-    color: #975a16;
+    background: var(--ambar-100);
+    color: var(--ambar-oscuro);
     margin-left: 6px;
     vertical-align: middle;
     font-weight: 500;
@@ -1017,8 +1080,8 @@ label {
 
 .btn-sugerencia {
     border: none;
-    background: #f0fff4;
-    color: #276749;
+    background: var(--verde-50);
+    color: var(--verde-800);
     border-radius: 8px;
     padding: 7px 10px;
     font-size: 0.78rem;
@@ -1029,14 +1092,14 @@ label {
 }
 
 .btn-sugerencia:hover {
-    background: #c6f6d5;
+    background: var(--verde-200);
 }
 
 .nota-limite-habitos {
     display: none;
     margin: 8px 0 0;
-    background: #ebf8ff;
-    color: #2b6cb0;
+    background: var(--azul-50);
+    color: var(--azul);
     border-radius: 10px;
     padding: 10px 12px;
     font-size: 0.8rem;
@@ -1051,7 +1114,7 @@ label {
     margin: 14px 2px 0;
     font-size: 0.72rem;
     line-height: 1.4;
-    color: #a0aec0;
+    color: var(--muted-2);
 }
 
 /* ===== FICHA DE UN HÁBITO SUGERIDO ===== */
@@ -1097,8 +1160,8 @@ label {
     top: 12px;
     right: 14px;
     border: none;
-    background: #f7fafc;
-    color: #718096;
+    background: var(--superficie-2);
+    color: var(--muted);
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -1110,7 +1173,7 @@ label {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #f0fff4;
+    background: var(--verde-50);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1125,7 +1188,7 @@ label {
 
 .hoja-tipo {
     font-size: 0.78rem;
-    color: #718096;
+    color: var(--muted);
     margin-bottom: 14px;
 }
 
@@ -1138,7 +1201,7 @@ label {
     font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #a0aec0;
+    color: var(--muted-2);
     font-weight: 700;
     margin-bottom: 2px;
 }
@@ -1146,13 +1209,13 @@ label {
 .bloque-hoja p {
     font-size: 0.88rem;
     line-height: 1.45;
-    color: #4a5568;
+    color: var(--texto-2);
     margin: 0;
 }
 
 .nota-hoja {
     font-size: 0.7rem;
-    color: #a0aec0;
+    color: var(--muted-2);
     line-height: 1.4;
     margin: 14px 0 16px;
 }
@@ -1162,13 +1225,13 @@ label {
 }
 
 .hoja-habito .btn:disabled {
-    background: #cbd5e0;
+    background: var(--linea-fuerte);
     cursor: default;
 }
 
 /* ===== AJUSTES: RECORDATORIO DIARIO ===== */
 .ajuste-recordatorio {
-    background: #f7fafc;
+    background: var(--superficie-2);
     border-radius: 12px;
     padding: 14px;
     margin-top: 4px;
@@ -1187,7 +1250,7 @@ label {
 
 .fila-ajuste p {
     font-size: 0.78rem;
-    color: #718096;
+    color: var(--muted);
     margin-top: 2px;
     line-height: 1.35;
 }
@@ -1197,7 +1260,7 @@ label {
     height: 28px;
     border-radius: 999px;
     border: none;
-    background: #cbd5e0;
+    background: var(--linea-fuerte);
     position: relative;
     cursor: pointer;
     flex-shrink: 0;
@@ -1217,7 +1280,7 @@ label {
 }
 
 .switch[aria-checked="true"] {
-    background: #2f855a;
+    background: var(--verde-700);
 }
 
 .switch[aria-checked="true"] span {
@@ -1225,7 +1288,7 @@ label {
 }
 
 .switch:focus-visible {
-    outline: 2px solid #2f855a;
+    outline: 2px solid var(--verde-700);
     outline-offset: 2px;
 }
 
@@ -1236,40 +1299,40 @@ label {
     gap: 12px;
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--linea);
 }
 
 .fila-hora label {
     font-size: 0.86rem;
-    color: #4a5568;
+    color: var(--texto-2);
 }
 
 .fila-hora input {
     width: auto;
     margin: 0;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--linea);
     border-radius: 8px;
     padding: 7px 9px;
     font-size: 0.9rem;
-    color: #2d3748;
+    color: var(--texto);
     background: white;
     font-family: inherit;
 }
 
 .fila-hora input:disabled {
-    color: #a0aec0;
+    color: var(--muted-2);
     background: white;
-    border-color: #edf2f7;
+    border-color: var(--linea-suave);
 }
 
 .estado-recordatorio {
     font-size: 0.8rem;
-    color: #718096;
+    color: var(--muted);
     margin-top: 10px;
 }
 
 .estado-recordatorio.activo {
-    color: #2f855a;
+    color: var(--verde-700);
     font-weight: 600;
 }
 
@@ -1285,14 +1348,14 @@ label {
     font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #a0aec0;
+    color: var(--muted-2);
     font-weight: 700;
     margin-bottom: 6px;
 }
 
 .aviso-simulado {
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
+    background: var(--superficie-2);
+    border: 1px solid var(--linea);
     border-radius: 12px;
     padding: 10px 12px;
 }
@@ -1301,21 +1364,21 @@ label {
     display: flex;
     justify-content: space-between;
     font-size: 0.7rem;
-    color: #718096;
+    color: var(--muted);
     margin-bottom: 4px;
 }
 
 .aviso-simulado p {
     font-size: 0.86rem;
     line-height: 1.35;
-    color: #2d3748;
+    color: var(--texto);
 }
 
 .btn-probar-aviso {
     width: 100%;
-    border: 1px solid #c6f6d5;
-    background: #f0fff4;
-    color: #276749;
+    border: 1px solid var(--verde-200);
+    background: var(--verde-50);
+    color: var(--verde-800);
     padding: 11px;
     border-radius: 10px;
     font-size: 0.9rem;
@@ -1326,13 +1389,13 @@ label {
 }
 
 .btn-probar-aviso:hover:not(:disabled) {
-    background: #c6f6d5;
+    background: var(--verde-200);
 }
 
 .btn-probar-aviso:disabled {
-    background: #f7fafc;
-    border-color: #e2e8f0;
-    color: #a0aec0;
+    background: var(--superficie-2);
+    border-color: var(--linea);
+    color: var(--muted-2);
     cursor: default;
 }
 
@@ -1349,7 +1412,7 @@ label {
 
 .dia-semana .dia-letra {
     font-size: 0.65rem;
-    color: #718096;
+    color: var(--muted);
 }
 
 .dia-semana .dia-numero {
@@ -1357,7 +1420,7 @@ label {
 }
 
 .dia-semana.hoy {
-    outline: 2px solid #2f855a;
+    outline: 2px solid var(--verde-700);
     outline-offset: 1px;
 }
 
@@ -1368,7 +1431,7 @@ label {
     align-items: baseline;
     gap: 10px;
     padding: 10px 0;
-    border-bottom: 1px solid #edf2f7;
+    border-bottom: 1px solid var(--linea-suave);
     font-size: 0.9rem;
 }
 
@@ -1377,13 +1440,13 @@ label {
 }
 
 .item-historial .fecha {
-    color: #718096;
+    color: var(--muted);
     font-size: 0.8rem;
     white-space: nowrap;
 }
 
 .sin-datos {
-    color: #a0aec0;
+    color: var(--muted-2);
     font-size: 0.9rem;
     font-style: italic;
 }
@@ -1397,5 +1460,581 @@ label {
 @media(max-width: 400px) {
     .categorias-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* =====================================================================
+   REDISEÑO VISUAL — Verde vida + energía cálida
+   Solo estilos: no cambia IDs, HTML ni la lógica de JavaScript.
+   ===================================================================== */
+
+body {
+    background-color: var(--fondo);
+    background-image:
+        radial-gradient(circle at 100% 0%, rgba(163, 230, 53, 0.14), transparent 38%),
+        radial-gradient(circle at 0% 100%, rgba(249, 115, 22, 0.07), transparent 42%);
+    background-attachment: fixed;
+    color: var(--texto);
+    padding-bottom: 96px;
+    font-size: 16px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+    color: var(--verde-900);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.contenedor {
+    max-width: 560px;
+    padding: 20px 18px 24px;
+}
+
+/* ===== CABECERA ===== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.86);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(20, 83, 45, 0.08);
+    box-shadow: none;
+    padding: 14px 18px;
+    gap: 12px;
+}
+
+header h1,
+header .logo-pequeño {
+    font-size: 1.12rem;
+    color: var(--verde-900);
+    letter-spacing: -0.02em;
+}
+
+.volver {
+    color: var(--verde-700);
+    font-weight: 700;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: var(--verde-50);
+    border: 1px solid var(--verde-200);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.volver:hover {
+    background: var(--verde-100);
+    transform: translateX(-1px);
+}
+
+header .btn-ajustes {
+    background: var(--verde-50);
+    color: var(--verde-700);
+    border: 1px solid var(--verde-200);
+    width: 38px;
+    height: 38px;
+    transition: background 0.18s ease, transform 0.18s ease;
+}
+
+header .btn-ajustes:hover {
+    background: var(--verde-100);
+    transform: rotate(8deg);
+}
+
+/* ===== TARJETAS ===== */
+.tarjeta,
+.resumen-calorias,
+.agregar-comida,
+.seccion-comida,
+.agregar-elemento,
+.resumen-habitos-card,
+.entrenador,
+.item-habito,
+.item-ejercicio,
+.calentamiento-card,
+.nota-entrenamiento,
+.zona-card,
+.sugerencia-habito,
+.recomendacion-habito,
+.hoja-habito,
+.auth-card {
+    background: var(--superficie);
+    border: 1px solid var(--linea);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra-sm);
+}
+
+.tarjeta {
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.tarjeta h3 {
+    font-size: 1.02rem;
+    color: var(--verde-900);
+    margin-bottom: 10px;
+}
+
+.resumen p {
+    margin: 7px 0;
+    color: var(--texto-2);
+}
+
+.resumen p span {
+    font-weight: 800;
+    color: var(--verde-800);
+}
+
+.fecha {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin: 2px 0 16px;
+}
+
+.acciones-rapidas h3 {
+    margin: 22px 0 10px;
+}
+
+/* Acentos por tipo de contenido */
+.enlace-plan {
+    background: linear-gradient(135deg, var(--naranja-50), var(--ambar-50));
+    border-color: var(--naranja-100);
+}
+
+.enlace-plan h3 {
+    color: var(--naranja-oscuro);
+}
+
+.resumen-calorias {
+    border-top: 4px solid var(--naranja);
+}
+
+.resumen-habitos-card {
+    border-top: 4px solid var(--verde-500);
+}
+
+.recomendacion-comida {
+    background: linear-gradient(135deg, var(--verde-50), var(--superficie));
+    border-color: var(--verde-200);
+}
+
+/* ===== BOTONES ===== */
+.btn {
+    border-radius: var(--radio-md);
+    padding: 12px 18px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.btn-principal {
+    background: linear-gradient(135deg, var(--verde-700), var(--verde-600));
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(21, 128, 61, 0.22);
+}
+
+.btn-principal:hover {
+    background: linear-gradient(135deg, var(--verde-800), var(--verde-700));
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(21, 128, 61, 0.28);
+}
+
+.btn-secundario {
+    background: var(--superficie-2);
+    color: var(--texto);
+    border: 1px solid var(--linea);
+}
+
+.btn-secundario:hover {
+    background: var(--linea-suave);
+    transform: translateY(-1px);
+}
+
+.btn:focus-visible,
+.btn-accion:focus-visible,
+.menu-inferior a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(34, 197, 94, 0.35);
+    outline-offset: 2px;
+}
+
+.btn-accion {
+    background: var(--superficie);
+    border: 1px solid var(--linea);
+    border-radius: 16px;
+    box-shadow: var(--sombra-sm);
+    color: var(--texto);
+    font-weight: 700;
+    padding: 15px 16px;
+    text-align: left;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn-accion:hover {
+    border-color: var(--verde-200);
+    background: var(--superficie);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(20, 83, 45, 0.10);
+}
+
+/* ===== FORMULARIOS ===== */
+input,
+select,
+textarea {
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-md);
+    padding: 12px 13px;
+    font-size: 1rem;
+    background: var(--superficie);
+    color: var(--texto);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--verde-400);
+    box-shadow: var(--anillo);
+    outline: none;
+}
+
+label {
+    font-weight: 700;
+    color: var(--texto-2);
+    font-size: 0.9rem;
+}
+
+#resultadoCalculo {
+    background: var(--verde-50) !important;
+    border: 1px solid var(--verde-200);
+    border-radius: var(--radio-md) !important;
+}
+
+/* ===== BARRAS DE PROGRESO ===== */
+.barra-progreso-calorias {
+    height: 12px;
+    background: var(--naranja-100);
+    border-radius: 999px;
+}
+
+.barra-progreso-calorias .relleno {
+    background: linear-gradient(90deg, #fb923c, var(--naranja));
+    border-radius: 999px;
+}
+
+.item-comida .kcal {
+    color: var(--naranja-oscuro);
+    font-weight: 800;
+}
+
+.barra-habitos {
+    height: 10px;
+    background: var(--verde-100);
+    border-radius: 999px;
+}
+
+.barra-habitos i {
+    background: linear-gradient(90deg, var(--verde-500), var(--verde-700));
+    border-radius: 999px;
+}
+
+.resumen-habitos strong {
+    color: var(--verde-700);
+    font-weight: 800;
+}
+
+/* ===== ENTRENADOR ===== */
+.entrenador {
+    border-left: 4px solid var(--linea);
+}
+
+.entrenador.en-marcha {
+    border-left-color: var(--teal);
+}
+
+.entrenador.en-descanso {
+    border-left-color: var(--azul);
+}
+
+.entrenador.en-marcha .cronometro {
+    color: var(--teal-oscuro);
+}
+
+.entrenador.en-descanso .cronometro {
+    color: var(--azul);
+}
+
+.cronometro {
+    letter-spacing: -0.04em;
+}
+
+/* ===== CALENDARIO ===== */
+.dia-semana {
+    background: var(--superficie-2);
+    border: 1px solid var(--linea);
+    border-radius: 12px;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.dia-semana.completo {
+    background: var(--verde-100);
+    border-color: var(--verde-200);
+    color: var(--verde-900);
+}
+
+/* ===== LISTAS ===== */
+.item-comida {
+    border-bottom-color: var(--linea-suave);
+}
+
+.item-habito,
+.item-ejercicio {
+    border-radius: 16px;
+    padding: 13px 14px;
+    margin-bottom: 9px;
+}
+
+.check-habito,
+.item-habito.hecho .check-habito {
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.item-habito.hecho .check-habito {
+    background: linear-gradient(135deg, var(--verde-600), var(--verde-700));
+    border-color: var(--verde-700);
+}
+
+.item-habito .racha {
+    background: var(--naranja-50);
+    color: var(--naranja-oscuro);
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-weight: 800;
+}
+
+/* ===== CHIPS ===== */
+.chip-habito,
+.chip-nivel,
+.chip-zona {
+    border-radius: 999px;
+    border: 1px solid var(--linea);
+    font-weight: 700;
+}
+
+.chip-habito.activo,
+.chip-nivel.activo,
+.chip-zona.activo {
+    background: var(--verde-700);
+    border-color: var(--verde-700);
+    color: #fff;
+}
+
+/* ===== MENÚ INFERIOR (MÓVIL) ===== */
+.menu-inferior {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
+    border: 1px solid rgba(20, 83, 45, 0.08);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 12px 30px rgba(20, 83, 45, 0.14);
+    justify-content: space-around;
+    align-items: center;
+    gap: 2px;
+    z-index: 90;
+}
+
+.menu-inferior a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 7px 9px;
+    border-radius: 14px;
+    color: var(--muted);
+    font-size: 0.66rem;
+    font-weight: 700;
+    line-height: 1.1;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.menu-inferior a::before {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.menu-inferior a:nth-child(1)::before { content: "🏠"; }
+.menu-inferior a:nth-child(2)::before { content: "🍎"; }
+.menu-inferior a:nth-child(3)::before { content: "💪"; }
+.menu-inferior a:nth-child(4)::before { content: "✅"; }
+.menu-inferior a:nth-child(5)::before { content: "📈"; }
+
+.menu-inferior a.activo {
+    background: var(--verde-100);
+    color: var(--verde-800);
+    font-weight: 800;
+}
+
+/* ===== AVISOS, NOTAS Y TOAST ===== */
+.nota-profesional {
+    color: var(--muted-2);
+}
+
+.reco-habito-aviso,
+.nota-limite-habitos {
+    background: var(--azul-50);
+    color: var(--azul);
+    border-radius: 12px;
+}
+
+.toast-habito {
+    background: var(--verde-900);
+    font-weight: 700;
+    box-shadow: var(--sombra);
+}
+
+.toast-habito.hito {
+    background: var(--verde-800);
+}
+
+.hoja-habito {
+    border-radius: 26px 26px 0 0;
+}
+
+/* ===== ACCESO / CUENTA ===== */
+.auth-card {
+    border-radius: 24px;
+    box-shadow: var(--sombra-lg);
+}
+
+.auth-card h1,
+.auth-card h2 {
+    color: var(--verde-900);
+}
+
+.auth-links a,
+.ficha-usos a,
+.enlace-reco {
+    color: var(--verde-700);
+}
+
+/* =====================================================================
+   ESCRITORIO: el menú inferior se convierte en barra lateral
+   ===================================================================== */
+@media (min-width: 900px) {
+    body:has(.menu-inferior) {
+        padding-left: 244px;
+        padding-bottom: 0;
+    }
+
+    .menu-inferior {
+        top: 0;
+        right: auto;
+        bottom: 0;
+        left: 0;
+        width: 244px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 5px;
+        padding: 26px 16px 20px;
+        border: none;
+        border-radius: 0;
+        background: linear-gradient(180deg, var(--verde-950), #123522 100%);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        box-shadow: 8px 0 30px rgba(15, 42, 27, 0.12);
+    }
+
+    .menu-inferior::before {
+        content: "🌿 VidaActiva";
+        display: block;
+        padding: 0 12px 20px;
+        color: #fff;
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .menu-inferior a {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        color: #a7c4b1;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .menu-inferior a::before {
+        font-size: 1.05rem;
+    }
+
+    .menu-inferior a:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+    }
+
+    .menu-inferior a.activo {
+        background: rgba(163, 230, 53, 0.14);
+        color: var(--lima);
+        box-shadow: inset 3px 0 0 var(--lima);
+    }
+
+    .contenedor {
+        max-width: 900px;
+        padding: 30px 34px 64px;
+    }
+
+    header {
+        padding: 16px 34px;
+    }
+
+    .acciones-rapidas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .acciones-rapidas h3 {
+        grid-column: 1 / -1;
+        margin-bottom: 2px;
+    }
+
+    .acciones-rapidas .btn-accion {
+        margin-bottom: 0;
+    }
+
+    .categorias-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .zonas-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .auth-wrap {
+        padding: 40px 16px;
+    }
+
+    .auth-card {
+        max-width: 520px;
+        padding: 32px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .contenedor {
+        max-width: 1020px;
     }
 }
