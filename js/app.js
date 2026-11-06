@@ -1654,25 +1654,28 @@ function renderizarHabitos() {
     if (!habitos.length) {
         lista.innerHTML = '<p class="lista-vacia">Todavía no registras hábitos. Empieza con uno pequeño, como "caminar 10 minutos".</p>';
     } else {
+        const icoLocal = function (id) {
+            return window.VA && typeof VA.icono === 'function' ? VA.icono(id) : '';
+        };
         lista.innerHTML = habitos.map(function (habito) {
             const hecho = diasHabito(habito).indexOf(hoy) >= 0;
             const racha = calcularRachaHabito(habito);
             const esReducir = tipoDeHabito(habito) === 'reducir';
             const mostrarRacha = racha > 1 || (esReducir && racha === 1);
             const insignia = mostrarRacha
-                ? '<span class="habit-streak">' + VA.icono(esReducir ? 'i-shield' : 'i-flame') + ' ' + racha + '</span>'
+                ? '<span class="habit-streak">' + icoLocal(esReducir ? 'i-shield' : 'i-flame') + ' ' + racha + '</span>'
                 : '';
-            const iconoHab = VA.iconoHabito ? VA.iconoHabito(habito) : 'i-check';
+            const iconoHab = window.VA && VA.iconoHabito ? VA.iconoHabito(habito) : 'i-check';
             const nombre = escaparHTML(habito.nombre);
             const id = escaparHTML(habito.id);
 
             return '<div class="item-habito' + (hecho ? ' hecho' : '') + '">' +
                 '<button type="button" class="check-habito' + (hecho ? ' hecho' : '') + '" onclick="alternarHabito(\'' + id + '\')" aria-pressed="' + (hecho ? 'true' : 'false') + '" aria-label="' + (hecho ? 'Desmarcar' : 'Marcar') + ' ' + nombre + '">' +
-                    VA.icono('i-check') +
+                    icoLocal('i-check') + (hecho ? '' : '') +
                 '</button>' +
-                '<span class="habit-copy"><strong>' + nombre + '</strong><small>' + VA.icono(iconoHab) + ' ' + (hecho ? 'Hecho hoy' : 'Pendiente hoy') + '</small></span>' +
+                '<span class="habit-copy"><strong>' + nombre + '</strong><small>' + icoLocal(iconoHab) + ' ' + (hecho ? 'Hecho hoy' : 'Pendiente hoy') + '</small></span>' +
                 insignia +
-                '<button class="btn-eliminar" title="Eliminar" onclick="eliminarHabito(\'' + id + '\')">' + VA.icono('i-trash') + '</button>' +
+                '<button class="btn-eliminar" title="Eliminar" onclick="eliminarHabito(\'' + id + '\')">' + icoLocal('i-trash') + '</button>' +
             '</div>';
         }).join('');
     }

@@ -153,6 +153,7 @@ a.icon-btn{flex-shrink:0}
   background:var(--green-700);border-color:var(--green-700);color:#fff;transform:scale(1.04);
 }
 .item-habito.hecho .nombre{text-decoration:line-through;color:var(--muted)}
+.item-habito.hecho .habit-copy strong{text-decoration:line-through;color:var(--muted)}
 .item-habito .racha{
   display:inline-flex;align-items:center;gap:3px;font-size:.7rem;font-weight:800;
   color:var(--orange);background:var(--orange-soft);padding:3px 8px;border-radius:999px;

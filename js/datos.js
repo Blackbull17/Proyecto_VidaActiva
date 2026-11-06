@@ -53,6 +53,35 @@
         return new Date().toISOString();
     }
 
+    // Hábitos iniciales: los que trae la vista previa / propuesta.
+    // Se usan solo la primera vez (clave ausente), no si el usuario
+    // borró todos a propósito (clave presente con []).
+    function habitosPorDefecto() {
+        const ahora = ahoraISO();
+        const base = [
+            { nombre: 'Beber 2L de agua', categoria: 'Salud' },
+            { nombre: 'Caminar 20 minutos', categoria: 'Movimiento' },
+            { nombre: 'Estirar 5 minutos', categoria: 'Movilidad' },
+            { nombre: 'Dormir antes de las 23:00', categoria: 'Descanso' }
+        ];
+        return base.map(function (item) {
+            return {
+                id: uuid(),
+                nombre: item.nombre,
+                tipo: 'construir',
+                categoria: item.categoria,
+                activo: true,
+                dias: [],
+                created_at: ahora,
+                updated_at: ahora
+            };
+        });
+    }
+
+    function haySupabase() {
+        return Boolean(window.VA && VA.auth && typeof VA.auth.configurado === 'function' && VA.auth.configurado());
+    }
+
     function esFechaISO(valor) {
         return typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(valor);
     }
@@ -1088,6 +1117,16 @@
         });
 
         const local = datos.habitos.listar();
+
+        // Usuario nuevo en Supabase: restaura los hábitos por defecto
+        // en local y los sube, con el diseño actual.
+        if (local.length === 0 && remotos.length === 0 && !tieneClave(CLAVES.habitos)) {
+            const iniciales = habitosPorDefecto().map(normalizarHabito);
+            guardarJSON(CLAVES.habitos, iniciales);
+            await guardarHabitosRemoto(iniciales);
+            return { cambioLocal: true, subido: true, iniciales: true };
+        }
+
         const remotosPorId = new Map(remotos.map(function (habito) { return [habito.id, habito]; }));
         const localesPorId = new Map(local.map(function (habito) { return [habito.id, habito]; }));
         const ids = new Set(Array.from(remotosPorId.keys()).concat(Array.from(localesPorId.keys())));
@@ -1540,6 +1579,16 @@
             listar: function () {
                 const crudos = leerJSON(CLAVES.habitos, []);
                 if (!Array.isArray(crudos)) return [];
+
+                // Primera vez en modo local: restaura los hábitos de la
+                // vista previa con el diseño actual. En modo Supabase la
+                // primera siembra la hace la sincronización (ver abajo),
+                // para no duplicar hábitos que ya viven en la nube.
+                if (crudos.length === 0 && !tieneClave(CLAVES.habitos) && !haySupabase()) {
+                    const iniciales = habitosPorDefecto().map(normalizarHabito);
+                    guardarJSON(CLAVES.habitos, iniciales);
+                    return iniciales;
+                }
 
                 const usados = {};
                 let cambio = false;
