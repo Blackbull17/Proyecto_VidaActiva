@@ -4,21 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VidaActiva — Inicio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
 <body data-public="true">
-    <div class="pantalla-inicio">
-        <h1 class="logo">🟢 VidaActiva</h1>
-        <p class="eslogan">Tu compañero para hábitos saludables y entrenamiento personal</p>
+    <div class="public-page">
+        <section class="public-art" aria-label="VidaActiva">
+            <div class="public-brand">
+                <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg></span>
+                <span class="brand-name">Vida<span>Activa</span></span>
+            </div>
 
-        <div class="botones-inicio">
-            <a href="acceso.html" class="btn btn-principal">Iniciar sesión</a>
-            <a href="acceso.html?modo=invitacion" class="btn btn-secundario">Tengo una invitación</a>
-        </div>
+            <div class="public-copy">
+                <span class="eyebrow">Bienestar cotidiano</span>
+                <h1>Tu salud, en pasos pequeños.</h1>
+                <p>Hábitos, alimentación y entrenamiento en un solo lugar. Sin prisas y sin complicarte.</p>
 
-        <p class="nota">🔒 Cuentas privadas por invitación. Tu perfil, plan, comidas, hábitos y entrenamientos se guardan en tu cuenta y se sincronizan con Supabase.</p>
+                <div class="public-points">
+                    <span class="public-point"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Marca tus hábitos del día</span>
+                    <span class="public-point"><svg class="icon" aria-hidden="true"><use href="#i-apple"/></svg> Registra tus comidas y calorías</span>
+                    <span class="public-point"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg> Entrena en casa a tu ritmo</span>
+                </div>
+            </div>
+
+            <p class="public-foot">Cuentas privadas por invitación. Tus datos se guardan en tu cuenta.</p>
+        </section>
+
+        <section class="public-panel">
+            <div class="public-card">
+                <span class="eyebrow">Acceso privado</span>
+                <h1>Bienvenido</h1>
+                <p>Entra a tu cuenta para continuar con tus hábitos, comidas y entrenamientos.</p>
+
+                <div class="botones-inicio">
+                    <a href="acceso.html" class="btn btn-principal">
+                        <svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> Iniciar sesión
+                    </a>
+                    <a href="acceso.html?modo=invitacion" class="btn btn-secundario">
+                        <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> Tengo una invitación
+                    </a>
+                </div>
+
+                <div class="auth-notice">
+                    <strong>Cuentas privadas</strong>
+                    No hay registro público. Tu perfil, plan, comidas, hábitos y entrenamientos se guardan en tu cuenta y se sincronizan con Supabase.
+                </div>
+
+                <p class="auth-links">¿Ya tienes cuenta? <a href="acceso.html">Entra aquí</a></p>
+            </div>
+        </section>
     </div>
 
+    <script src="js/ui.js"></script>
     <script>
         // Si Supabase redirige aquí con tokens de invitación o recuperación,
         // los enviamos a acceso.html para que la persona establezca su contraseña.

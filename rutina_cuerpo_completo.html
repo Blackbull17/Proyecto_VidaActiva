@@ -5,13 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="refresh" content="0; url=rutina.html?rutina=cuerpo_completo_principiante">
     <title>VidaActiva — Cuerpo Completo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body>
-    <main class="contenedor">
-        <p>Te llevamos a la rutina de cuerpo completo.</p>
-        <p><a class="btn btn-principal" href="rutina.html?rutina=cuerpo_completo_principiante">Continuar</a></p>
+<body data-page="ejercicios">
+    <main class="auth-wrap">
+        <section class="auth-card">
+            <header class="page-head" style="margin-bottom:16px;">
+                <div>
+                    <span class="eyebrow">Entrenamiento</span>
+                    <h1>Cuerpo completo</h1>
+                    <p>Te llevamos a la rutina de cuerpo completo.</p>
+                </div>
+                <span class="page-badge teal"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
+            </header>
+            <a class="btn btn-principal" href="rutina.html?rutina=cuerpo_completo_principiante">
+                <svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Continuar
+            </a>
+        </section>
     </main>
+    <script src="js/ui.js"></script>
     <script>
         location.replace('rutina.html?rutina=cuerpo_completo_principiante');
     </script>

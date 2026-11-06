@@ -4,44 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VidaActiva — Progreso</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body>
-    <header>
-        <a href="principal.html" class="volver">← Volver</a>
-        <h1>Tu Progreso</h1>
-    </header>
+<body data-page="progreso">
+    <div class="app">
+        <aside class="sidebar" data-va-sidebar></aside>
 
-    <main class="contenedor">
-        <div class="tarjeta estadisticas">
-            <h3>📊 Resumen General</h3>
-            <p>Total de entrenamientos: <strong id="totalEntrenamientos">0</strong></p>
-            <p>Total de minutos: <strong id="totalMinutos">0</strong></p>
-            <p>Hábitos creados: <strong id="totalHabitos">0</strong></p>
-            <p>Racha más larga: <strong id="rachaMaxima">0 días</strong></p>
+        <div class="app-main">
+            <div class="mobile-top" data-va-mobile-top></div>
+
+            <main class="main">
+                <header class="page-head">
+                    <div>
+                        <span class="eyebrow">Tu evolución</span>
+                        <h1>Progreso</h1>
+                        <p>Lo que construyes, se nota.</p>
+                    </div>
+                    <span class="page-badge azul"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg></span>
+                </header>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-icon teal"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
+                        <div><span>Entrenamientos</span><strong id="totalEntrenamientos">0</strong></div>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon azul"><svg class="icon" aria-hidden="true"><use href="#i-timer"/></svg></span>
+                        <div><span>Minutos</span><strong id="totalMinutos">0</strong></div>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon naranja"><svg class="icon" aria-hidden="true"><use href="#i-flame"/></svg></span>
+                        <div><span>Racha más larga</span><strong id="rachaMaxima">0 días</strong></div>
+                    </div>
+                </div>
+
+                <div class="section-head"><h2>Tu semana</h2><span class="muted" id="resumenSemanaProgreso"></span></div>
+                <div class="card">
+                    <div class="week" id="semanaProgreso"></div>
+                    <p class="perfil-ayuda" style="margin-top:12px;">Los días marcados son días con actividad: entrenamiento, comidas registradas o hábitos completados.</p>
+                </div>
+
+                <div class="section-head"><h2>Última actividad</h2></div>
+                <div class="card historial">
+                    <div id="listaHistorial">
+                        <p class="sin-datos">Aún no tienes actividad registrada. ¡Empieza hoy!</p>
+                    </div>
+                </div>
+
+                <div class="section-head"><h2>Logros</h2></div>
+                <div class="medals">
+                    <div class="medal apagado" id="logroPrimero">
+                        <span class="medal-icon"><svg class="icon" aria-hidden="true"><use href="#i-medal"/></svg></span>
+                        <strong>Primer paso</strong>
+                        <span>1 entrenamiento</span>
+                    </div>
+                    <div class="medal apagado" id="logroSemana">
+                        <span class="medal-icon"><svg class="icon" aria-hidden="true"><use href="#i-medal"/></svg></span>
+                        <strong>7 días</strong>
+                        <span>Primera semana</span>
+                    </div>
+                    <div class="medal apagado" id="logroMes">
+                        <span class="medal-icon"><svg class="icon" aria-hidden="true"><use href="#i-medal"/></svg></span>
+                        <strong>30 días</strong>
+                        <span>Constancia</span>
+                    </div>
+                </div>
+
+                <div class="acciones-fila">
+                    <a href="perfil.html" class="btn btn-secundario">
+                        <svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg> Editar perfil y metas
+                    </a>
+                    <a href="ejercicios.html" class="btn btn-principal">
+                        <svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg> Entrenar hoy
+                    </a>
+                </div>
+            </main>
         </div>
+    </div>
 
-        <div class="tarjeta historial">
-            <h3>📅 Última Actividad</h3>
-            <div id="listaHistorial">
-                <p class="sin-datos">Aún no tienes actividad registrada. ¡Empieza hoy! 💪</p>
-            </div>
-        </div>
-
-        <a href="perfil.html" class="btn btn-secundario">Editar perfil y metas</a>
-    </main>
-
-    <nav class="menu-inferior">
-        <a href="principal.html">Inicio</a>
-        <a href="alimentacion.html">Alimentación</a>
-        <a href="ejercicios.html">Ejercicios</a>
-        <a href="habitos.html">Hábitos</a>
-        <a href="progreso.html" class="activo">Progreso</a>
-    </nav>
+    <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
     <script src="js/config.js"></script>
     <script src="js/datos.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

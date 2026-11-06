@@ -48,55 +48,48 @@ function generarDieta() {
 
     guardarPlanDieta(presupuesto, colaciones);
 
+    function icoDieta(id) {
+        return window.VA && VA.icono ? VA.icono(id) : '';
+    }
+
     // Construir horarios
-    let horariosHTML = `
-        <p><strong>🌅 Desayuno:</strong> ${hDesayuno}</p>
-        <p><strong>☀️ Comida:</strong> ${hComida}</p>
-        <p><strong>🌙 Cena:</strong> ${hCena}</p>
-    `;
+    let horariosHTML = '<p><strong>Desayuno:</strong> ' + hDesayuno + '</p>' +
+        '<p><strong>Comida:</strong> ' + hComida + '</p>' +
+        '<p><strong>Cena:</strong> ' + hCena + '</p>';
     if (colaciones === 'una') {
-        horariosHTML += `<p><strong>🍎 Colación:</strong> ${hCol1}</p>`;
+        horariosHTML += '<p><strong>Colación:</strong> ' + hCol1 + '</p>';
     } else if (colaciones === 'dos') {
-        horariosHTML += `
-            <p><strong>🍎 Colación mañana:</strong> ${hCol1}</p>
-            <p><strong>🥨 Colación tarde:</strong> ${hCol2}</p>
-        `;
+        horariosHTML += '<p><strong>Colación mañana:</strong> ' + hCol1 + '</p>' +
+            '<p><strong>Colación tarde:</strong> ' + hCol2 + '</p>';
     }
 
     // Mostrar resultado
     const resultado = document.getElementById('resultadoDieta');
     resultado.style.display = 'block';
-    resultado.innerHTML = `
-        <div class="tarjeta" style="border-left: 4px solid #2f855a;">
-            <h2 style="color:#2f855a; margin-top:0;">✅ Tu dieta está lista</h2>
-            
-            <h3>🩺 Consideraciones de salud</h3>
-            <p>${recomendaciones}</p>
-            
-            <h3>💰 Tu presupuesto</h3>
-            <p>${mensajePresupuesto}</p>
-
-            <h3>💵 Indicador de presupuesto</h3>
-            ${indicadorPresupuesto}
-            
-            <h3>⏰ Horarios de comida</h3>
-            ${horariosHTML}
-            
-            <h3>🍽️ Menú sugerido del día</h3>
-            <div style="background:#f7fafc; padding:15px; border-radius:8px;">
-                <p><strong>🌅 Desayuno</strong><br>${opcionesComida.desayuno}</p>
-                ${colaciones !== 'no' ? `<p><strong>🍎 Colación mañana</strong><br>${opcionesComida.colacion1}</p>` : ''}
-                <p><strong>☀️ Comida</strong><br>${opcionesComida.comida}</p>
-                ${colaciones === 'dos' ? `<p><strong>🥨 Colación tarde</strong><br>${opcionesComida.colacion2}</p>` : ''}
-                <p><strong>🌙 Cena</strong><br>${opcionesComida.cena}</p>
-            </div>
-            
-            <p style="margin-top:15px; font-size:0.85rem; color:#718096;">
-                ⚠️ Recuerda: Esta es una sugerencia general. Si tienes condiciones médicas específicas, 
-                consulta siempre con un nutricionista profesional.
-            </p>
-        </div>
-    `;
+    resultado.innerHTML =
+        '<div class="card" style="border-left:4px solid var(--green-500);">' +
+            '<h2>' + icoDieta('i-check') + ' Tu dieta está lista</h2>' +
+            '<h3>' + icoDieta('i-shield') + ' Consideraciones de salud</h3>' +
+            '<p>' + recomendaciones + '</p>' +
+            '<h3>' + icoDieta('i-scale') + ' Tu presupuesto</h3>' +
+            '<p>' + mensajePresupuesto + '</p>' +
+            '<h3>' + icoDieta('i-chart') + ' Indicador de presupuesto</h3>' +
+            indicadorPresupuesto +
+            '<h3>' + icoDieta('i-clock') + ' Horarios de comida</h3>' +
+            horariosHTML +
+            '<h3>' + icoDieta('i-food') + ' Menú sugerido del día</h3>' +
+            '<div class="recomendacion-comida card" style="margin-top:10px;">' +
+                '<p><strong>Desayuno</strong><br>' + opcionesComida.desayuno + '</p>' +
+                (colaciones !== 'no' ? '<p><strong>Colación mañana</strong><br>' + opcionesComida.colacion1 + '</p>' : '') +
+                '<p><strong>Comida</strong><br>' + opcionesComida.comida + '</p>' +
+                (colaciones === 'dos' ? '<p><strong>Colación tarde</strong><br>' + opcionesComida.colacion2 + '</p>' : '') +
+                '<p><strong>Cena</strong><br>' + opcionesComida.cena + '</p>' +
+            '</div>' +
+            '<p class="perfil-ayuda" style="margin-top:15px;">' +
+                'Recuerda: Esta es una sugerencia general. Si tienes condiciones médicas específicas, ' +
+                'consulta siempre con un nutricionista profesional.' +
+            '</p>' +
+        '</div>';
     resultado.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -126,13 +119,13 @@ function obtenerRecomendaciones(enfermedad) {
 function obtenerMensajePresupuesto(presupuesto) {
     switch(presupuesto) {
         case 'economico':
-            return '💡 Has elegido un presupuesto ajustado. Se priorizarán alimentos económicos pero nutritivos: legumbres, huevos, frutas y verduras de temporada, arroz y avena. Comprar al mayoreo y evitar productos procesados te ayudará a ahorrar más.';
+            return 'Has elegido un presupuesto ajustado. Se priorizarán alimentos económicos pero nutritivos: legumbres, huevos, frutas y verduras de temporada, arroz y avena. Comprar al mayoreo y evitar productos procesados te ayudará a ahorrar más.';
         case 'medio':
-            return '💡 Con tu presupuesto puedes comprar una buena variedad de alimentos frescos: pollo, pescado, frutas, verduras, cereales y lácteos. Una buena distribución te permitirá comer muy bien sin gastar de más.';
+            return 'Con tu presupuesto puedes comprar una buena variedad de alimentos frescos: pollo, pescado, frutas, verduras, cereales y lácteos. Una buena distribución te permitirá comer muy bien sin gastar de más.';
         case 'amplio':
-            return '💡 Tienes un buen presupuesto disponible. Puedes incluir mayor variedad de proteínas, frutas variadas, y alimentos de mejor calidad nutricional.';
+            return 'Tienes un buen presupuesto disponible. Puedes incluir mayor variedad de proteínas, frutas variadas, y alimentos de mejor calidad nutricional.';
         case 'generoso':
-            return '💡 Excelente presupuesto. Puedes elegir alimentos orgánicos, cortes de carne de mejor calidad, una amplia variedad de frutas, verduras y opciones saludables para cada momento del día.';
+            return 'Excelente presupuesto. Puedes elegir alimentos orgánicos, cortes de carne de mejor calidad, una amplia variedad de frutas, verduras y opciones saludables para cada momento del día.';
     }
 }
 
@@ -260,16 +253,14 @@ function construirIndicadorPresupuesto(presupuesto, colaciones) {
         ? 'más de ' + formatearPesos(datos.minimo / 7 / comidas)
         : formatearPesos(datos.minimo / 7 / comidas) + ' a ' + formatearPesos(datos.maximo / 7 / comidas);
 
-    return `
-        <div style="background:#f7fafc; padding:15px; border-radius:8px;">
-            <p><strong>Presupuesto semanal:</strong> ${semanal}</p>
-            <p><strong>Equivalente por día:</strong> ${diario} <span style="color:#718096;">(entre 7 días)</span></p>
-            <p><strong>Repartido en ${comidas} comidas:</strong> ${porComida} por comida</p>
-            <p style="margin-top:8px; font-size:0.85rem; color:#718096;">
-                Es una estimación a partir del rango que elegiste. Los precios reales cambian según la tienda y la región.
-            </p>
-        </div>
-    `;
+    return '<div class="recomendacion-comida card" style="margin-top:10px;">' +
+            '<p><strong>Presupuesto semanal:</strong> ' + semanal + '</p>' +
+            '<p><strong>Equivalente por día:</strong> ' + diario + ' (entre 7 días)</p>' +
+            '<p><strong>Repartido en ' + comidas + ' comidas:</strong> ' + porComida + ' por comida</p>' +
+            '<p class="perfil-ayuda" style="margin-top:8px;">' +
+                'Es una estimación a partir del rango que elegiste. Los precios reales cambian según la tienda y la región.' +
+            '</p>' +
+        '</div>';
 }
 
 function calcularGasto(registro) {
@@ -529,7 +520,7 @@ function actualizarResumenCalorias() {
             contenedorPresupuesto.style.display = 'block';
             const porcentaje = Math.min(100, Math.round((gastoSemana / datos.maximo) * 100));
             barraPresupuesto.style.width = porcentaje + '%';
-            barraPresupuesto.style.background = gastoSemana > datos.maximo ? '#e53e3e' : '#2f855a';
+            barraPresupuesto.style.background = gastoSemana > datos.maximo ? '#dc2626' : '';
         }
     } else {
         if (planEl) planEl.style.display = 'none';
@@ -540,19 +531,24 @@ function actualizarResumenCalorias() {
     if (barra) {
         const porcentaje = Math.min(100, Math.round((consumidas / meta) * 100));
         barra.style.width = porcentaje + '%';
-        barra.style.background = consumidas > meta ? '#e53e3e' : '#2f855a';
+        barra.style.background = consumidas > meta ? '#dc2626' : '';
+        const pill = document.getElementById('porcentajeCalorias');
+        if (pill) {
+            pill.textContent = Math.round((consumidas / (meta || 1)) * 100) + '%';
+            pill.className = 'pill ' + (consumidas > meta ? 'rojo' : 'naranja');
+        }
     }
 
     const texto = document.getElementById('textoRecomendacion');
     if (texto) {
         if (consumidas === 0) {
-            texto.textContent = 'Aún no registras comidas. ¡Empieza con un buen desayuno! 🌅';
+            texto.textContent = 'Aún no registras comidas. ¡Empieza con un buen desayuno!';
         } else if (consumidas < meta * 0.5) {
-            texto.textContent = `Llevas ${consumidas.toLocaleString('es-MX')} kcal. Te faltan ${(meta - consumidas).toLocaleString('es-MX')} para tu meta. ¡Sigue así! 💪`;
+            texto.textContent = 'Llevas ' + consumidas.toLocaleString('es-MX') + ' kcal. Te faltan ' + (meta - consumidas).toLocaleString('es-MX') + ' para tu meta. ¡Sigue así!';
         } else if (consumidas < meta) {
-            texto.textContent = `¡Muy bien! Llevas ${consumidas.toLocaleString('es-MX')} de ${meta.toLocaleString('es-MX')} kcal. Ya casi llegas a tu meta. 🎉`;
+            texto.textContent = '¡Muy bien! Llevas ' + consumidas.toLocaleString('es-MX') + ' de ' + meta.toLocaleString('es-MX') + ' kcal. Ya casi llegas a tu meta.';
         } else {
-            texto.textContent = 'Alcanzaste tu meta de calorías del día. Mantén el equilibrio en tu próxima comida. 🍃';
+            texto.textContent = 'Alcanzaste tu meta de calorías del día. Mantén el equilibrio en tu próxima comida.';
         }
     }
 }
@@ -746,7 +742,7 @@ function finalizarEntrenamiento() {
     }
 
     actualizarJugador();
-    mostrarEstadoEntrenamiento('✅ ¡Entrenamiento completado! Se guardó en tu progreso.', 'exito');
+    mostrarEstadoEntrenamiento('Entrenamiento completado. Se guardó en tu progreso.', 'exito');
 
     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
 }
@@ -772,7 +768,7 @@ function registrarEntrenamiento(rutina) {
 // Botón "Marcar como completado" de la rutina
 function completarEntrenamiento() {
     if (entrenamiento.fase === 'completado' && entrenamiento.guardado) {
-        mostrarEstadoEntrenamiento('Ya registraste este entrenamiento. 💪', 'info');
+        mostrarEstadoEntrenamiento('Ya registraste este entrenamiento.', 'info');
         return;
     }
 
@@ -781,7 +777,7 @@ function completarEntrenamiento() {
         return;
     }
 
-    mostrarEstadoEntrenamiento('Ya registraste este entrenamiento. 💪', 'info');
+    mostrarEstadoEntrenamiento('Ya registraste este entrenamiento.', 'info');
 }
 
 function mostrarEstadoEntrenamiento(texto, tipo) {
@@ -818,17 +814,17 @@ function actualizarJugador() {
         faseEl.textContent = 'Listo para empezar';
         detalle.textContent = 'El cronómetro bajará automáticamente en cada ejercicio.';
         cronometro.textContent = formatearTiempo(rutina.ejercicios[0].tiempo);
-        boton.textContent = '▶️ Iniciar';
+        boton.innerHTML = (window.VA && VA.icono ? VA.icono('i-play') : '') + ' Iniciar';
         marcarLista(-1, 0);
         return;
     }
 
     if (entrenamiento.fase === 'completado') {
         progreso.textContent = 'Rutina terminada';
-        faseEl.textContent = '🎉 ¡Buen trabajo!';
+        faseEl.textContent = '¡Buen trabajo!';
         detalle.textContent = 'Registrado en tu progreso de hoy.';
-        cronometro.textContent = '✅';
-        boton.textContent = '🔁 Repetir';
+        cronometro.textContent = '✓';
+        boton.innerHTML = (window.VA && VA.icono ? VA.icono('i-refresh') : '') + ' Repetir';
         marcarLista(-1, rutina.ejercicios.length);
         return;
     }
@@ -840,7 +836,7 @@ function actualizarJugador() {
 
     if (esDescanso) {
         const siguiente = rutina.ejercicios[entrenamiento.indice + 1];
-        faseEl.textContent = '😮‍💨 Descanso';
+        faseEl.textContent = 'Descanso';
         detalle.textContent = siguiente ? 'Siguiente: ' + siguiente.nombre : '';
         marcarLista(-1, entrenamiento.indice + 1);
     } else {
@@ -850,7 +846,7 @@ function actualizarJugador() {
     }
 
     cronometro.textContent = formatearTiempo(Math.max(0, entrenamiento.restante));
-    boton.textContent = entrenamiento.pausado ? '▶️ Reanudar' : '⏸️ Pausar';
+    boton.innerHTML = (window.VA && VA.icono ? VA.icono(entrenamiento.pausado ? 'i-play' : 'i-pause') : '') + (entrenamiento.pausado ? ' Reanudar' : ' Pausar');
 
     panel.classList.toggle('en-descanso', esDescanso);
     panel.classList.toggle('en-marcha', !esDescanso);
@@ -1209,17 +1205,18 @@ function renderizarCatalogoHabitos() {
         const etiqueta = sugerencia.tipo === 'reducir'
             ? '<span class="etiqueta-reducir">a reducir</span>'
             : '';
+        const icono = window.VA && VA.iconoHabito && VA.icono
+            ? VA.icono(VA.iconoHabito({ categoria: sugerencia.cat, nombre: sugerencia.nombre }))
+            : '';
 
-        return `
-            <div class="sugerencia-habito ${sugerencia.tipo === 'reducir' ? 'reducir' : ''}" onclick="abrirHojaHabito('${sugerencia.id}')">
-                <div class="sugerencia-icono">${sugerencia.emoji}</div>
-                <div class="sugerencia-texto">
-                    <h3>${escaparHTML(sugerencia.nombre)}${etiqueta}</h3>
-                    <p>${escaparHTML(sugerencia.resumen)}</p>
-                </div>
-                <button type="button" class="btn-sugerencia" onclick="event.stopPropagation(); agregarHabitoSugerido('${sugerencia.id}')">+ Agregar</button>
-            </div>
-        `;
+        return '<div class="sugerencia-habito' + (sugerencia.tipo === 'reducir' ? ' reducir' : '') + '" onclick="abrirHojaHabito(\'' + sugerencia.id + '\')">' +
+            '<div class="sugerencia-icono">' + icono + '</div>' +
+            '<div class="sugerencia-texto">' +
+                '<h3>' + escaparHTML(sugerencia.nombre) + etiqueta + '</h3>' +
+                '<p>' + escaparHTML(sugerencia.resumen) + '</p>' +
+            '</div>' +
+            '<button type="button" class="btn-sugerencia" onclick="event.stopPropagation(); agregarHabitoSugerido(\'' + sugerencia.id + '\')">+ Agregar</button>' +
+        '</div>';
     }).join('') || '<p class="lista-vacia">Ya agregaste todas las ideas de esta categoría.</p>';
 
     const nota = document.getElementById('notaLimiteHabitos');
@@ -1280,7 +1277,9 @@ function actualizarRecomendacionHabito() {
         ? 'También podría encajar:'
         : 'Te recomendamos:';
     document.getElementById('recoHabitoNombreBanner').textContent = sugerencia.nombre;
-    document.getElementById('recoHabitoIcono').textContent = sugerencia.emoji;
+    document.getElementById('recoHabitoIcono').innerHTML = window.VA && VA.iconoHabito && VA.icono
+        ? VA.icono(VA.iconoHabito({ categoria: sugerencia.cat, nombre: sugerencia.nombre }))
+        : '';
     document.getElementById('recoHabitoNombre').textContent = sugerencia.nombre;
     document.getElementById('recoHabitoResumen').textContent = sugerencia.resumen;
     document.getElementById('recoHabitoAgregar').setAttribute('aria-label', 'Agregar ' + sugerencia.nombre);
@@ -1335,7 +1334,9 @@ function abrirHojaHabito(id) {
     });
     if (!sugerencia) return;
 
-    document.getElementById('hojaHabitoIcono').textContent = sugerencia.emoji;
+    document.getElementById('hojaHabitoIcono').innerHTML = window.VA && VA.iconoHabito && VA.icono
+        ? VA.icono(VA.iconoHabito({ categoria: sugerencia.cat, nombre: sugerencia.nombre }))
+        : '';
     document.getElementById('hojaHabitoNombre').textContent = sugerencia.nombre;
     document.getElementById('hojaHabitoTipo').textContent = sugerencia.cat + ' · ' +
         (sugerencia.tipo === 'reducir' ? 'Hábito a reducir' : 'Hábito para construir');
@@ -1659,17 +1660,20 @@ function renderizarHabitos() {
             const esReducir = tipoDeHabito(habito) === 'reducir';
             const mostrarRacha = racha > 1 || (esReducir && racha === 1);
             const insignia = mostrarRacha
-                ? '<span class="racha">' + (esReducir ? '🛡️' : '🔥') + ' ' + racha + (racha === 1 ? ' día' : ' días') + '</span>'
+                ? '<span class="habit-streak">' + VA.icono(esReducir ? 'i-shield' : 'i-flame') + ' ' + racha + '</span>'
                 : '';
+            const iconoHab = VA.iconoHabito ? VA.iconoHabito(habito) : 'i-check';
+            const nombre = escaparHTML(habito.nombre);
+            const id = escaparHTML(habito.id);
 
-            return `
-                <div class="item-habito ${hecho ? 'hecho' : ''}">
-                    <button class="check-habito" onclick="alternarHabito('${escaparHTML(habito.id)}')" aria-label="${hecho ? 'Desmarcar' : 'Marcar'} ${escaparHTML(habito.nombre)}">${hecho ? '✓' : ''}</button>
-                    <span class="nombre">${escaparHTML(habito.nombre)}</span>
-                    ${insignia}
-                    <button class="btn-eliminar" title="Eliminar" onclick="eliminarHabito('${escaparHTML(habito.id)}')">✕</button>
-                </div>
-            `;
+            return '<div class="item-habito' + (hecho ? ' hecho' : '') + '">' +
+                '<button type="button" class="check-habito' + (hecho ? ' hecho' : '') + '" onclick="alternarHabito(\'' + id + '\')" aria-pressed="' + (hecho ? 'true' : 'false') + '" aria-label="' + (hecho ? 'Desmarcar' : 'Marcar') + ' ' + nombre + '">' +
+                    VA.icono('i-check') +
+                '</button>' +
+                '<span class="habit-copy"><strong>' + nombre + '</strong><small>' + VA.icono(iconoHab) + ' ' + (hecho ? 'Hecho hoy' : 'Pendiente hoy') + '</small></span>' +
+                insignia +
+                '<button class="btn-eliminar" title="Eliminar" onclick="eliminarHabito(\'' + id + '\')">' + VA.icono('i-trash') + '</button>' +
+            '</div>';
         }).join('');
     }
 
@@ -1708,7 +1712,7 @@ function renderizarCalendarioSemana() {
     const habitos = leerHabitos();
     const hoy = obtenerFechaHoy();
     const inicio = obtenerLunes();
-    const letras = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+    const letras = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
     const dias = [];
 
     for (let i = 0; i < 7; i++) {
@@ -1717,12 +1721,12 @@ function renderizarCalendarioSemana() {
         const hechos = habitos.filter(function (h) { return diasHabito(h).indexOf(iso) >= 0; }).length;
         const completo = habitos.length > 0 && hechos === habitos.length;
 
-        dias.push(`
-            <div class="dia-semana ${completo ? 'completo' : ''} ${iso === hoy ? 'hoy' : ''}" title="${hechos} de ${habitos.length} hábitos">
-                <span class="dia-letra">${letras[i]}</span>
-                <span class="dia-numero">${fecha.getDate()}</span>
-            </div>
-        `);
+        dias.push(
+            '<div class="day' + (completo ? ' hecho' : '') + (iso === hoy ? ' hoy' : '') + '" title="' + hechos + ' de ' + habitos.length + ' hábitos">' +
+                '<span>' + letras[i] + '</span>' +
+                '<strong>' + fecha.getDate() + '</strong>' +
+            '</div>'
+        );
     }
 
     contenedor.innerHTML = dias.join('');
@@ -1842,7 +1846,7 @@ function construirHistorial() {
         actividades.push({
             fecha: entrenamiento.fecha,
             orden: 0,
-            texto: '🏋️ ' + (entrenamiento.rutina_nombre || entrenamiento.rutina) + ' · ' + entrenamiento.minutos + ' min'
+            texto: 'Entrenamiento: ' + (entrenamiento.rutina_nombre || entrenamiento.rutina) + ' · ' + entrenamiento.minutos + ' min'
         });
     });
 
@@ -1854,7 +1858,7 @@ function construirHistorial() {
         actividades.push({
             fecha: fecha,
             orden: 1,
-            texto: '🍽️ ' + numero + ' alimento' + (numero === 1 ? '' : 's') +
+            texto: numero + ' alimento' + (numero === 1 ? '' : 's') +
                 ' · ' + calcularCaloriasRegistro(comidas[fecha]) + ' kcal' +
                 ' · ' + formatearPesos(calcularGasto(normalizarRegistro(comidas[fecha])))
         });
@@ -1871,7 +1875,7 @@ function construirHistorial() {
         actividades.push({
             fecha: fecha,
             orden: 2,
-            texto: '✅ ' + porFecha[fecha] + ' hábito' + (porFecha[fecha] === 1 ? '' : 's') + ' completado' + (porFecha[fecha] === 1 ? '' : 's')
+            texto: porFecha[fecha] + ' hábito' + (porFecha[fecha] === 1 ? '' : 's') + ' completado' + (porFecha[fecha] === 1 ? '' : 's')
         });
     });
 
@@ -1898,14 +1902,50 @@ function iniciarProgreso() {
     }, 0);
     document.getElementById('totalMinutos').textContent = minutos;
 
-    document.getElementById('totalHabitos').textContent = habitos.length;
+    const totalHabitosEl = document.getElementById('totalHabitos');
+    if (totalHabitosEl) totalHabitosEl.textContent = habitos.length;
     document.getElementById('rachaMaxima').textContent = calcularRachaMaxima(dias) + ' días';
+
+    // Semana Propuesta + logros.
+    const semana = document.getElementById('semanaProgreso');
+    if (semana) {
+        const hoyISO = obtenerFechaHoy();
+        const inicio = obtenerLunes();
+        const letras = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+        let conActividad = 0;
+        const celdas = [];
+        for (let i = 0; i < 7; i++) {
+            const fecha = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate() + i);
+            const iso = fechaISO(fecha);
+            const hecho = dias.has(iso);
+            if (hecho) conActividad += 1;
+            celdas.push(
+                '<div class="day' + (hecho ? ' hecho' : '') + (iso === hoyISO ? ' hoy' : '') + '">' +
+                    '<span>' + letras[i] + '</span><strong>' + fecha.getDate() + '</strong>' +
+                '</div>'
+            );
+        }
+        semana.innerHTML = celdas.join('');
+        const resumenSemana = document.getElementById('resumenSemanaProgreso');
+        if (resumenSemana) resumenSemana.textContent = conActividad + ' de 7 días';
+    }
+
+    const rachaMaxima = calcularRachaMaxima(dias);
+    const logros = {
+        logroPrimero: entrenamientos.length >= 1,
+        logroSemana: rachaMaxima >= 7,
+        logroMes: rachaMaxima >= 30
+    };
+    Object.keys(logros).forEach(function (id) {
+        const medalla = document.getElementById(id);
+        if (medalla) medalla.classList.toggle('apagado', !logros[id]);
+    });
 
     const historial = construirHistorial();
     const contenedor = document.getElementById('listaHistorial');
 
     if (!historial.length) {
-        contenedor.innerHTML = '<p class="sin-datos">Aún no tienes actividad registrada. ¡Empieza hoy! 💪</p>';
+        contenedor.innerHTML = '<p class="sin-datos">Aún no tienes actividad registrada. ¡Empieza hoy!</p>';
         return;
     }
 
@@ -1935,26 +1975,92 @@ function iniciarPanelPrincipal() {
 
     const saludo = document.getElementById('saludoPrincipal');
     if (saludo) {
-        saludo.textContent = perfil && perfil.nombre
-            ? '¡Hola, ' + perfil.nombre + '! 👋'
-            : '¡Bienvenido! 👋';
+        const nombre = perfil && perfil.nombre ? perfil.nombre.trim() : '';
+        const hora = hoy.getHours();
+        const saludoHora = hora < 13 ? 'Buenos días' : (hora < 20 ? 'Buenas tardes' : 'Buenas noches');
+        saludo.textContent = nombre ? saludoHora + ', ' + nombre : '¡Bienvenido!';
     }
 
     const habitos = leerHabitos();
     const hechos = habitos.filter(function (h) { return diasHabito(h).indexOf(iso) >= 0; }).length;
-    document.getElementById('resumen-habitos').textContent = hechos + '/' + habitos.length;
+    const totalHabitos = habitos.length;
+    const porcentaje = totalHabitos ? Math.round(hechos / totalHabitos * 100) : 0;
+    const racha = calcularRachaActual(obtenerDiasActividad());
+
+    function fijar(id, texto) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = texto;
+    }
+
+    fijar('resumen-habitos', hechos + '/' + totalHabitos);
 
     const entrenamientosHoy = leerEntrenamientos().filter(function (e) { return e.fecha === iso; });
-    document.getElementById('resumen-entrenamiento').textContent = entrenamientosHoy.length
-        ? 'Completado ✅'
-        : 'Pendiente';
+    const entrenado = entrenamientosHoy.length > 0;
+    fijar('resumen-entrenamiento', entrenado ? 'Completado' : 'Pendiente');
 
     const comidas = leerTodoComidas();
     const calorias = calcularCaloriasRegistro(comidas[iso]);
     const meta = (perfil && perfil.calorias_objetivo) || CALORIAS_META;
-    document.getElementById('resumen-calorias').textContent = calorias.toLocaleString('es-MX') + ' / ' + meta.toLocaleString('es-MX') + ' kcal';
+    fijar('resumen-calorias', calorias.toLocaleString('es-MX') + ' / ' + meta.toLocaleString('es-MX') + ' kcal');
+    fijar('resumen-racha', racha + (racha === 1 ? ' día' : ' días'));
 
-    document.getElementById('resumen-racha').textContent = calcularRachaActual(obtenerDiasActividad()) + ' días';
+    // Hero Propuesta: anillo, textos y chips.
+    fijar('heroPct', porcentaje + '%');
+    const anillo = document.getElementById('heroRing');
+    if (anillo) {
+        const C = 2 * Math.PI * 58;
+        anillo.setAttribute('stroke-dasharray', String(C));
+        anillo.style.strokeDashoffset = String(C * (1 - porcentaje / 100));
+    }
+    fijar('heroRacha', racha + (racha === 1 ? ' día' : ' días') + ' de racha');
+    fijar('heroHabitos', hechos + '/' + totalHabitos + ' hábitos');
+    const heroTitulo = document.getElementById('heroTitulo');
+    if (heroTitulo) {
+        heroTitulo.textContent = !totalHabitos
+            ? 'Empecemos hoy'
+            : porcentaje === 100 ? '¡Día completo!'
+            : porcentaje >= 50 ? 'Vas muy bien'
+            : 'Un paso a la vez';
+    }
+    const heroTexto = document.getElementById('heroTexto');
+    if (heroTexto) {
+        heroTexto.textContent = !totalHabitos
+            ? 'Agrega tu primer hábito y marca tu día.'
+            : porcentaje === 100
+                ? 'Completaste todos tus hábitos. Mañana seguimos.'
+                : 'Completaste ' + hechos + ' de ' + totalHabitos + '. Te faltan ' + (totalHabitos - hechos) + ' para cerrar el día.';
+    }
+
+    renderizarSemanaPrincipal();
+}
+
+function renderizarSemanaPrincipal() {
+    const contenedor = document.getElementById('semanaPrincipal');
+    if (!contenedor) return;
+
+    const habitos = leerHabitos();
+    const diasActividad = obtenerDiasActividad();
+    const hoy = obtenerFechaHoy();
+    const inicio = obtenerLunes();
+    const letras = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+    let conActividad = 0;
+    const celdas = [];
+
+    for (let i = 0; i < 7; i++) {
+        const fecha = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate() + i);
+        const iso = fechaISO(fecha);
+        const hecho = diasActividad.has(iso);
+        if (hecho) conActividad += 1;
+        celdas.push(
+            '<div class="day' + (hecho ? ' hecho' : '') + (iso === hoy ? ' hoy' : '') + '">' +
+                '<span>' + letras[i] + '</span><strong>' + fecha.getDate() + '</strong>' +
+            '</div>'
+        );
+    }
+
+    contenedor.innerHTML = celdas.join('');
+    const resumen = document.getElementById('semanaResumen');
+    if (resumen) resumen.textContent = conActividad + ' de 7 días';
 }
 
 document.addEventListener('DOMContentLoaded', iniciarPanelPrincipal);

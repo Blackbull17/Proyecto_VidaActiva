@@ -4,54 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VidaActiva — Panel Principal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body>
-    <header>
-        <h1 class="logo-pequeño">🟢 VidaActiva</h1>
-    </header>
+<body data-page="inicio">
+    <div class="app">
+        <aside class="sidebar" data-va-sidebar></aside>
 
-    <main class="contenedor">
-        <h2 id="saludoPrincipal">¡Bienvenido! 👋</h2>
-        <p class="fecha" id="fechaActual"></p>
+        <div class="app-main">
+            <div class="mobile-top" data-va-mobile-top></div>
 
-        <div class="tarjeta resumen">
-            <h3>📊 Resumen de hoy</h3>
-            <p>Hábitos: <span id="resumen-habitos">0/0</span> completados</p>
-            <p>Entrenamiento: <span id="resumen-entrenamiento">Pendiente</span></p>
-            <p>Calorías hoy: <span id="resumen-calorias">0 / 1,800 kcal</span></p>
-            <p>Racha actual: <span id="resumen-racha">0 días</span></p>
+            <main class="main">
+                <header class="page-head">
+                    <div>
+                        <span class="eyebrow" id="fechaActual"></span>
+                        <h1 id="saludoPrincipal">¡Bienvenido!</h1>
+                        <p>Hoy es un buen día para moverte.</p>
+                    </div>
+                    <a class="icon-btn" href="habitos.html" aria-label="Hábitos y recordatorios" title="Hábitos y recordatorios">
+                        <svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>
+                        <span class="dot"></span>
+                    </a>
+                </header>
+
+                <section class="hero" aria-label="Resumen del día">
+                    <div class="hero-nuevo">
+                        <div class="hero-copy">
+                            <span class="hero-eyebrow">Tu día</span>
+                            <h2 id="heroTitulo">Vas muy bien</h2>
+                            <p id="heroTexto">Marca tus hábitos y registra lo que comes para cerrar el día.</p>
+                            <div class="hero-chips">
+                                <span class="chip chip-lima">
+                                    <svg class="icon" aria-hidden="true"><use href="#i-flame"/></svg>
+                                    <span id="heroRacha">0 días</span>
+                                </span>
+                                <span class="chip chip-ghost">
+                                    <svg class="icon" aria-hidden="true"><use href="#i-target"/></svg>
+                                    <span id="heroHabitos">0/0 hábitos</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="hero-visual">
+                            <svg class="ring" viewBox="0 0 140 140" aria-hidden="true">
+                                <circle class="ring-bg" cx="70" cy="70" r="58"/>
+                                <circle class="ring-fg" id="heroRing" cx="70" cy="70" r="58" stroke-dasharray="364.4" stroke-dashoffset="364.4"/>
+                            </svg>
+                            <div class="ring-label">
+                                <strong id="heroPct">0%</strong>
+                                <span>hábitos</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-icon verde"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+                        <div><span>Hábitos</span><strong id="resumen-habitos">0/0</strong></div>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon teal"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
+                        <div><span>Entrenamiento</span><strong id="resumen-entrenamiento">Pendiente</strong></div>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon naranja"><svg class="icon" aria-hidden="true"><use href="#i-apple"/></svg></span>
+                        <div><span>Calorías</span><strong id="resumen-calorias">0 / 1,800 kcal</strong></div>
+                    </div>
+                </div>
+
+                <div class="section-head"><h2>Acciones rápidas</h2></div>
+                <div class="quick-grid">
+                    <a class="quick" href="alimentacion.html">
+                        <span class="quick-icon naranja"><svg class="icon" aria-hidden="true"><use href="#i-food"/></svg></span>
+                        <span><strong>Registrar comida</strong><small>Suma tus calorías</small></span>
+                        <svg class="icon quick-arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+                    </a>
+                    <a class="quick" href="ejercicios.html">
+                        <span class="quick-icon teal"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
+                        <span><strong>Entrenar</strong><small>Rutina de hoy</small></span>
+                        <svg class="icon quick-arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+                    </a>
+                    <a class="quick" href="habitos.html">
+                        <span class="quick-icon verde"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+                        <span><strong>Mis hábitos</strong><small>Marca tu día</small></span>
+                        <svg class="icon quick-arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+                    </a>
+                    <a class="quick" href="progreso.html">
+                        <span class="quick-icon azul"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg></span>
+                        <span><strong>Ver progreso</strong><small>Tu evolución</small></span>
+                        <svg class="icon quick-arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+                    </a>
+                </div>
+
+                <div class="section-head"><h2>Tu semana</h2><span class="muted" id="semanaResumen"></span></div>
+                <div class="week" id="semanaPrincipal"></div>
+
+                <div class="section-head"><h2>Rutina recomendada</h2></div>
+                <div class="card routine">
+                    <span class="routine-icon"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
+                    <div class="routine-copy">
+                        <strong>Cuerpo completo</strong>
+                        <span>2 rondas · Principiante · 20 min</span>
+                        <div class="routine-tags"><span class="tag">Fuerza</span><span class="tag">En casa</span></div>
+                    </div>
+                    <a class="btn btn-verde" href="rutina.html?rutina=cuerpo_completo_principiante">
+                        <svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Empezar
+                    </a>
+                </div>
+            </main>
         </div>
+    </div>
 
-        <div class="acciones-rapidas">
-            <h3>🚀 Acciones rápidas</h3>
-            <a href="alimentacion.html" class="btn-accion">🍽️ Registrar comida</a>
-            <a href="cambio_fisico.html" class="btn-accion">🥗 Plan personalizado (salud y presupuesto)</a>
-            <a href="ejercicios.html" class="btn-accion">💪 Iniciar entrenamiento</a>
-            <a href="habitos.html" class="btn-accion">✅ Ver mis hábitos</a>
-            <a href="progreso.html" class="btn-accion">📈 Ver progreso</a>
-            <a href="perfil.html" class="btn-accion">👤 Mi perfil y metas</a>
-            <a href="cuenta.html" class="btn-accion">⚙️ Mi cuenta y datos</a>
-        </div>
-
-        <div class="tarjeta recomendacion">
-            <h3>💪 Rutina recomendada</h3>
-            <p><strong>Cuerpo completo</strong> — 2 rondas | 🟢 Principiante</p>
-            <a href="rutina.html?rutina=cuerpo_completo_principiante" class="btn btn-principal">Comenzar rutina</a>
-        </div>
-    </main>
-
-    <nav class="menu-inferior">
-        <a href="principal.html" class="activo">Inicio</a>
-        <a href="alimentacion.html">Alimentación</a>
-        <a href="ejercicios.html">Ejercicios</a>
-        <a href="habitos.html">Hábitos</a>
-        <a href="progreso.html">Progreso</a>
-    </nav>
+    <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
     <script src="js/config.js"></script>
     <script src="js/datos.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

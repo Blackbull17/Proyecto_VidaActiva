@@ -3,13 +3,25 @@
 
     // ===== DATOS: ZONAS, NIVELES Y CATÁLOGO =====
     const GRUPOS = {
-        cuerpo_completo: { nombre: 'Cuerpo completo', icono: '🏃' },
-        brazos_hombros: { nombre: 'Brazos y hombros', icono: '💪' },
-        piernas: { nombre: 'Piernas', icono: '🦵' },
-        pecho: { nombre: 'Pecho', icono: '🏋️' },
-        abdomen: { nombre: 'Abdomen', icono: '🔥' },
-        espalda: { nombre: 'Espalda', icono: '🧘' }
+        cuerpo_completo: { nombre: 'Cuerpo completo', icono: 'i-body' },
+        brazos_hombros: { nombre: 'Brazos y hombros', icono: 'i-arm' },
+        piernas: { nombre: 'Piernas', icono: 'i-leg' },
+        pecho: { nombre: 'Pecho', icono: 'i-heart' },
+        abdomen: { nombre: 'Abdomen', icono: 'i-core' },
+        espalda: { nombre: 'Espalda', icono: 'i-back' }
     };
+
+    function iconoGrupoEjercicio(clave) {
+        if (window.VA && typeof VA.icono === 'function') {
+            return VA.icono((GRUPOS[clave] || {}).icono || 'i-dumbbell');
+        }
+        return (GRUPOS[clave] || {}).icono || '';
+    }
+
+    function ico(id) {
+        if (window.VA && typeof VA.icono === 'function') return VA.icono(id);
+        return '';
+    }
 
     const NIVELES = ['Principiante', 'Intermedio', 'Avanzado'];
 
@@ -2107,7 +2119,7 @@
         contenedor.querySelectorAll('[data-anim-toggle]').forEach(function (boton) {
             const caja = boton.closest('.tecnica-caja');
             if (caja) caja.classList.add('pausada');
-            boton.textContent = '▶️ Reanudar animación';
+            boton.innerHTML = ico('i-play') + ' Reanudar animación';
             boton.setAttribute('aria-pressed', 'true');
         });
     }
@@ -2153,15 +2165,15 @@
         return '<div class="tecnica-caja" data-ejercicio="' + escaparHTML(id) + '" data-velocidad="1">' +
             '<div class="tecnica-lienzo">' + svgAnimacion(id) + '</div>' +
             '<div class="tecnica-texto">' +
-                '<span class="tecnica-etiqueta">🎬 Cómo se hace</span>' +
+                '<span class="tecnica-etiqueta">Cómo se hace</span>' +
                 '<ol class="tecnica-pasos">' + pasosHTML + '</ol>' +
                 (info.clave ? '<p class="tecnica-clave"><strong>Clave:</strong> ' + escaparHTML(info.clave) + '</p>' : '') +
-                '<p class="tecnica-respira">🫁 ' + escaparHTML(info.respira) + '</p>' +
+                '<p class="tecnica-respira">' + escaparHTML(info.respira) + '</p>' +
                 '<div class="tecnica-control">' +
                     (animada
-                        ? '<button type="button" class="btn-anim" data-anim-toggle aria-pressed="false">⏸️ Pausar</button>' +
-                          '<button type="button" class="btn-anim" data-anim-velocidad="1.7" aria-pressed="false">🐢 Lento</button>' +
-                          '<button type="button" class="btn-anim activo" data-anim-velocidad="1" aria-pressed="true">▶️ Normal</button>'
+                        ? '<button type="button" class="btn-anim" data-anim-toggle aria-pressed="false">' + ico('i-pause') + ' Pausar animación</button>' +
+                          '<button type="button" class="btn-anim" data-anim-velocidad="1.7" aria-pressed="false">Lento</button>' +
+                          '<button type="button" class="btn-anim activo" data-anim-velocidad="1" aria-pressed="true">' + ico('i-play') + ' Normal</button>'
                         : '<span class="tecnica-hold-nota">Mantén la posición el tiempo indicado.</span>') +
                 '</div>' +
             '</div>' +
@@ -2205,7 +2217,7 @@
             if (!pausada && typeof svg.unpauseAnimations === 'function') svg.unpauseAnimations();
         }
 
-        boton.textContent = pausada ? '▶️ Reanudar animación' : '⏸️ Pausar animación';
+        boton.innerHTML = pausada ? ico('i-play') + ' Reanudar animación' : ico('i-pause') + ' Pausar animación';
         boton.setAttribute('aria-pressed', pausada ? 'true' : 'false');
     }
 
@@ -2497,8 +2509,8 @@
     }
 
     function etiquetaNivel(nivel) {
-        const iconos = { Principiante: '🟢', Intermedio: '🟡', Avanzado: '🔴' };
-        return '<span class="nivel nivel-' + claveNivel(nivel) + '">' + iconos[nivel] + ' ' + nivel + '</span>';
+        return '<span class="nivel nivel-' + claveNivel(nivel) + '">' +
+            '<span class="nivel-punto nivel-' + claveNivel(nivel) + '"></span> ' + nivel + '</span>';
     }
 
     function obtenerRutina(id) {
@@ -2624,7 +2636,7 @@
                 }).join('');
 
                 return '<article class="zona-card" data-grupo="' + claveGrupo + '">' +
-                    '<span class="zona-icono" aria-hidden="true">' + grupo.icono + '</span>' +
+                    '<span class="zona-icono" aria-hidden="true">' + iconoGrupoEjercicio(claveGrupo) + '</span>' +
                     '<h3>' + grupo.nombre + '</h3>' +
                     '<p class="zona-cuenta">' + rutinas.length + ' rutinas</p>' +
                     '<div class="zona-niveles">' + niveles + '</div>' +
@@ -2686,7 +2698,7 @@
                 }).join('');
 
                 return '<button type="button" class="ejercicio-item" data-ejercicio="' + id + '" aria-label="Ver ficha de ' + escaparHTML(ejercicio.nombre) + '">' +
-                    '<span class="ejercicio-item-icono" aria-hidden="true">' + (GRUPOS[ejercicio.grupos[0]] || {}).icono + '</span>' +
+                    '<span class="ejercicio-item-icono" aria-hidden="true">' + iconoGrupoEjercicio(ejercicio.grupos[0] || '') + '</span>' +
                     '<span class="ejercicio-item-texto">' +
                         '<strong>' + escaparHTML(ejercicio.nombre) + '</strong>' +
                         '<span class="ejercicio-item-tags">' + grupos + etiquetaEquipo(ejercicio.equipo) + etiquetaImpacto(ejercicio.impacto) + '</span>' +
@@ -2703,7 +2715,7 @@
             focoAntesFicha = document.activeElement;
             tituloHoja.textContent = ejercicio.nombre;
             grupoHoja.textContent = ejercicio.grupos.map(function (grupo) { return GRUPOS[grupo].nombre; }).join(' · ');
-            iconoHoja.textContent = (GRUPOS[ejercicio.grupos[0]] || {}).icono || '💪';
+            iconoHoja.innerHTML = iconoGrupoEjercicio(ejercicio.grupos[0] || '');
 
             const usos = rutinasConEjercicio(id);
             const usosHTML = usos.length
@@ -3122,7 +3134,7 @@
             guardarEntrenamiento();
             renderizarLista();
             actualizarJugador();
-            mostrarEstado('✅ ¡Entrenamiento completado! Se guardó en tu progreso.', 'exito');
+            mostrarEstado('¡Entrenamiento completado! Se guardó en tu progreso.', 'exito');
             if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
         }
 
@@ -3152,7 +3164,7 @@
                 return;
             }
 
-            tecnicaEntrenador.innerHTML = '<button type="button" class="btn-tecnica btn-tecnica-entrenador" data-tecnica="' + id + '">🎬 Ver técnica animada</button>';
+            tecnicaEntrenador.innerHTML = '<button type="button" class="btn-tecnica btn-tecnica-entrenador" data-tecnica="' + id + '">' + ico('i-play') + ' Ver técnica animada</button>';
             tecnicaEntrenador.hidden = false;
         }
 
@@ -3174,7 +3186,7 @@
 
             if (tituloTecnica) tituloTecnica.textContent = ejercicio.nombre;
             if (grupoTecnica) grupoTecnica.textContent = ejercicio.grupos.map(function (grupo) { return GRUPOS[grupo].nombre; }).join(' · ');
-            if (iconoTecnica) iconoTecnica.textContent = '🎬';
+            if (iconoTecnica) iconoTecnica.innerHTML = ico('i-play');
 
             if (contenidoTecnica) {
                 contenidoTecnica.innerHTML =
@@ -3321,14 +3333,14 @@
                     : '';
                 grupoSustitucion.textContent = grupos + (item.id_original && actual ? ' · Ahora: ' + actual.nombre : '');
             }
-            if (iconoSustitucion) iconoSustitucion.textContent = '🔄';
+            if (iconoSustitucion) iconoSustitucion.innerHTML = ico('i-refresh');
 
             if (contenidoSustitucion) {
                 const actualHTML = item.id_original
                     ? '<div class="sustitucion-actual">' +
                         '<p><strong>Ahora:</strong> ' + escaparHTML(actual ? actual.nombre : item.id) + '</p>' +
                         '<p class="hoja-texto">Original: ' + escaparHTML(original ? original.nombre : originalId) + '</p>' +
-                        '<button type="button" class="btn-anim" data-restaurar-sheet>↩️ Volver al original</button>' +
+                        '<button type="button" class="btn-anim" data-restaurar-sheet>' + ico('i-refresh') + ' Volver al original</button>' +
                     '</div>'
                     : '';
 
@@ -3455,7 +3467,7 @@
                 if (rondasControl) rondasControl.hidden = false;
                 if (btnEntrenamiento) {
                     btnEntrenamiento.hidden = false;
-                    btnEntrenamiento.textContent = '▶️ Iniciar';
+                    btnEntrenamiento.innerHTML = ico('i-play') + ' Iniciar';
                 }
                 if (btnHecho) btnHecho.hidden = true;
                 if (btnSaltar) btnSaltar.hidden = true;
@@ -3468,7 +3480,7 @@
                 entrenador.classList.add('en-marcha');
                 if (progreso) progreso.textContent = 'Rutina terminada';
                 if (faseBadge) faseBadge.textContent = 'COMPLETADO';
-                if (cronometro) cronometro.textContent = '✅';
+                if (cronometro) cronometro.textContent = '✓';
                 if (faseEl) faseEl.textContent = '¡Buen trabajo!';
                 if (detalle) detalle.textContent = 'Registrado en tu progreso de hoy.';
                 if (barra) barra.style.width = '100%';
@@ -3478,7 +3490,7 @@
                 if (rondasControl) rondasControl.hidden = true;
                 if (btnEntrenamiento) {
                     btnEntrenamiento.hidden = false;
-                    btnEntrenamiento.textContent = '🔁 Repetir';
+                    btnEntrenamiento.innerHTML = ico('i-refresh') + ' Repetir';
                 }
                 if (btnHecho) btnHecho.hidden = true;
                 if (btnSaltar) btnSaltar.hidden = true;
@@ -3518,7 +3530,7 @@
                 if (faseEl) faseEl.textContent = 'Prepárate';
                 if (detalle) detalle.textContent = 'Empieza en 3 segundos. Respira y colócate.';
                 marcarLista(-1, completados % totalEjercicios);
-                if (btnEntrenamiento) btnEntrenamiento.textContent = estado.pausado ? '▶️ Reanudar' : '⏸️ Pausar';
+                if (btnEntrenamiento) btnEntrenamiento.innerHTML = ico(estado.pausado ? 'i-play' : 'i-pause') + (estado.pausado ? ' Reanudar' : ' Pausar');
                 return;
             }
 
@@ -3530,7 +3542,7 @@
                 if (faseEl) faseEl.textContent = 'Cambia de lado';
                 if (detalle) detalle.textContent = 'Lado ' + estado.lado + ' de ' + item.lados + '. Colócate bien.';
                 marcarLista(estado.indice, estado.indice);
-                if (btnEntrenamiento) btnEntrenamiento.textContent = estado.pausado ? '▶️ Reanudar' : '⏸️ Pausar';
+                if (btnEntrenamiento) btnEntrenamiento.innerHTML = ico(estado.pausado ? 'i-play' : 'i-pause') + (estado.pausado ? ' Reanudar' : ' Pausar');
                 return;
             }
 
@@ -3544,7 +3556,7 @@
                     detalle.textContent = siguiente ? 'Siguiente: ' + nombreEjercicio(siguiente) : 'Último ejercicio de la ronda.';
                 }
                 marcarLista(-1, estado.indice + 1);
-                if (btnEntrenamiento) btnEntrenamiento.textContent = estado.pausado ? '▶️ Reanudar' : '⏸️ Pausar';
+                if (btnEntrenamiento) btnEntrenamiento.innerHTML = ico(estado.pausado ? 'i-play' : 'i-pause') + (estado.pausado ? ' Reanudar' : ' Pausar');
                 if (estado.pausado) entrenador.classList.add('pausado');
                 return;
             }
@@ -3557,7 +3569,7 @@
                 if (detalle) detalle.textContent = 'Siguiente: ronda ' + (estado.ronda + 1) + ' de ' + estado.rondas + '.';
                 if (barra) barra.style.width = '100%';
                 marcarLista(-1, totalEjercicios);
-                if (btnEntrenamiento) btnEntrenamiento.textContent = estado.pausado ? '▶️ Reanudar' : '⏸️ Pausar';
+                if (btnEntrenamiento) btnEntrenamiento.innerHTML = ico(estado.pausado ? 'i-play' : 'i-pause') + (estado.pausado ? ' Reanudar' : ' Pausar');
                 if (estado.pausado) entrenador.classList.add('pausado');
                 return;
             }
@@ -3572,7 +3584,7 @@
                 if (btnEntrenamiento) btnEntrenamiento.hidden = true;
                 if (btnHecho) {
                     btnHecho.hidden = false;
-                    btnHecho.textContent = '✅ Hecho';
+                    btnHecho.innerHTML = ico('i-check') + ' Hecho';
                 }
                 if (btnSaltar) btnSaltar.hidden = false;
                 if (btnDetener) btnDetener.hidden = false;
@@ -3592,7 +3604,7 @@
                 marcarLista(estado.indice, estado.indice);
                 if (btnEntrenamiento) {
                     btnEntrenamiento.hidden = false;
-                    btnEntrenamiento.textContent = estado.pausado ? '▶️ Reanudar' : '⏸️ Pausar';
+                    btnEntrenamiento.innerHTML = ico(estado.pausado ? 'i-play' : 'i-pause') + (estado.pausado ? ' Reanudar' : ' Pausar');
                 }
                 if (btnHecho) btnHecho.hidden = true;
                 if (estado.pausado) entrenador.classList.add('pausado');
@@ -3638,11 +3650,11 @@
                         '<p>' + dosisTexto(item) + ' <span class="separador">·</span> ' + descansoTexto(item) + '</p>' +
                         (original ? '<p class="item-ejercicio-original">En lugar de ' + escaparHTML(original.nombre) + '</p>' : '') +
                         '<div class="item-tags">' + etiquetaEquipo(ejercicio ? ejercicio.equipo : 'Sin equipo') + etiquetaImpacto(ejercicio ? ejercicio.impacto : 'Bajo') +
-                            (tieneAnimacion ? '<button type="button" class="btn-tecnica" data-tecnica="' + item.id + '">🎬 Ver técnica</button>' : '') +
+                            (tieneAnimacion ? '<button type="button" class="btn-tecnica" data-tecnica="' + item.id + '">' + ico('i-play') + ' Ver técnica</button>' : '') +
                             (mostrarCambiar ? '<button type="button" class="btn-tecnica btn-cambiar" data-cambiar="' + indice + '"' +
-                                (puedeCambiar ? '' : ' disabled title="Termina la sesión actual para cambiar ejercicios"') + '>🔄 Cambiar</button>' : '') +
+                                (puedeCambiar ? '' : ' disabled title="Termina la sesión actual para cambiar ejercicios"') + '>' + ico('i-refresh') + ' Cambiar</button>' : '') +
                             (original ? '<button type="button" class="btn-tecnica btn-restaurar" data-restaurar="' + indice + '"' +
-                                (puedeCambiar ? '' : ' disabled title="Termina la sesión actual para cambiar ejercicios"') + '>↩️ Original</button>' : '') +
+                                (puedeCambiar ? '' : ' disabled title="Termina la sesión actual para cambiar ejercicios"') + '>' + ico('i-refresh') + ' Original</button>' : '') +
                         '</div>' +
                     '</div>' +
                 '</div>';

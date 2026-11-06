@@ -4,48 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VidaActiva — Mi cuenta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body data-onboarding="true">
-    <header>
-        <a href="principal.html" class="volver">← Volver</a>
-        <h1>Mi cuenta</h1>
-    </header>
+<body data-page="cuenta" data-onboarding="true">
+    <div class="app">
+        <aside class="sidebar" data-va-sidebar></aside>
 
-    <main class="contenedor">
-        <section class="tarjeta">
-            <h3>👤 Cuenta</h3>
-            <p class="perfil-resumen" id="resumenCuenta">Cargando…</p>
-            <p class="perfil-resumen" id="modoCuenta"></p>
-            <a href="perfil.html" class="btn btn-secundario" style="margin-top:12px; display:block;">Editar perfil y metas</a>
-            <button type="button" class="btn btn-secundario" id="btnCerrarSesion" style="margin-top:12px; width:100%;">Cerrar sesión</button>
-        </section>
+        <div class="app-main">
+            <div class="mobile-top" data-va-mobile-top></div>
 
-        <section class="tarjeta cuenta-bloque">
-            <h3>💾 Tus datos</h3>
-            <p class="perfil-ayuda">Exporta un respaldo antes de cambiar de dispositivo o antes de conectar la base de datos.</p>
-            <button type="button" class="btn btn-principal" id="btnExportar">Exportar mis datos (JSON)</button>
+            <main class="main">
+                <header class="page-head">
+                    <div>
+                        <span class="eyebrow">Tu cuenta</span>
+                        <h1>Mi cuenta</h1>
+                        <p>Tu perfil, tus datos y la sincronización.</p>
+                    </div>
+                    <span class="page-badge verde"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>
+                </header>
 
-            <label class="btn btn-secundario" for="archivoImportar">Importar un respaldo JSON</label>
-            <input type="file" id="archivoImportar" accept="application/json,.json">
+                <section class="card">
+                    <h3><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> Cuenta</h3>
+                    <p class="perfil-resumen" id="resumenCuenta">Cargando…</p>
+                    <p class="perfil-resumen" id="modoCuenta"></p>
+                    <a href="perfil.html" class="btn btn-secundario" style="margin-top:12px;">
+                        <svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg> Editar perfil y metas
+                    </a>
+                    <button type="button" class="btn btn-secundario" id="btnCerrarSesion" style="margin-top:10px;">
+                        <svg class="icon" aria-hidden="true"><use href="#i-logout"/></svg> Cerrar sesión
+                    </button>
+                </section>
 
-            <button type="button" class="btn btn-secundario" id="btnBorrar" style="color:#c53030;">Borrar datos de este dispositivo</button>
-            <p id="estadoCuenta" class="auth-status" role="status" aria-live="polite"></p>
-        </section>
+                <section class="card cuenta-bloque">
+                    <h3><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Tus datos</h3>
+                    <p class="perfil-ayuda">Exporta un respaldo antes de cambiar de dispositivo o antes de conectar la base de datos.</p>
+                    <button type="button" class="btn btn-principal" id="btnExportar">
+                        <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Exportar mis datos (JSON)
+                    </button>
 
-        <section class="tarjeta cuenta-bloque">
-            <h3>🔐 Privacidad</h3>
-            <p class="perfil-ayuda">
-                Cada cuenta tendrá su propio espacio en la base de datos. Las condiciones de salud y alergias
-                no se guardan; solo se usan para generar el menú en la pantalla de plan personalizado.
-            </p>
-        </section>
-    </main>
+                    <label class="btn btn-secundario" for="archivoImportar">
+                        <svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg> Importar un respaldo JSON
+                    </label>
+                    <input type="file" id="archivoImportar" accept="application/json,.json">
+
+                    <button type="button" class="btn btn-secundario" id="btnBorrar" style="color:#b91c1c;">
+                        <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Borrar datos de este dispositivo
+                    </button>
+                    <p id="estadoCuenta" class="auth-status" role="status" aria-live="polite"></p>
+                </section>
+
+                <section class="card cuenta-bloque">
+                    <h3><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> Privacidad</h3>
+                    <p class="perfil-ayuda">
+                        Cada cuenta tiene su propio espacio en la base de datos. Las condiciones de salud y alergias
+                        no se guardan; solo se usan para generar el menú en la pantalla de plan personalizado.
+                    </p>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
     <script src="js/config.js"></script>
     <script src="js/datos.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/cuenta.js"></script>
 </body>
 </html>

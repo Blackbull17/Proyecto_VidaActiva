@@ -4,121 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VidaActiva — Rutina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/estilos.css">
     <link rel="stylesheet" href="css/ejercicios.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
-<body>
-    <header class="cabecera-rutina">
-        <a href="ejercicios.html" class="volver">← Volver</a>
-        <h1 id="tituloRutina">Rutina</h1>
-        <p class="subtitulo-rutina" id="subtituloRutina"></p>
-    </header>
+<body data-page="ejercicios">
+    <div class="app">
+        <aside class="sidebar" data-va-sidebar></aside>
 
-    <main class="contenedor" id="appRutina">
-        <div class="rutina-meta" id="rutinaMeta"></div>
-        <p class="nota-duracion">Duración con descansos. Suma 5 min de calentamiento y 5 de vuelta a la calma.</p>
+        <div class="app-main">
+            <div class="mobile-top" data-va-mobile-top></div>
 
-        <p class="aviso-compacto">
-            <span aria-hidden="true">🛡️</span>
-            <span><strong>Si algo te duele o te falta el aire, para.</strong> Haz la versión fácil.</span>
-        </p>
+            <main class="main" id="appRutina">
+                <header class="page-head">
+                    <div>
+                        <span class="eyebrow">Entrenamiento</span>
+                        <h1 id="tituloRutina">Rutina</h1>
+                        <p class="subtitulo-rutina" id="subtituloRutina"></p>
+                    </div>
+                    <span class="page-badge teal"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
+                </header>
 
-        <section class="entrenador" id="entrenador" aria-label="Entrenador de la rutina">
-            <div class="entrenador-top">
-                <p class="entrenador-progreso" id="entrenadorProgreso">Preparando rutina…</p>
-                <span class="fase-badge" id="faseBadge">LISTO</span>
-            </div>
+                <div class="rutina-meta" id="rutinaMeta"></div>
+                <p class="nota-duracion">Duración con descansos. Suma 5 min de calentamiento y 5 de vuelta a la calma.</p>
 
-            <div class="cronometro" id="cronometro">00:00</div>
-            <p class="entrenador-fase" id="entrenadorFase">Listo para empezar</p>
-            <p class="entrenador-detalle" id="entrenadorDetalle"></p>
+                <p class="aviso-compacto">
+                    <span aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span>
+                    <span><strong>Si algo te duele o te falta el aire, para.</strong> Haz la versión fácil.</span>
+                </p>
 
-            <div class="tecnica-entrenador" id="tecnicaEntrenador" hidden></div>
+                <section class="entrenador" id="entrenador" aria-label="Entrenador de la rutina">
+                    <div class="entrenador-top">
+                        <p class="entrenador-progreso" id="entrenadorProgreso">Preparando rutina…</p>
+                        <span class="fase-badge" id="faseBadge">LISTO</span>
+                    </div>
 
-            <div class="progreso-rutina" aria-hidden="true">
-                <i id="barraProgresoRutina"></i>
-            </div>
+                    <div class="cronometro" id="cronometro">00:00</div>
+                    <p class="entrenador-fase" id="entrenadorFase">Listo para empezar</p>
+                    <p class="entrenador-detalle" id="entrenadorDetalle"></p>
 
-            <div class="rondas-control" id="rondasControl">
-                <label for="rondasRutina">Rondas</label>
-                <select id="rondasRutina"></select>
-                <span class="rondas-ayuda">Puedes ajustarlo antes de empezar. La duración incluye los descansos.</span>
-            </div>
+                    <div class="tecnica-entrenador" id="tecnicaEntrenador" hidden></div>
 
-            <div class="controles-entrenador">
-                <button type="button" id="btnEntrenamiento" class="btn btn-principal">▶️ Iniciar</button>
-                <button type="button" id="btnHecho" class="btn btn-principal" hidden>✅ Hecho</button>
-                <button type="button" id="btnSaltar" class="btn btn-secundario" hidden>⏭️ Saltar</button>
-                <button type="button" id="btnDetener" class="btn btn-secundario" hidden>⏹️ Detener</button>
-            </div>
-            <p class="estado-entrenamiento" id="estadoEntrenamiento" role="status" aria-live="polite"></p>
+                    <div class="progreso-rutina" aria-hidden="true">
+                        <i id="barraProgresoRutina"></i>
+                    </div>
 
-            <details class="calentamiento-inline" id="calentamientoEntrenador">
-                <summary>
-                    <span aria-hidden="true">🔥</span>
-                    <span class="calentamiento-resumen">Calentamiento · 5 min</span>
-                    <span class="calentamiento-nota">recomendado antes de empezar</span>
-                </summary>
-                <ul>
-                    <li>Marcha suave en el sitio · 2 min</li>
-                    <li>Círculos de hombros y brazos · 1 min</li>
-                    <li>Sentadillas al aire y movilidad de cadera · 2 min</li>
-                </ul>
-            </details>
+                    <div class="rondas-control" id="rondasControl">
+                        <label for="rondasRutina">Rondas</label>
+                        <select id="rondasRutina"></select>
+                        <span class="rondas-ayuda">Puedes ajustarlo antes de empezar. La duración incluye los descansos.</span>
+                    </div>
 
-            <div class="cierre-entrenador" id="cierreEntrenador" hidden>
-                <strong>🌿 Antes de irte: 5 min de vuelta a la calma</strong>
-                <p>Baja el pulso con estiramientos suaves. Los tienes detallados justo debajo de la lista.</p>
-                <a href="#vueltaCalma" class="btn btn-secundario">Ver la vuelta a la calma</a>
-            </div>
-        </section>
+                    <div class="controles-entrenador">
+                        <button type="button" id="btnEntrenamiento" class="btn btn-principal">
+                            <svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Iniciar
+                        </button>
+                        <button type="button" id="btnHecho" class="btn btn-principal" hidden>
+                            <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Hecho
+                        </button>
+                        <button type="button" id="btnSaltar" class="btn btn-secundario" hidden>
+                            <svg class="icon" aria-hidden="true"><use href="#i-skip"/></svg> Saltar
+                        </button>
+                        <button type="button" id="btnDetener" class="btn btn-secundario" hidden>
+                            <svg class="icon" aria-hidden="true"><use href="#i-stop"/></svg> Detener
+                        </button>
+                    </div>
+                    <p class="estado-entrenamiento" id="estadoEntrenamiento" role="status" aria-live="polite"></p>
 
-        <section class="rutina-bloque" aria-labelledby="tituloLista">
-            <div class="seccion-cabecera">
-                <div>
-                    <h2 id="tituloLista">Ejercicios de la rutina</h2>
-                    <p>El orden alterna esfuerzo y descanso. Los ejercicios con 🎬 incluyen una demostración animada.</p>
-                </div>
-            </div>
-            <div class="lista-ejercicios" id="listaEjercicios"></div>
-        </section>
+                    <details class="calentamiento-inline" id="calentamientoEntrenador">
+                        <summary>
+                            <span aria-hidden="true"><svg class="icon"><use href="#i-flame"/></svg></span>
+                            <span class="calentamiento-resumen">Calentamiento · 5 min</span>
+                            <span class="calentamiento-nota">recomendado antes de empezar</span>
+                        </summary>
+                        <ul>
+                            <li>Marcha suave en el sitio · 2 min</li>
+                            <li>Círculos de hombros y brazos · 1 min</li>
+                            <li>Sentadillas al aire y movilidad de cadera · 2 min</li>
+                        </ul>
+                    </details>
 
-        <section class="calentamiento-card cierre-card" id="vueltaCalma">
-            <div class="calentamiento-cabecera">
-                <span aria-hidden="true">🌿</span>
-                <div>
-                    <h2>Vuelta a la calma · 5 min</h2>
-                    <p>Después del último ejercicio. Baja el pulso y estira sin rebotes.</p>
-                </div>
-            </div>
-            <ul>
-                <li>Estiramiento de pecho y espalda · 2 min</li>
-                <li>Estiramiento de piernas · 2 min</li>
-                <li>Respiración lenta · 1 min</li>
-            </ul>
-        </section>
+                    <div class="cierre-entrenador" id="cierreEntrenador" hidden>
+                        <strong>Antes de irte: 5 min de vuelta a la calma</strong>
+                        <p>Baja el pulso con estiramientos suaves. Los tienes detallados justo debajo de la lista.</p>
+                        <a href="#vueltaCalma" class="btn btn-secundario">
+                            <svg class="icon" aria-hidden="true"><use href="#i-leaf"/></svg> Ver la vuelta a la calma
+                        </a>
+                    </div>
+                </section>
 
-        <section class="nota-entrenamiento">
-            <span aria-hidden="true">🛡️</span>
-            <div>
-                <strong>Cuida tu cuerpo</strong>
-                <p>Calienta 5 minutos antes y termina con estiramientos suaves. Si un ejercicio te causa dolor, cambia a la versión más fácil o sáltalo. Si tienes una lesión o una condición de salud, consulta con un profesional.</p>
-            </div>
-        </section>
-    </main>
+                <section class="rutina-bloque" aria-labelledby="tituloLista">
+                    <div class="seccion-cabecera">
+                        <div>
+                            <h2 id="tituloLista">Ejercicios de la rutina</h2>
+                            <p>El orden alterna esfuerzo y descanso. Los ejercicios con demostración incluyen una animación.</p>
+                        </div>
+                    </div>
+                    <div class="lista-ejercicios" id="listaEjercicios"></div>
+                </section>
 
-    <nav class="menu-inferior">
-        <a href="principal.html">Inicio</a>
-        <a href="alimentacion.html">Alimentación</a>
-        <a href="ejercicios.html" class="activo">Ejercicios</a>
-        <a href="habitos.html">Hábitos</a>
-        <a href="progreso.html">Progreso</a>
-    </nav>
+                <section class="calentamiento-card cierre-card" id="vueltaCalma">
+                    <div class="calentamiento-cabecera">
+                        <span aria-hidden="true"><svg class="icon"><use href="#i-leaf"/></svg></span>
+                        <div>
+                            <h2>Vuelta a la calma · 5 min</h2>
+                            <p>Después del último ejercicio. Baja el pulso y estira sin rebotes.</p>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Estiramiento de pecho y espalda · 2 min</li>
+                        <li>Estiramiento de piernas · 2 min</li>
+                        <li>Respiración lenta · 1 min</li>
+                    </ul>
+                </section>
+
+                <section class="nota-entrenamiento">
+                    <span aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span>
+                    <div>
+                        <strong>Cuida tu cuerpo</strong>
+                        <p>Calienta 5 minutos antes y termina con estiramientos suaves. Si un ejercicio te causa dolor, cambia a la versión más fácil o sáltalo. Si tienes una lesión o una condición de salud, consulta con un profesional.</p>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
     <div class="hoja-fondo" id="hojaSustitucionFondo">
         <div class="hoja-habito ficha-ejercicio" role="dialog" aria-modal="true" aria-labelledby="tituloSustitucion">
-            <button type="button" class="cerrar-hoja" id="cerrarSustitucion" aria-label="Cerrar">✕</button>
-            <div class="hoja-icono" id="iconoSustitucion" aria-hidden="true">🔄</div>
+            <button type="button" class="cerrar-hoja" id="cerrarSustitucion" aria-label="Cerrar">
+                <svg class="icon"><use href="#i-close"/></svg>
+            </button>
+            <div class="hoja-icono" id="iconoSustitucion" aria-hidden="true"></div>
             <h3 id="tituloSustitucion">Cambiar ejercicio</h3>
             <p class="hoja-tipo" id="grupoSustitucion"></p>
             <div id="contenidoSustitucion"></div>
@@ -127,8 +148,10 @@
 
     <div class="hoja-fondo" id="hojaTecnicaFondo">
         <div class="hoja-habito ficha-ejercicio" role="dialog" aria-modal="true" aria-labelledby="tituloTecnica">
-            <button type="button" class="cerrar-hoja" id="cerrarTecnica" aria-label="Cerrar">✕</button>
-            <div class="hoja-icono" id="iconoTecnica" aria-hidden="true">🎬</div>
+            <button type="button" class="cerrar-hoja" id="cerrarTecnica" aria-label="Cerrar">
+                <svg class="icon"><use href="#i-close"/></svg>
+            </button>
+            <div class="hoja-icono" id="iconoTecnica" aria-hidden="true"></div>
             <h3 id="tituloTecnica">Técnica</h3>
             <p class="hoja-tipo" id="grupoTecnica"></p>
             <div id="contenidoTecnica"></div>
@@ -138,6 +161,7 @@
     <script src="js/config.js"></script>
     <script src="js/datos.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/ejercicios.js"></script>
 </body>
 </html>
