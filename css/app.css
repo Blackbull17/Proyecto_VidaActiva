@@ -518,14 +518,15 @@ a.icon-btn{flex-shrink:0}
 .fila-ajuste p{font-size:.72rem;color:var(--muted)}
 .switch{
   width:46px;height:26px;border-radius:999px;border:none;background:#d1d5db;
-  position:relative;cursor:pointer;flex-shrink:0;transition:.2s ease;
+  position:relative;cursor:pointer;flex-shrink:0;transition:background .15s ease;
+  overflow:hidden;box-sizing:border-box;padding:0;
 }
 .switch span{
   position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
-  background:#fff;transition:.2s ease;box-shadow:0 1px 3px rgba(0,0,0,.2);
+  background:#fff;transition:left .2s ease,transform .2s ease;box-shadow:0 1px 3px rgba(0,0,0,.2);
 }
 .switch[aria-checked="true"]{background:var(--green-700)}
-.switch[aria-checked="true"] span{left:23px}
+.switch[aria-checked="true"] span{left:23px;transform:none}
 .fila-hora{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
 .fila-hora label{margin:0}
 .fila-hora input{width:auto;margin:0}
@@ -1074,10 +1075,33 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
 
 /* Iconos dentro de componentes dinámicos */
 .icon{vertical-align:middle}
-.check-habito .icon{width:15px;height:15px;stroke-width:2.4}
-.habit-copy small .icon{width:12px;height:12px;vertical-align:-2px;margin-right:3px}
-.habit-copy small svg.icon{width:12px;height:12px}
-.btn-eliminar .icon{width:14px;height:14px}
+.check-habito{display:grid;place-items:center}
+.check-habito .icon{width:15px;height:15px;stroke-width:2.4;display:block}
+.btn-eliminar{display:grid;place-items:center}
+.btn-eliminar .icon{width:14px;height:14px;display:block}
+.cerrar-hoja .icon{display:block}
+.btn .icon{vertical-align:-3px}
+.icon-btn{display:grid;place-items:center}
+.icon-btn .icon{display:block}
+.habit-copy small{display:flex;align-items:center;gap:4px}
+.habit-copy small .icon{width:12px;height:12px;flex-shrink:0}
+.habit-streak .icon{width:13px;height:13px}
+
+/* Cajas de icono: reglas genéricas como .stat span, .medal span o
+   .meal-block-head span ponían display:block y el icono quedaba
+   pegado a la esquina. Estas van después y con más peso. */
+.stat > .stat-icon,
+.meal-block-head > .meal-icon,
+.medal > .medal-icon,
+.side-streak > .streak-flame{display:grid;place-items:center}
+
+/* La llama de la racha heredaba el gris de .side-streak span */
+.side-streak > .streak-flame{color:#fb923c}
+
+/* La medalla conserva su ámbar (antes se pintaba gris) */
+.medal > .medal-icon{background:#fef3c7;color:#d97706}
+.medal.apagado > .medal-icon{background:var(--surface-2);color:var(--muted)}
+
 .btn-tecnica .icon,.btn-anim .icon{width:14px;height:14px}
 .hoja-icono .icon{width:24px;height:24px}
 .sugerencia-icono .icon{width:20px;height:20px}

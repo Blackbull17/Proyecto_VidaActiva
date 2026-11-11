@@ -1562,7 +1562,10 @@ function alternarHabito(id) {
 
     if (estabaHecho) dias.splice(indice, 1); else dias.push(hoy);
 
-    const actualizado = Object.assign({}, habito, { dias: dias });
+    // Al marcar y al desmarcar, actualizar updated_at: así la
+    // sincronización no “resucita” la marca y la racha baja de verdad.
+    const ahora = typeof VA.datos.ahoraISO === 'function' ? VA.datos.ahoraISO() : new Date().toISOString();
+    const actualizado = Object.assign({}, habito, { dias: dias, updated_at: ahora });
     const otros = habitos.filter(function (h) { return String(h.id) !== String(id); });
 
     guardarHabitos(habitos.map(function (h) {
@@ -1570,6 +1573,12 @@ function alternarHabito(id) {
     }));
     renderizarHabitos();
     renderizarCalendarioSemana();
+
+    // La tarjeta de racha de la barra lateral también debe bajar al
+    // desmarcar; si no, se queda mostrando la racha vieja.
+    if (window.VA && VA.ui && typeof VA.ui.actualizar === 'function') {
+        VA.ui.actualizar();
+    }
 
     // Al desmarcar no se muestra ningún mensaje: nada de reproches.
     if (estabaHecho) return;
@@ -1615,6 +1624,13 @@ function calcularRachaHabito(habito) {
     const dias = diasHabito(habito);
     let racha = 0;
     const cursor = new Date();
+
+    // Si hoy todavía no está marcado, la racha se mide hasta ayer.
+    // Así, al desmarcar el día, la racha baja un día (4 → 3) en lugar
+    // de desaparecer por completo.
+    if (dias.indexOf(fechaISO(cursor)) < 0) {
+        cursor.setDate(cursor.getDate() - 1);
+    }
 
     while (dias.indexOf(fechaISO(cursor)) >= 0) {
         racha += 1;
