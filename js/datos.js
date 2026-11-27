@@ -38,6 +38,7 @@
         moderado: 1.55,
         activo: 1.725
     };
+    const FORMULAS_TMB = ['mifflin', 'harris'];
 
     function uuid() {
         if (window.crypto && typeof window.crypto.randomUUID === 'function') {
@@ -365,18 +366,36 @@
         return { cambioLocal: false, remoto: false };
     }
 
-    function calcularCaloriasObjetivo(perfil) {
+    function calcularTMB(perfil, formula) {
         const p = perfil && typeof perfil === 'object' ? perfil : {};
         const peso = numero(p.peso_kg || p.peso);
         const estatura = numero(p.estatura_cm || p.estatura);
         const edad = numero(p.edad);
+        if (!(peso > 0) || !(estatura > 0) || !(edad > 0)) return 0;
 
-        if (!(peso > 0) || !(estatura > 0) || !(edad > 0)) return 1800;
+        if ((formula || p.formula) === 'harris') {
+            // Harris-Benedict revisada (Roza & Shizgal, 1984).
+            if (p.sexo === 'masculino') {
+                return Math.round(88.362 + 13.397 * peso + 4.799 * estatura - 5.677 * edad);
+            }
+            if (p.sexo === 'femenino') {
+                return Math.round(447.593 + 9.247 * peso + 3.098 * estatura - 4.330 * edad);
+            }
+            // Sin sexo declarado se usa el punto medio de ambas ecuaciones.
+            return Math.round(267.9775 + 11.322 * peso + 3.9485 * estatura - 5.0035 * edad);
+        }
 
         // Mifflin-St Jeor con un valor neutro cuando no se indica sexo.
         let metabolismo = (10 * peso) + (6.25 * estatura) - (5 * edad) - 78;
         if (p.sexo === 'masculino') metabolismo += 83;
         if (p.sexo === 'femenino') metabolismo -= 83;
+        return Math.round(metabolismo);
+    }
+
+    function calcularCaloriasObjetivo(perfil) {
+        const p = perfil && typeof perfil === 'object' ? perfil : {};
+        const metabolismo = calcularTMB(p, p.formula);
+        if (!metabolismo) return 1800;
 
         const factor = FACTORES_ACTIVIDAD[p.actividad] || FACTORES_ACTIVIDAD.moderado;
         let calorias = metabolismo * factor;
@@ -578,6 +597,7 @@
             ? datos.horarios
             : {};
         const distribucion = texto(datos.distribucion) || 'equilibrada';
+        const formula = texto(datos.formula);
         const kcal = numero(datos.kcal_objetivo);
         const version = numero(datos.version);
         const menuSemana = normalizarMenuSemana(datos.menu_semana);
@@ -595,6 +615,7 @@
             menu_semana: menuSemana,
             huella_filtros: huellaPlan(datos.huella_filtros),
             distribucion: DISTRIBUCIONES_PLAN.indexOf(distribucion) >= 0 ? distribucion : 'equilibrada',
+            formula: FORMULAS_TMB.indexOf(formula) >= 0 ? formula : 'mifflin',
             kcal_objetivo: kcal > 0 ? Math.max(1200, Math.min(4000, Math.round(kcal))) : null,
             version: version > 0
                 ? Math.min(10, Math.round(version))
@@ -654,6 +675,7 @@
             normalizado.version,
             normalizado.huella_filtros,
             normalizado.distribucion,
+            normalizado.formula,
             normalizado.kcal_objetivo || 0,
             JSON.stringify(normalizado.menu_semana)
         ].join('|');
@@ -743,6 +765,7 @@
             menu_semana: normalizado.menu_semana,
             huella_filtros: normalizado.huella_filtros,
             distribucion: normalizado.distribucion,
+            formula: normalizado.formula,
             kcal_objetivo: normalizado.kcal_objetivo,
             version: normalizado.version,
             activo: true
@@ -1444,6 +1467,7 @@
         uuid: uuid,
         fechaLocalISO: fechaLocalISO,
         ahoraISO: ahoraISO,
+        calcularTMB: calcularTMB,
         calcularCaloriasObjetivo: calcularCaloriasObjetivo,
         huella: huellaTexto,
         avisarError: avisarError,

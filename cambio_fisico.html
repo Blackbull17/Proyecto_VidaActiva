@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/estilos.css?v=6">
-    <link rel="stylesheet" href="css/auth.css?v=6">
-    <link rel="stylesheet" href="css/app.css?v=6">
+    <link rel="stylesheet" href="css/estilos.css?v=7">
+    <link rel="stylesheet" href="css/auth.css?v=7">
+    <link rel="stylesheet" href="css/app.css?v=7">
 </head>
 <body data-page="alimentacion">
     <div class="app">
@@ -97,6 +97,13 @@
                                 <option value="somp">SOMP</option>
                             </select>
                         </div>
+
+                        <label for="formulaDieta">Fórmula para estimar tu meta</label>
+                        <select id="formulaDieta">
+                            <option value="mifflin">Mifflin-St Jeor (1990) — recomendada</option>
+                            <option value="harris">Harris-Benedict revisada (1984)</option>
+                        </select>
+                        <small class="perfil-ayuda">Cambia el cálculo de calorías al generar el plan. La elección queda guardada con tu menú.</small>
 
                         <label for="medicamentoDieta">¿Tomas algún medicamento?</label>
                         <select id="medicamentoDieta">
@@ -225,12 +232,12 @@
 
     <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
-    <script src="js/config.js?v=6"></script>
-    <script src="js/datos.js?v=6"></script>
-    <script src="js/dietas-datos.js?v=6"></script>
-    <script src="js/dietas-motor.js?v=6"></script>
-    <script src="js/auth.js?v=6"></script>
-    <script src="js/ui.js?v=6"></script>
-    <script src="js/app.js?v=6"></script>
+    <script src="js/config.js?v=7"></script>
+    <script src="js/datos.js?v=7"></script>
+    <script src="js/dietas-datos.js?v=7"></script>
+    <script src="js/dietas-motor.js?v=7"></script>
+    <script src="js/auth.js?v=7"></script>
+    <script src="js/ui.js?v=7"></script>
+    <script src="js/app.js?v=7"></script>
 </body>
 </html>

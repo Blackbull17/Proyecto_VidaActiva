@@ -1,6 +1,10 @@
 // ===== PLAN DE ALIMENTACIÓN =====
 const CLAVE_OCULTA_DIETA = 'vidaactiva.inicio.recordatorio-dieta-oculto';
-const VERSION_PLAN_DIETA = 3;
+const VERSION_PLAN_DIETA = 4;
+
+function etiquetaFormulaDieta(formula) {
+    return formula === 'harris' ? 'Harris-Benedict (1984)' : 'Mifflin-St Jeor (1990)';
+}
 
 let planDietaActual = null;
 let perfilDietaActual = null;
@@ -182,6 +186,7 @@ function leerOpcionesDieta() {
         despensa: seleccionCampo('despensaDieta'),
         presupuesto: valorCampo('presupuesto') || 'medio',
         colaciones: valorCampo('colaciones') || 'no',
+        formula: valorCampo('formulaDieta') || 'mifflin',
         horarios: horariosDelFormulario()
     };
 }
@@ -206,6 +211,7 @@ function guardarPlanDieta(perfil, menu, meta) {
         menu_semana: menu,
         huella_filtros: VA.dietas.firma(perfil),
         distribucion: perfil.distribucion,
+        formula: perfil.formula || 'mifflin',
         kcal_objetivo: meta.kcal,
         version: VERSION_PLAN_DIETA,
         updated_at: VA.datos.ahoraISO()
@@ -375,8 +381,15 @@ function metaDietaActual() {
     const estatura = Number(perfil.estatura) || 0;
     const edad = Number(perfil.edad) || 0;
     const imc = alturaM > 0 ? peso / (alturaM * alturaM) : 0;
-    const tmb = Math.round((10 * peso) + (6.25 * estatura) - (5 * edad) +
-        (perfil.sexo === 'masculino' ? 5 : (perfil.sexo === 'femenino' ? -161 : -78)));
+    const tmb = window.VA && VA.datos && typeof VA.datos.calcularTMB === 'function'
+        ? VA.datos.calcularTMB({
+            peso_kg: peso,
+            estatura_cm: estatura,
+            edad: edad,
+            sexo: perfil.sexo
+        }, perfil.formula)
+        : Math.round((10 * peso) + (6.25 * estatura) - (5 * edad) +
+            (perfil.sexo === 'masculino' ? 5 : (perfil.sexo === 'femenino' ? -161 : -78)));
     const factores = { sedentario: 1.2, ligero: 1.375, moderado: 1.55, activo: 1.725 };
     const tdee = Math.round(tmb * (factores[perfil.actividad] || 1.55));
     const avisos = [];
@@ -395,6 +408,7 @@ function metaDietaActual() {
     if (imc >= 25) avisos.push('Con IMC de ' + numeroDecimalDieta(imc) + ' conviene comparar la meta con un especialista; la estimación puede sobreestimar el gasto energético.');
 
     return Object.assign({}, base, {
+        formula: perfil.formula || 'mifflin',
         tmb: tmb,
         tdee: tdee,
         imc: imc,
@@ -477,7 +491,8 @@ function renderizarMetaDieta(meta) {
         '<p class="dieta-meta-numero"><strong>' + numeroEnteroDieta(meta.kcal) + '</strong><span>kcal/día</span></p>' +
         '<p class="dieta-meta-detalle">Mantenimiento estimado ' + numeroEnteroDieta(meta.tdee) + ' kcal · actividad ' +
             escaparHTML(actividad) + ' · ' + escaparHTML(objetivoTexto) + '.</p>' +
-        '<p class="dieta-meta-formula">TMB ' + numeroEnteroDieta(meta.tmb) + ' kcal con <strong>Mifflin-St Jeor</strong> × factor de actividad.</p>' +
+        '<p class="dieta-meta-formula">TMB ' + numeroEnteroDieta(meta.tmb) + ' kcal con <strong>' +
+            escaparHTML(etiquetaFormulaDieta(meta.formula)) + '</strong> × factor de actividad.</p>' +
         '<div class="dieta-meta-macros">' +
             '<div class="dieta-meta-macro prot"><span>Proteína</span><strong>' + numeroEnteroDieta(meta.macros.prot) + ' g</strong>' +
                 '<small><b class="dieta-meta-pct">' + dist.prot + ' %</b> · ' + numeroDecimalDieta(meta.protPorKg) + ' g/kg</small></div>' +
@@ -531,7 +546,8 @@ function perfilParaDetalle() {
     const plan = VA.datos.plan.obtener();
     return VA.dietas.normalizarPerfil(perfilReal, {
         distribucion: plan.distribucion,
-        colaciones: plan.colaciones
+        colaciones: plan.colaciones,
+        formula: plan.formula
     });
 }
 
@@ -583,8 +599,13 @@ function renderizarDetalleTecnico(colaciones) {
         : '<p class="perfil-ayuda">Sin filtros activos en esta sesión. No se guardan condiciones, alergias ni medicamentos en la cuenta.</p>';
 
     const notas = [];
-    notas.push('<strong>Fórmula:</strong> Mifflin-St Jeor (1990) para la TMB (' + numeroEnteroDieta(detalleMeta.tmb) +
-        ' kcal) × factor de actividad. Es la fórmula interna de la app; no hay selector de Harris-Benedict.');
+    const formulaActual = (perfil && perfil.formula) || detalleMeta.formula || 'mifflin';
+    notas.push('<strong>Fórmula:</strong> ' + escaparHTML(etiquetaFormulaDieta(formulaActual)) +
+        ' para la TMB (' + numeroEnteroDieta(detalleMeta.tmb) +
+        ' kcal) × factor de actividad. El especialista puede alternar entre Mifflin-St Jeor y Harris-Benedict revisada; la elección se guarda con el plan.');
+    if (formulaActual === 'harris') {
+        notas.push('<strong>Comparación:</strong> Harris-Benedict revisada puede sobreestimar 5–15 % en sobrepeso u obesidad; conviene cotejar la meta con Mifflin-St Jeor.');
+    }
     notas.push('<strong>Macros:</strong> ' + numeroEnteroDieta(meta.macros.prot) + ' g de proteína, ' +
         numeroEnteroDieta(meta.macros.grasa) + ' g de lípidos y ' + numeroEnteroDieta(meta.macros.carb) +
         ' g de carbohidratos al día (' + dist.carb + ' % / ' + dist.prot + ' % / ' + dist.lip + ' % de la energía).');
@@ -3097,6 +3118,7 @@ function cargarPlanDieta() {
 
         asignar('presupuesto', plan.presupuesto);
         asignar('colaciones', plan.colaciones);
+        asignar('formulaDieta', plan.formula);
         if (plan.horarios) {
             asignar('horarioDesayuno', plan.horarios.desayuno);
             asignar('horarioComida', plan.horarios.comida);

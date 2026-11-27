@@ -330,6 +330,7 @@
         var medicamentos = Object.keys(D.MEDICAMENTOS);
         var regiones = Object.keys(D.REGIONES);
         var distribuciones = Object.keys(D.DISTRIBUCION);
+        var formulas = ['mifflin', 'harris'];
 
         var sugerida = sugerirDistribucion({
             condiciones: Array.isArray(extra.condiciones) ? extra.condiciones : [],
@@ -363,6 +364,7 @@
             medicamento: medicamentos.indexOf(extra.medicamento) >= 0 ? extra.medicamento : 'ninguno',
             condiciones: condiciones,
             distribucion: distribucion,
+            formula: formulas.indexOf(extra.formula) >= 0 ? extra.formula : 'mifflin',
             region: regiones.indexOf(extra.region) >= 0 ? extra.region : 'todas',
             gustos: gustos,
             despensa: despensa,
@@ -397,7 +399,8 @@
             peso_kg: perfil.peso,
             estatura_cm: perfil.estatura,
             actividad: perfil.actividad,
-            objetivo: perfil.objetivo
+            objetivo: perfil.objetivo,
+            formula: perfil.formula || 'mifflin'
         };
         var kcal = window.VA && VA.datos && typeof VA.datos.calcularCaloriasObjetivo === 'function'
             ? VA.datos.calcularCaloriasObjetivo(base)
@@ -432,7 +435,8 @@
                 carne: tope((75 * P - 10 * C - 39 * F) / 486),
                 grasa: tope((105 * F + 2 * C - 15 * P) / 486)
             },
-            distribucion: perfil.distribucion
+            distribucion: perfil.distribucion,
+            formula: perfil.formula || 'mifflin'
         };
     }
 
@@ -504,6 +508,7 @@
             perfil.presupuesto || 'medio',
             perfil.medicamento || 'ninguno',
             perfil.distribucion || D.DISTRIBUCION_POR_DEFECTO,
+            perfil.formula || 'mifflin',
             perfil.region || 'todas',
             (perfil.gustos || []).slice().sort(),
             (perfil.despensa || []).slice().sort(),
