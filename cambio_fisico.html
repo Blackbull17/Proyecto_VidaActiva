@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/estilos.css?v=4">
-    <link rel="stylesheet" href="css/auth.css?v=4">
-    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="stylesheet" href="css/estilos.css?v=5">
+    <link rel="stylesheet" href="css/auth.css?v=5">
+    <link rel="stylesheet" href="css/app.css?v=5">
 </head>
 <body data-page="alimentacion">
     <div class="app">
@@ -32,8 +32,19 @@
                     <section class="card">
                         <h3><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg> Condiciones de salud</h3>
 
-                        <label for="condicionesDieta">¿Tienes alguna condición de salud?</label>
-                        <select id="condicionesDieta" multiple size="5" aria-describedby="ayudaCondiciones">
+                        <label id="condicionesEtiqueta">¿Tienes alguna condición de salud?</label>
+                        <div class="multi-dieta" data-multi-dieta="condicionesDieta">
+                            <button type="button" class="multi-dieta-control" id="condicionesControl" aria-labelledby="condicionesEtiqueta" aria-expanded="false" aria-controls="condicionesPanel" onclick="alternarMultiDieta('condicionesDieta')">
+                                <span class="multi-dieta-valor" id="condicionesValor">Ninguna</span>
+                                <span class="multi-dieta-conteo" id="condicionesConteo"></span>
+                                <svg class="icon multi-dieta-flecha" aria-hidden="true"><use href="#i-chevron"/></svg>
+                            </button>
+                            <div class="multi-dieta-panel" id="condicionesPanel" hidden>
+                                <p class="multi-dieta-pista">Puedes marcar varias opciones.</p>
+                                <div class="multi-dieta-chips" id="condicionesChips"></div>
+                            </div>
+                        </div>
+                        <select id="condicionesDieta" multiple hidden aria-describedby="ayudaCondiciones">
                             <option value="diabetes">Diabetes</option>
                             <option value="hipertension">Hipertensión arterial</option>
                             <option value="gastritis">Gastritis / reflujo</option>
@@ -44,8 +55,19 @@
                         </select>
                         <small id="ayudaCondiciones" class="perfil-ayuda">Elige todas las que apliquen.</small>
 
-                        <label for="alergiasDieta" style="margin-top:15px;">¿Tienes alergias alimentarias?</label>
-                        <select id="alergiasDieta" multiple size="5" onchange="mostrarOtrasAlergias()">
+                        <label id="alergiasEtiqueta" style="margin-top:15px;">¿Tienes alergias alimentarias?</label>
+                        <div class="multi-dieta" data-multi-dieta="alergiasDieta">
+                            <button type="button" class="multi-dieta-control" id="alergiasControl" aria-labelledby="alergiasEtiqueta" aria-expanded="false" aria-controls="alergiasPanel" onclick="alternarMultiDieta('alergiasDieta')">
+                                <span class="multi-dieta-valor" id="alergiasValor">Ninguna</span>
+                                <span class="multi-dieta-conteo" id="alergiasConteo"></span>
+                                <svg class="icon multi-dieta-flecha" aria-hidden="true"><use href="#i-chevron"/></svg>
+                            </button>
+                            <div class="multi-dieta-panel" id="alergiasPanel" hidden>
+                                <p class="multi-dieta-pista">Puedes marcar varias opciones.</p>
+                                <div class="multi-dieta-chips" id="alergiasChips"></div>
+                            </div>
+                        </div>
+                        <select id="alergiasDieta" multiple hidden onchange="mostrarOtrasAlergias()">
                             <option value="gluten">Gluten</option>
                             <option value="lactosa">Lactosa</option>
                             <option value="frutos_secos">Frutos secos</option>
@@ -98,11 +120,33 @@
                             <option value="costa">Costa</option>
                         </select>
 
-                        <label for="gustosDieta">Alimentos que te gustan</label>
-                        <select id="gustosDieta" multiple size="5"></select>
+                        <label id="gustosEtiqueta">Alimentos que te gustan</label>
+                        <div class="multi-dieta" data-multi-dieta="gustosDieta">
+                            <button type="button" class="multi-dieta-control" id="gustosControl" aria-labelledby="gustosEtiqueta" aria-expanded="false" aria-controls="gustosPanel" onclick="alternarMultiDieta('gustosDieta')">
+                                <span class="multi-dieta-valor" id="gustosValor">Ninguno</span>
+                                <span class="multi-dieta-conteo" id="gustosConteo"></span>
+                                <svg class="icon multi-dieta-flecha" aria-hidden="true"><use href="#i-chevron"/></svg>
+                            </button>
+                            <div class="multi-dieta-panel" id="gustosPanel" hidden>
+                                <p class="multi-dieta-pista">Puedes marcar varios alimentos.</p>
+                                <div class="multi-dieta-chips" id="gustosChips"></div>
+                            </div>
+                        </div>
+                        <select id="gustosDieta" multiple hidden></select>
 
-                        <label for="despensaDieta" style="margin-top:15px;">Alimentos que tienes en casa</label>
-                        <select id="despensaDieta" multiple size="5"></select>
+                        <label id="despensaEtiqueta" style="margin-top:15px;">Alimentos que tienes en casa</label>
+                        <div class="multi-dieta" data-multi-dieta="despensaDieta">
+                            <button type="button" class="multi-dieta-control" id="despensaControl" aria-labelledby="despensaEtiqueta" aria-expanded="false" aria-controls="despensaPanel" onclick="alternarMultiDieta('despensaDieta')">
+                                <span class="multi-dieta-valor" id="despensaValor">Ninguno</span>
+                                <span class="multi-dieta-conteo" id="despensaConteo"></span>
+                                <svg class="icon multi-dieta-flecha" aria-hidden="true"><use href="#i-chevron"/></svg>
+                            </button>
+                            <div class="multi-dieta-panel" id="despensaPanel" hidden>
+                                <p class="multi-dieta-pista">Puedes marcar varios alimentos.</p>
+                                <div class="multi-dieta-chips" id="despensaChips"></div>
+                            </div>
+                        </div>
+                        <select id="despensaDieta" multiple hidden></select>
                         <small class="perfil-ayuda">Elige todas las opciones que quieras.</small>
                     </section>
 
@@ -181,12 +225,12 @@
 
     <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
-    <script src="js/config.js?v=4"></script>
-    <script src="js/datos.js?v=4"></script>
-    <script src="js/dietas-datos.js?v=4"></script>
-    <script src="js/dietas-motor.js?v=4"></script>
-    <script src="js/auth.js?v=4"></script>
-    <script src="js/ui.js?v=4"></script>
-    <script src="js/app.js?v=4"></script>
+    <script src="js/config.js?v=5"></script>
+    <script src="js/datos.js?v=5"></script>
+    <script src="js/dietas-datos.js?v=5"></script>
+    <script src="js/dietas-motor.js?v=5"></script>
+    <script src="js/auth.js?v=5"></script>
+    <script src="js/ui.js?v=5"></script>
+    <script src="js/app.js?v=5"></script>
 </body>
 </html>

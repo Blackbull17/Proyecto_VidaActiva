@@ -134,6 +134,23 @@
         return referencia && referencia.carb > 0 ? (alimento.carb || 0) / referencia.carb : 0;
     }
 
+    function smaeDe(alimento) {
+        var grupo = subgrupo(alimento);
+        var referencia = grupo ? D.EQUIVALENTES[grupo] : null;
+        if (!referencia) return null;
+        return {
+            id: grupo,
+            nombre: referencia.nombre,
+            porcion: referencia.porcion,
+            kcal: referencia.kcal,
+            prot: referencia.prot,
+            lip: referencia.lip,
+            carb: referencia.carb,
+            cantidad: cantidadEquivalente(alimento, grupo),
+            libre: referencia.libre === true
+        };
+    }
+
     function equivalentesDelDia(dia, colaciones) {
         var porFamilia = {};
         FAMILIAS.forEach(function (k) { porFamilia[k] = 0; });
@@ -744,6 +761,7 @@
         resumenDia: resumenDia,
         equivalentesDia: equivalentesDia,
         infoFamilias: infoFamilias,
+        smae: smaeDe,
         escalarPorcion: escalarPorcion,
         alimento: alimento,
         menu: menu,

@@ -25,6 +25,95 @@ function marcarSeleccionCampo(id, seleccionados) {
     Array.prototype.forEach.call(campo.options, function (opcion) {
         opcion.selected = seleccionados.indexOf(opcion.value) >= 0;
     });
+    actualizarMultiDieta(id);
+}
+
+const MULTIS_DIETA = ['condicionesDieta', 'alergiasDieta', 'gustosDieta', 'despensaDieta'];
+
+function prefijoMultiDieta(id) {
+    return id.replace(/Dieta$/, '');
+}
+
+function textoVacioMultiDieta(id) {
+    return id === 'gustosDieta' || id === 'despensaDieta' ? 'Ninguno' : 'Ninguna';
+}
+
+function cerrarTodosLosMultisDieta() {
+    Array.prototype.forEach.call(document.querySelectorAll('.multi-dieta.abierto'), function (contenedor) {
+        const id = contenedor.getAttribute('data-multi-dieta');
+        const prefijo = prefijoMultiDieta(id);
+        const panel = document.getElementById(prefijo + 'Panel');
+        const control = document.getElementById(prefijo + 'Control');
+        contenedor.classList.remove('abierto');
+        if (panel) panel.hidden = true;
+        if (control) control.setAttribute('aria-expanded', 'false');
+    });
+}
+
+function alternarMultiDieta(id) {
+    const contenedor = document.querySelector('.multi-dieta[data-multi-dieta="' + id + '"]');
+    if (!contenedor) return;
+
+    const yaAbierto = contenedor.classList.contains('abierto');
+    cerrarTodosLosMultisDieta();
+    if (yaAbierto) return;
+
+    const prefijo = prefijoMultiDieta(id);
+    const panel = document.getElementById(prefijo + 'Panel');
+    const control = document.getElementById(prefijo + 'Control');
+    contenedor.classList.add('abierto');
+    if (panel) panel.hidden = false;
+    if (control) control.setAttribute('aria-expanded', 'true');
+}
+
+function alternarChipMultiDieta(id, valor) {
+    const campo = document.getElementById(id);
+    if (!campo || !campo.options) return;
+
+    Array.prototype.forEach.call(campo.options, function (opcion) {
+        if (opcion.value === valor) opcion.selected = !opcion.selected;
+    });
+    actualizarMultiDieta(id);
+    if (id === 'alergiasDieta') mostrarOtrasAlergias();
+}
+
+function actualizarMultiDieta(id) {
+    const campo = document.getElementById(id);
+    if (!campo || !campo.options) return;
+
+    const prefijo = prefijoMultiDieta(id);
+    const seleccionados = seleccionCampo(id);
+    const nombres = Array.prototype.map.call(campo.selectedOptions, function (opcion) {
+        return (opcion.textContent || opcion.value || '').trim();
+    });
+    const valor = document.getElementById(prefijo + 'Valor');
+    const conteo = document.getElementById(prefijo + 'Conteo');
+    const chips = document.getElementById(prefijo + 'Chips');
+
+    if (valor) {
+        valor.textContent = nombres.length
+            ? nombres.slice(0, 2).join(', ') + (nombres.length > 2 ? ' +' + (nombres.length - 2) : '')
+            : textoVacioMultiDieta(id);
+    }
+    if (conteo) conteo.textContent = seleccionados.length ? String(seleccionados.length) : '';
+    if (chips) {
+        chips.innerHTML = Array.prototype.map.call(campo.options, function (opcion) {
+            const activo = seleccionados.indexOf(opcion.value) >= 0;
+            return '<button type="button" class="multi-dieta-chip' + (activo ? ' activo' : '') + '"' +
+                ' aria-pressed="' + (activo ? 'true' : 'false') + '"' +
+                ' onclick="alternarChipMultiDieta(\'' + id + '\',\'' + opcion.value + '\')">' +
+                escaparHTML(opcion.textContent || opcion.value) + '</button>';
+        }).join('');
+    }
+}
+
+function actualizarMultisDieta() {
+    MULTIS_DIETA.forEach(actualizarMultiDieta);
+}
+
+function cerrarMultisDietaAlClicFuera(evento) {
+    if (evento.target && evento.target.closest && evento.target.closest('.multi-dieta')) return;
+    cerrarTodosLosMultisDieta();
 }
 
 function perfilActualRegistrado() {
@@ -206,12 +295,233 @@ function totalesDietaDelDia(colaciones) {
     return total;
 }
 
+const ACTIVIDADES_DIETA = {
+    sedentario: 'sedentaria',
+    ligero: 'ligera',
+    moderado: 'moderada',
+    activo: 'activa'
+};
+
+const ETIQUETAS_EQ_DIETA = {
+    verdura: 'Verdura',
+    fruta: 'Fruta',
+    cereal: 'Cereal',
+    leguminosa: 'Leguminosa',
+    carne: 'Carne',
+    leche: 'Leche',
+    grasa: 'Grasa'
+};
+
+const REF_EQ_DIETA = {
+    verdura: 'verdura',
+    fruta: 'fruta',
+    cereal: 'cereal',
+    leguminosa: 'leguminosa',
+    carne: 'carne_muy_baja',
+    leche: 'leche_descremada',
+    grasa: 'grasa_con_proteina'
+};
+
+const NOTAS_MEDICAMENTO_DIETA = {
+    anticoagulante: 'Anticoagulante: mantén constante el consumo de alimentos ricos en vitamina K y consulta antes de cambiarlo.',
+    levotiroxina: 'Levotiroxina: se toma en ayunas; separa el calcio, el hierro y la soya del horario de la medicina.',
+    antibiotico: 'Antibiótico: sigue las indicaciones médicas sobre lácteos, horarios y alimentos durante el tratamiento.',
+    antidiabetico: 'Antidiabético: vigila la glucosa y consulta si aparecen mareos, sudor frío o hambre intensa.',
+    diuretico: 'Diurético o antihipertensivo: revisa con tu médico el sodio y el potasio de la dieta.',
+    estatina: 'Estatina: evita el pomelo y consulta cualquier cambio en el tratamiento.',
+    antidepresivo: 'Antidepresivo: evita el alcohol y revisa con tu médico los alimentos ricos en tiramina.',
+    otro: 'Medicamento declarado: revisa interacciones alimentarias con tu médico o farmacéutico.'
+};
+
+function clasificarIMCDieta(imc) {
+    if (imc < 16.5) return { clave: 'muy_bajo', texto: 'Muy por debajo del peso', corto: 'Muy bajo' };
+    if (imc < 18.5) return { clave: 'bajo', texto: 'Por debajo del peso', corto: 'Bajo' };
+    if (imc < 25) return { clave: 'normal', texto: 'Peso normal', corto: 'Normal' };
+    if (imc < 27) return { clave: 'ligero', texto: 'Ligero sobrepeso', corto: 'Ligero' };
+    if (imc < 30) return { clave: 'sobrepeso', texto: 'Sobrepeso', corto: 'Sobrepeso' };
+    if (imc < 35) return { clave: 'obesidad1', texto: 'Obesidad grado I', corto: 'Obesidad I' };
+    if (imc < 40) return { clave: 'obesidad2', texto: 'Obesidad grado II', corto: 'Obesidad II' };
+    return { clave: 'obesidad3', texto: 'Obesidad grado III', corto: 'Obesidad III' };
+}
+
+function distribucionDetalleDieta(meta) {
+    const catalogo = window.VA_DIETAS || {};
+    return (catalogo.DISTRIBUCION && catalogo.DISTRIBUCION[meta.distribucion]) ||
+        (catalogo.DISTRIBUCION && catalogo.DISTRIBUCION[catalogo.DISTRIBUCION_POR_DEFECTO]) ||
+        { nombre: 'Equilibrada', carb: 50, prot: 25, lip: 25 };
+}
+
 function metaDietaActual() {
     const perfil = perfilParaDetalle();
     if (!perfil || !window.VA || !VA.dietas) {
-        return { kcal: 0, macros: { prot: 0, grasa: 0, carb: 0 } };
+        return {
+            kcal: 0,
+            macros: { prot: 0, grasa: 0, carb: 0 },
+            equivalentes: {},
+            distribucion: 'equilibrada',
+            imc: 0,
+            imcClase: clasificarIMCDieta(0),
+            pesoSaludable: { min: 0, max: 0 },
+            protPorKg: 0,
+            tmb: 0,
+            tdee: 0,
+            avisos: []
+        };
     }
-    return VA.dietas.calcularMeta(perfil);
+
+    const base = VA.dietas.calcularMeta(perfil);
+    const alturaM = (Number(perfil.estatura) || 0) / 100;
+    const peso = Number(perfil.peso) || 0;
+    const estatura = Number(perfil.estatura) || 0;
+    const edad = Number(perfil.edad) || 0;
+    const imc = alturaM > 0 ? peso / (alturaM * alturaM) : 0;
+    const tmb = Math.round((10 * peso) + (6.25 * estatura) - (5 * edad) +
+        (perfil.sexo === 'masculino' ? 5 : (perfil.sexo === 'femenino' ? -161 : -78)));
+    const factores = { sedentario: 1.2, ligero: 1.375, moderado: 1.55, activo: 1.725 };
+    const tdee = Math.round(tmb * (factores[perfil.actividad] || 1.55));
+    const avisos = [];
+
+    if (perfil.etapa === 'embarazo') avisos.push('Embarazo: se suman kcal adicionales y no se aplica déficit. Confirma el trimestre con tu especialista.');
+    if (perfil.etapa === 'lactancia') avisos.push('Lactancia: se suman kcal adicionales. Prioriza hidratación, calcio y proteína.');
+    if (perfil.sexo === 'prefiero_no_decir') avisos.push('Sin dato de sexo se usa una estimación neutra; la meta calórica es menos precisa.');
+    if (Array.isArray(perfil.condiciones) &&
+        (perfil.condiciones.indexOf('celiaquia') >= 0 || perfil.condiciones.indexOf('intolerancia_lactosa') >= 0)) {
+        avisos.push('Celíaquía e intolerancia a la lactosa se filtran de forma estricta; revisa siempre etiquetas y contaminación cruzada.');
+    }
+
+    const notaMedicamento = NOTAS_MEDICAMENTO_DIETA[perfil.medicamento];
+    if (notaMedicamento && perfil.medicamento !== 'ninguno') avisos.push(notaMedicamento);
+    if (perfil.alergiaOtra) avisos.push('Alergia declarada: «' + perfil.alergiaOtra + '». Revisa etiquetas; lo que no aparezca en el catálogo no puede garantizarse.');
+    if (imc >= 25) avisos.push('Con IMC de ' + numeroDecimalDieta(imc) + ' conviene comparar la meta con un especialista; la estimación puede sobreestimar el gasto energético.');
+
+    return Object.assign({}, base, {
+        tmb: tmb,
+        tdee: tdee,
+        imc: imc,
+        imcClase: clasificarIMCDieta(imc),
+        pesoSaludable: {
+            min: alturaM > 0 ? 18.5 * alturaM * alturaM : 0,
+            max: alturaM > 0 ? 24.9 * alturaM * alturaM : 0
+        },
+        protPorKg: peso ? (base.macros.prot / peso) : 0,
+        objetivo: perfil.objetivo,
+        avisos: avisos
+    });
+}
+
+function menuCompletoDieta(id) {
+    const catalogo = window.VA_DIETAS || {};
+    if (!Array.isArray(catalogo.MENUS)) return null;
+    for (let i = 0; i < catalogo.MENUS.length; i += 1) {
+        if (catalogo.MENUS[i].id === id) return catalogo.MENUS[i];
+    }
+    return null;
+}
+
+function renderizarMetaDieta(meta) {
+    if (!meta || !meta.kcal) return '';
+
+    const perfil = perfilParaDetalle();
+    const catalogo = window.VA_DIETAS || {};
+    const dist = distribucionDetalleDieta(meta);
+    const objetivoChip = meta.objetivo === 'bajar'
+        ? 'Déficit moderado'
+        : (meta.objetivo === 'subir' ? 'Superávit' : 'Mantenimiento');
+    const objetivoTexto = meta.objetivo === 'bajar'
+        ? 'bajar de peso (déficit del 15 %)'
+        : (meta.objetivo === 'subir' ? 'ganar masa muscular (superávit del 10 %)' : 'mantener peso');
+    const actividad = perfil ? (ACTIVIDADES_DIETA[perfil.actividad] || perfil.actividad || 'moderada') : 'moderada';
+    const imcPct = Math.min(100, Math.max(0, (meta.imc - 15) / (40 - 15) * 100));
+
+    const referencias = catalogo.EQUIVALENTES || {};
+    const eqKcal = {};
+    let eqTotal = 0;
+    Object.keys(ETIQUETAS_EQ_DIETA).forEach(function (clave) {
+        const ref = referencias[REF_EQ_DIETA[clave]];
+        eqKcal[clave] = (Number(meta.equivalentes[clave]) || 0) * (ref && Number(ref.kcal) ? Number(ref.kcal) : 0);
+        eqTotal += eqKcal[clave];
+    });
+    const eqGrid = Object.keys(ETIQUETAS_EQ_DIETA).map(function (clave) {
+        const pct = eqTotal > 0 ? Math.round(eqKcal[clave] / eqTotal * 100) : 0;
+        return '<div class="dieta-eq-item"><span>' + ETIQUETAS_EQ_DIETA[clave] + '</span>' +
+            '<strong>' + numeroDecimalDieta(meta.equivalentes[clave]) + '</strong>' +
+            '<small>' + pct + ' %</small></div>';
+    }).join('');
+
+    const badges = [];
+    if (meta.imc) badges.push(meta.imcClase.corto);
+    if (dist) badges.push(dist.nombre);
+    if (perfil && perfil.etapa && perfil.etapa !== 'ninguna' && catalogo.ETAPAS && catalogo.ETAPAS[perfil.etapa]) {
+        badges.push(catalogo.ETAPAS[perfil.etapa].nombre);
+    }
+    if (perfil && perfil.region && perfil.region !== 'todas' && catalogo.REGIONES && catalogo.REGIONES[perfil.region]) {
+        badges.push('Cocina ' + catalogo.REGIONES[perfil.region].nombre);
+    }
+    if (perfil && Array.isArray(perfil.gustos) && perfil.gustos.length) badges.push(perfil.gustos.length + ' gustos');
+    if (perfil && Array.isArray(perfil.despensa) && perfil.despensa.length) badges.push(perfil.despensa.length + ' en despensa');
+    if (perfil) {
+        const filtros = (perfil.alergias || []).length + (perfil.condiciones || []).length;
+        if (filtros) badges.push(filtros + (filtros === 1 ? ' filtro activo' : ' filtros activos'));
+        if (perfil.medicamento && perfil.medicamento !== 'ninguno') badges.push('Medicamento');
+    }
+
+    const avisos = (meta.avisos || []).slice(0, 5).map(function (texto) {
+        return '<p class="dieta-meta-aviso">' + icoPlan('i-alert') + '<span>' + escaparHTML(texto) + '</span></p>';
+    }).join('');
+
+    return '<section class="card dieta-meta" aria-label="Meta diaria estimada">' +
+        '<div class="dieta-meta-cabeza">' +
+            '<span class="dieta-meta-eyebrow">' + icoPlan('i-flame') + ' Meta diaria estimada</span>' +
+            '<span class="dieta-meta-chip">' + escaparHTML(objetivoChip) + '</span>' +
+        '</div>' +
+        '<p class="dieta-meta-numero"><strong>' + numeroEnteroDieta(meta.kcal) + '</strong><span>kcal/día</span></p>' +
+        '<p class="dieta-meta-detalle">Mantenimiento estimado ' + numeroEnteroDieta(meta.tdee) + ' kcal · actividad ' +
+            escaparHTML(actividad) + ' · ' + escaparHTML(objetivoTexto) + '.</p>' +
+        '<p class="dieta-meta-formula">TMB ' + numeroEnteroDieta(meta.tmb) + ' kcal con <strong>Mifflin-St Jeor</strong> × factor de actividad.</p>' +
+        '<div class="dieta-meta-macros">' +
+            '<div class="dieta-meta-macro prot"><span>Proteína</span><strong>' + numeroEnteroDieta(meta.macros.prot) + ' g</strong>' +
+                '<small><b class="dieta-meta-pct">' + dist.prot + ' %</b> · ' + numeroDecimalDieta(meta.protPorKg) + ' g/kg</small></div>' +
+            '<div class="dieta-meta-macro"><span>Lípidos</span><strong>' + numeroEnteroDieta(meta.macros.grasa) + ' g</strong>' +
+                '<small><b class="dieta-meta-pct">' + dist.lip + ' %</b> de la energía</small></div>' +
+            '<div class="dieta-meta-macro"><span>Carbohidratos</span><strong>' + numeroEnteroDieta(meta.macros.carb) + ' g</strong>' +
+                '<small><b class="dieta-meta-pct">' + dist.carb + ' %</b> de la energía</small></div>' +
+        '</div>' +
+        '<div class="dieta-meta-bloque">' +
+            '<div class="dieta-meta-bloque-cabeza"><span>' + icoPlan('i-scale') + ' Rango de peso (IMC)</span>' +
+                '<strong>IMC ' + numeroDecimalDieta(meta.imc) + '</strong></div>' +
+            '<div class="dieta-meta-barra" role="img" aria-label="Rango de índice de masa corporal">' +
+                '<span class="dieta-meta-marcador" style="left:' + imcPct.toFixed(1) + '%"></span></div>' +
+            '<div class="dieta-meta-escala"><span style="left:14%">18,5</span><span style="left:40%">25</span>' +
+                '<span style="left:60%">30</span><span class="fin" style="left:100%">40</span></div>' +
+            '<p class="dieta-meta-texto"><strong>' + escaparHTML(meta.imcClase.texto) + '</strong> · Rango saludable para tu estatura: ' +
+                numeroDecimalDieta(meta.pesoSaludable.min) + '–' + numeroDecimalDieta(meta.pesoSaludable.max) + ' kg.</p>' +
+        '</div>' +
+        '<div class="dieta-meta-bloque">' +
+            '<div class="dieta-meta-bloque-cabeza"><span>' + icoPlan('i-target') + ' Distribución de energía</span>' +
+                '<strong>' + dist.carb + ' / ' + dist.prot + ' / ' + dist.lip + '</strong></div>' +
+            '<div class="dieta-dist-barra" role="img" aria-label="Reparto de energía entre carbohidratos, proteína y lípidos">' +
+                '<span class="dieta-dist-carb" style="width:' + dist.carb + '%"></span>' +
+                '<span class="dieta-dist-prot" style="width:' + dist.prot + '%"></span>' +
+                '<span class="dieta-dist-grasa" style="width:' + dist.lip + '%"></span>' +
+            '</div>' +
+            '<div class="dieta-dist-leyenda">' +
+                '<span><i class="dieta-punto-carb"></i> Carbohidratos <strong>' + dist.carb + ' %</strong></span>' +
+                '<span><i class="dieta-punto-prot"></i> Proteína <strong>' + dist.prot + ' %</strong></span>' +
+                '<span><i class="dieta-punto-grasa"></i> Lípidos <strong>' + dist.lip + ' %</strong></span>' +
+            '</div>' +
+        '</div>' +
+        '<div class="dieta-meta-bloque">' +
+            '<div class="dieta-meta-bloque-cabeza"><span>' + icoPlan('i-info') + ' Equivalentes al día</span>' +
+                '<small>' + numeroEnteroDieta(meta.kcal) + ' kcal · % de la energía</small></div>' +
+            '<div class="dieta-eq-grid">' + eqGrid + '</div>' +
+        '</div>' +
+        (badges.length
+            ? '<div class="dieta-badges">' + badges.map(function (b) {
+                return '<span class="dieta-badge">' + escaparHTML(b) + '</span>';
+            }).join('') + '</div>'
+            : '') +
+        (avisos ? '<div class="dieta-meta-avisos">' + avisos + '</div>' : '') +
+    '</section>';
 }
 
 function perfilParaDetalle() {
@@ -229,9 +539,13 @@ function renderizarDetalleTecnico(colaciones) {
     if (!detalleTecnicoAbierto) return '';
 
     const perfil = perfilParaDetalle();
-    const objetivo = perfil ? VA.dietas.calcularMeta(perfil).equivalentes : {};
-    const real = VA.dietas.equivalentesDia(planDietaActual, diaDietaActual, colaciones);
+    const detalleMeta = metaDietaActual();
+    const meta = perfil ? VA.dietas.calcularMeta(perfil) : detalleMeta;
+    const objetivo = meta.equivalentes || {};
+    const real = VA.dietas.equivalentesDia(planDietaActual, diaDietaActual, colaciones) || {};
     const info = VA.dietas.infoFamilias();
+    const catalogo = window.VA_DIETAS || {};
+    const dist = distribucionDetalleDieta(meta);
 
     const filas = Object.keys(info).map(function (clave) {
         return '<tr>' +
@@ -242,7 +556,77 @@ function renderizarDetalleTecnico(colaciones) {
         '</tr>';
     }).join('');
 
+    const filtros = [];
+    if (perfil) {
+        (perfil.alergias || []).forEach(function (id) {
+            const nombre = catalogo.ALERGIAS && catalogo.ALERGIAS[id] ? catalogo.ALERGIAS[id].nombre : id;
+            filtros.push('Alergia: ' + nombre + (id === 'otros' && perfil.alergiaOtra ? ' (' + perfil.alergiaOtra + ')' : ''));
+        });
+        (perfil.condiciones || []).forEach(function (id) {
+            filtros.push((catalogo.CONDICIONES && catalogo.CONDICIONES[id] ? catalogo.CONDICIONES[id].nombre : id));
+        });
+        if (perfil.etapa && perfil.etapa !== 'ninguna' && catalogo.ETAPAS && catalogo.ETAPAS[perfil.etapa]) {
+            filtros.push(catalogo.ETAPAS[perfil.etapa].nombre);
+        }
+        if (perfil.medicamento && perfil.medicamento !== 'ninguno') {
+            const nombreMed = catalogo.MEDICAMENTOS && catalogo.MEDICAMENTOS[perfil.medicamento]
+                ? catalogo.MEDICAMENTOS[perfil.medicamento].nombre : perfil.medicamento;
+            filtros.push('Medicamento: ' + nombreMed);
+        }
+        if (Array.isArray(perfil.gustos) && perfil.gustos.length) filtros.push(perfil.gustos.length + ' gustos');
+        if (Array.isArray(perfil.despensa) && perfil.despensa.length) filtros.push(perfil.despensa.length + ' en despensa');
+    }
+    const filtrosHTML = filtros.length
+        ? '<div class="seguridad-resumen">' + filtros.map(function (texto) {
+            return '<span class="plan-chip">' + escaparHTML(texto) + '</span>';
+        }).join('') + '</div>'
+        : '<p class="perfil-ayuda">Sin filtros activos en esta sesión. No se guardan condiciones, alergias ni medicamentos en la cuenta.</p>';
+
+    const notas = [];
+    notas.push('<strong>Fórmula:</strong> Mifflin-St Jeor (1990) para la TMB (' + numeroEnteroDieta(detalleMeta.tmb) +
+        ' kcal) × factor de actividad. Es la fórmula interna de la app; no hay selector de Harris-Benedict.');
+    notas.push('<strong>Macros:</strong> ' + numeroEnteroDieta(meta.macros.prot) + ' g de proteína, ' +
+        numeroEnteroDieta(meta.macros.grasa) + ' g de lípidos y ' + numeroEnteroDieta(meta.macros.carb) +
+        ' g de carbohidratos al día (' + dist.carb + ' % / ' + dist.prot + ' % / ' + dist.lip + ' % de la energía).');
+    notas.push('<strong>Equivalentes:</strong> la meta se convierte en ' + numeroDecimalDieta(objetivo.cereal) +
+        ' de cereal, ' + numeroDecimalDieta(objetivo.carne) + ' de carne, ' + numeroDecimalDieta(objetivo.grasa) +
+        ' de grasa, ' + numeroDecimalDieta(objetivo.verdura) + ' de verdura, ' + numeroDecimalDieta(objetivo.fruta) +
+        ' de fruta, ' + numeroDecimalDieta(objetivo.leguminosa) + ' de leguminosa y ' + numeroDecimalDieta(objetivo.leche) +
+        ' de leche al día. Método del formato de cálculo del especialista; pendiente de validación clínica.');
+    notas.push('<strong>SMAE:</strong> cada alimento del plan puede desplegar «Especificación SMAE» con su subgrupo del ' +
+        'Sistema Mexicano de Alimentos Equivalentes (4ª ed., Pérez Lizaur; tablas difundidas por UNAM, IMSS y BUAP), ' +
+        'kcal y macronutrientes por equivalente y porción de referencia. El número de equivalentes se estima desde el catálogo.');
+    notas.push('<strong>Distribución:</strong> ' + dist.nombre + ' (' + dist.carb + ' / ' + dist.prot + ' / ' + dist.lip +
+        '). Prioridad: diabetes > hipertensión > colesterol > SOMP > equilibrada. El sexo, la edad, el peso y la estatura ' +
+        'modifican las calorías y, por tanto, los gramos de cada macro.');
+    notas.push('<strong>IMC:</strong> ' + numeroDecimalDieta(detalleMeta.imc) + ' (' +
+        detalleMeta.imcClase.texto.toLowerCase() + '). Peso saludable estimado: ' +
+        numeroDecimalDieta(detalleMeta.pesoSaludable.min) + '–' +
+        numeroDecimalDieta(detalleMeta.pesoSaludable.max) + ' kg.');
+    notas.push('<strong>Composición:</strong> valores de ejemplo; deben sustituirse por tablas del INCMNSZ (2015) o BAM (2019), citando la fuente.');
+    notas.push('<strong>Edad:</strong> solo adultos de 18 años o más; en menores se requieren percentiles y valoración pediátrica.');
+    if (perfil && perfil.medicamento && perfil.medicamento !== 'ninguno') {
+        const notaMed = NOTAS_MEDICAMENTO_DIETA[perfil.medicamento] || 'Consulta interacciones con tu médico.';
+        notas.push('<strong>Medicamento:</strong> ' + notaMed);
+    }
+    if (perfil && perfil.alergiaOtra) {
+        notas.push('<strong>Alergia específica:</strong> «' + perfil.alergiaOtra +
+            '». Se busca por nombre en el catálogo; revisa etiquetas y contaminación cruzada.');
+    }
+    notas.push('<strong>Pendiente:</strong> porciones, equivalencias y notas clínicas deben validarse con un nutricionista.');
+
+    const pasos = [
+        { titulo: 'Formulario real', texto: 'cambio_fisico.html envía las preferencias a js/app.js; los desplegables son multiselect con chips, igual que el prototipo.', codigo: 'leerOpcionesDieta()' },
+        { titulo: 'Motor', texto: 'js/dietas-motor.js normaliza el perfil, filtra alimentos y calcula meta, equivalentes y SMAE por alimento.', codigo: 'VA.dietas.generarPlan()' },
+        { titulo: 'Persistencia', texto: 'El menú de 7 días se guarda en diet_plans.menu_semana; huella_filtros guarda solo un hash corto.', codigo: 'guardarPlanDieta()' },
+        { titulo: 'Sincronización', texto: 'RLS por user_id: el plan se recupera al cerrar y volver a abrir la sesión con la misma cuenta.', codigo: 'sincronizarPlanRemoto()' },
+        { titulo: 'Vista', texto: 'La tarjeta de meta, la barra de IMC, la distribución y los porcentajes se muestran antes del menú semanal.', codigo: 'renderizarMetaDieta()' },
+        { titulo: 'Este panel', texto: 'Las notas técnicas y los filtros activos viven aquí, plegados y ocultos por defecto para el especialista.', codigo: 'renderizarDetalleTecnico()' }
+    ];
+
     return '<section class="plan-tecnico" id="planTecnico">' +
+        '<h4>Detalle técnico del plan</h4>' +
+        '<h5>Filtros activos</h5>' + filtrosHTML +
         '<h4>Equivalentes por día</h4>' +
         '<div class="plan-tecnico-tabla">' +
             '<table>' +
@@ -251,12 +635,112 @@ function renderizarDetalleTecnico(colaciones) {
             '</table>' +
         '</div>' +
         '<p class="perfil-ayuda">Referencias del Sistema Mexicano de Alimentos Equivalentes.</p>' +
+        '<h4>Notas del prototipo</h4>' +
+        '<ul class="plan-tecnico-notas">' + notas.map(function (texto) {
+            return '<li>' + texto + '</li>';
+        }).join('') + '</ul>' +
+        '<h4>Cómo se integró en la app real</h4>' +
+        '<div class="plan-tecnico-pasos">' + pasos.map(function (paso) {
+            return '<article><h5>' + escaparHTML(paso.titulo) + '</h5><p>' + escaparHTML(paso.texto) +
+                '</p><code>' + escaparHTML(paso.codigo) + '</code></article>';
+        }).join('') + '</div>' +
     '</section>';
 }
 
 function alternarDetalleTecnico() {
     detalleTecnicoAbierto = !detalleTecnicoAbierto;
     renderizarPlanDieta();
+}
+
+function alternarAcordeonDieta(id, boton) {
+    const panel = document.getElementById(id);
+    if (!panel) return;
+    const abrir = panel.hidden;
+    panel.hidden = !abrir;
+    if (boton) boton.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+}
+
+function renderizarEspecificacionSMAE(alimento, clave, posicion) {
+    if (!window.VA || !VA.dietas || typeof VA.dietas.smae !== 'function') return '';
+    const smae = VA.dietas.smae(alimento);
+    if (!smae) return '';
+
+    const id = 'spec-' + clave + '-' + posicion;
+    const texto = smae.libre
+        ? 'SMAE: porción libre · ' + smae.nombre + ' (' + smae.porcion + ')'
+        : 'SMAE: ' + numeroDecimalDieta(smae.cantidad) + ' eq · ' + smae.nombre +
+            ' (' + numeroEnteroDieta(smae.kcal) + ' kcal, ' + numeroDecimalDieta(smae.prot) + ' P / ' +
+            numeroDecimalDieta(smae.lip) + ' L / ' + numeroDecimalDieta(smae.carb) + ' C por eq)';
+
+    return '<button type="button" class="dieta-spec-toggle" aria-expanded="false" aria-controls="' + id +
+        '" onclick="alternarAcordeonDieta(\'' + id + '\',this)">' +
+        icoPlan('i-info') + ' Especificación SMAE</button>' +
+        '<span class="dieta-spec-panel" id="' + id + '" hidden>' + escaparHTML(texto) + '</span>';
+}
+
+function renderizarAvisosPlanDieta(meta, totales) {
+    const avisos = [];
+    if (meta.kcal) {
+        const desvio = Math.round((totales.kcal - meta.kcal) / meta.kcal * 100);
+        if (Math.abs(desvio) > 5) {
+            avisos.push('El día queda en ' + numeroEnteroDieta(totales.kcal) + ' kcal (' +
+                (desvio > 0 ? '+' : '') + desvio + ' % frente a la meta).');
+        }
+    }
+
+    const desvioMacro = function (real, objetivo) {
+        return objetivo > 0 ? Math.round((real - objetivo) / objetivo * 100) : 0;
+    };
+    const dProt = desvioMacro(totales.prot, meta.macros.prot);
+    const dGrasa = desvioMacro(totales.grasa, meta.macros.grasa);
+    const dCarb = desvioMacro(totales.carb, meta.macros.carb);
+    const partes = [];
+    if (Math.abs(dProt) > 15) partes.push('proteína ' + (dProt > 0 ? '+' : '') + dProt + ' %');
+    if (Math.abs(dGrasa) > 20) partes.push('lípidos ' + (dGrasa > 0 ? '+' : '') + dGrasa + ' %');
+    if (Math.abs(dCarb) > 25) partes.push('carbohidratos ' + (dCarb > 0 ? '+' : '') + dCarb + ' %');
+    if (partes.length) {
+        avisos.push('El menú se desvía de la meta en ' + partes.join(', ') +
+            '. Puedes probar otra opción o revisarlo con tu especialista.');
+    }
+
+    if (!avisos.length) return '';
+    return '<div class="plan-avisos">' + avisos.map(function (texto) {
+        return '<p class="plan-aviso alerta">' + icoPlan('i-alert') + '<span>' + escaparHTML(texto) + '</span></p>';
+    }).join('') + '</div>';
+}
+
+function renderizarEquivalentesAcordeon(meta, colaciones) {
+    if (!planDietaActual || !window.VA || !VA.dietas) return '';
+
+    const objetivo = meta.equivalentes || {};
+    const real = VA.dietas.equivalentesDia(planDietaActual, diaDietaActual, colaciones) || {};
+    const info = VA.dietas.infoFamilias();
+    const id = 'dietaEqPanel';
+
+    const items = Object.keys(info).map(function (clave) {
+        const objetivoFamilia = Number(objetivo[clave]) || 0;
+        const realFamilia = Number(real[clave]) || 0;
+        const adec = objetivoFamilia ? Math.round(realFamilia / objetivoFamilia * 100) : 0;
+        const clase = (adec >= 90 && adec <= 110) ? 'ok' : ((adec < 70 || adec > 130) ? 'mal' : 'medio');
+        return '<div class="dieta-eq-plan-item ' + clase + '">' +
+            '<span>' + escaparHTML(info[clave].nombre) + '</span>' +
+            '<strong>' + numeroDecimalDieta(realFamilia) + '</strong>' +
+            '<small>meta ' + numeroDecimalDieta(objetivoFamilia) + ' · ' + adec + ' %</small>' +
+        '</div>';
+    }).join('');
+
+    return '<div class="dieta-acordeon">' +
+        '<button type="button" class="dieta-acordeon-boton" aria-expanded="false" aria-controls="' + id +
+            '" onclick="alternarAcordeonDieta(\'' + id + '\',this)">' +
+            '<span>' + icoPlan('i-info') + ' Equivalentes del día</span>' +
+            '<span><small>porciones del menú vs. meta</small><span class="dieta-acordeon-flecha">' +
+                icoPlan('i-chevron') + '</span></span>' +
+        '</button>' +
+        '<div class="dieta-acordeon-contenido" id="' + id + '" hidden>' +
+            '<p class="dieta-acordeon-ayuda">Los números son porciones tipo SMAE que suma este menú. La meta es lo que te corresponde; 100 % significa que cuadra.</p>' +
+            '<div class="dieta-eq-plan-grid">' + items + '</div>' +
+        '</div>' +
+    '</div>';
 }
 
 function renderizarPlanDieta(aviso) {
@@ -274,6 +758,8 @@ function renderizarPlanDieta(aviso) {
     const infoMenu = typeof VA.dietas.menu === 'function' ? VA.dietas.menu(resumen.menuId) : null;
     const meta = metaDietaActual();
     const totales = totalesDietaDelDia(colaciones);
+    const metaHTML = renderizarMetaDieta(meta);
+    const avisosPlan = renderizarAvisosPlanDieta(meta, totales);
     const adecuacion = meta.kcal ? Math.round(totales.kcal / meta.kcal * 100) : 0;
     const puedeCambiar = !!perfilDietaActual;
     const desactivado = puedeCambiar ? '' : ' disabled title="Genera tu plan para cambiar alimentos"';
@@ -324,8 +810,11 @@ function renderizarPlanDieta(aviso) {
             const clave = comida.clave + ':' + posicion;
             const tieneCambio = !!(dia.cambios && dia.cambios[clave]);
             return '<li class="plan-alimento">' +
-                '<span class="plan-alimento-nombre">' + escaparHTML(alimento.nombre) +
-                    '<small>' + escaparHTML(alimento.porcion) + '</small></span>' +
+                '<span class="plan-alimento-info">' +
+                    '<span class="plan-alimento-nombre">' + escaparHTML(alimento.nombre) +
+                        '<small>' + escaparHTML(alimento.porcion) + '</small></span>' +
+                    renderizarEspecificacionSMAE(detalle, clave, posicion) +
+                '</span>' +
                 '<span class="plan-alimento-kcal">' + numeroEnteroDieta(detalle.kcal) + ' kcal</span>' +
                 '<span class="plan-alimento-acciones">' +
                     (tieneCambio
@@ -350,7 +839,7 @@ function renderizarPlanDieta(aviso) {
 
     const cambios = Object.keys(dia.cambios || {}).length;
     resultado.hidden = false;
-    resultado.innerHTML =
+    resultado.innerHTML = metaHTML +
         '<section class="card plan-semana" aria-label="Menú semanal">' +
             '<div class="plan-cabecera">' +
                 '<div><span class="eyebrow">Tu semana</span><h2>' + icoPlan('i-apple') + ' Menú semanal</h2></div>' +
@@ -363,6 +852,7 @@ function renderizarPlanDieta(aviso) {
                 '</div>' +
             '</div>' +
             (aviso ? '<p class="plan-aviso">' + icoPlan('i-check') + '<span>' + escaparHTML(aviso) + '</span></p>' : '') +
+            avisosPlan +
             '<div class="plan-dias" role="tablist" aria-label="Días de la semana">' + pestanas + '</div>' +
             '<div class="plan-menu-cabecera">' +
                 '<div class="plan-menu-titulo">' +
@@ -373,8 +863,11 @@ function renderizarPlanDieta(aviso) {
                 '</div>' +
                 kpis +
             '</div>' +
+            '<p class="plan-menu-nota">Los porcentajes de la tarjeta superior se calculan sobre tu meta diaria; ' +
+                'los valores de aquí son los totales del día que estás viendo.</p>' +
             '<h3 class="plan-dia-titulo">' + escaparHTML(resumen.dia) + '</h3>' +
             '<div class="plan-comidas">' + comidas + '</div>' +
+            renderizarEquivalentesAcordeon(meta, colaciones) +
             '<div class="plan-acciones">' +
                 '<button type="button" class="btn btn-secundario" onclick="otroMenuDieta()"' + desactivado + '>' +
                     icoPlan('i-refresh') + ' Otra opción</button>' +
@@ -382,6 +875,10 @@ function renderizarPlanDieta(aviso) {
                     (puedeCambiar && cambios ? '' : ' disabled') + '>' +
                     icoPlan('i-undo') + ' Restaurar día</button>' +
             '</div>' +
+            '<p class="plan-nota">Esta estimación es orientativa y no sustituye la valoración de un especialista. ' +
+                'En cada alimento puedes abrir su especificación SMAE y ajustar porciones con criterio profesional.</p>' +
+            '<div class="plan-footer"><span>VidaActiva · plan personalizado</span>' +
+                '<span>Detalle técnico disponible para el especialista</span></div>' +
             renderizarDetalleTecnico(colaciones) +
         '</section>';
 }
@@ -608,6 +1105,7 @@ function cargarListasDieta() {
 
     if (gustos && !gustos.options.length) gustos.innerHTML = opciones;
     if (despensa && !despensa.options.length) despensa.innerHTML = opciones;
+    actualizarMultisDieta();
 }
 
 function leerPlanDieta() {
@@ -2588,6 +3086,7 @@ function cargarPlanDieta() {
     inicializarDialogoCambio();
     actualizarCamposPorSexo();
     mostrarOtrasAlergias();
+    document.addEventListener('click', cerrarMultisDietaAlClicFuera);
 
     const plan = VA.datos.plan.obtener();
     if (plan && plan.presupuesto) {

@@ -1161,6 +1161,44 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
 }
 #formularioDieta .perfil-ayuda{margin-top:6px}
 
+/* Desplegables de selección múltiple, con el estilo del prototipo */
+.multi-dieta{position:relative;margin-top:6px}
+.multi-dieta-control{
+  width:100%;display:flex;align-items:center;gap:8px;padding:11px 13px;
+  border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);
+  font-size:.82rem;font-weight:700;text-align:left;cursor:pointer;
+}
+.multi-dieta-control:hover{border-color:#bbf7d0}
+.multi-dieta-abierto .multi-dieta-control{
+  border-color:var(--green-500);box-shadow:0 0 0 4px rgba(34,197,94,.12);
+}
+.multi-dieta-valor{
+  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.multi-dieta-conteo{
+  display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;
+  padding:0 6px;border-radius:999px;background:var(--green-100);color:var(--green-700);
+  font-size:.64rem;font-weight:800;
+}
+.multi-dieta-conteo:empty{display:none}
+.multi-dieta-flecha{width:15px;height:15px;flex-shrink:0;color:var(--muted);transition:transform .18s ease}
+.multi-dieta-abierto .multi-dieta-flecha{transform:rotate(90deg);color:var(--green-700)}
+.multi-dieta-panel{
+  position:absolute;z-index:30;top:calc(100% + 6px);left:0;right:0;
+  max-height:250px;overflow:auto;padding:10px;border:1px solid var(--line);
+  border-radius:12px;background:#fff;box-shadow:var(--shadow);
+}
+.multi-dieta-pista{margin:0 0 8px;color:var(--muted);font-size:.66rem;font-weight:700}
+.multi-dieta-chips{display:flex;flex-wrap:wrap;gap:6px}
+.multi-dieta-chip{
+  padding:6px 10px;border:1px solid var(--line);border-radius:999px;
+  background:#fff;color:var(--muted);font-size:.68rem;font-weight:800;cursor:pointer;
+}
+.multi-dieta-chip:hover{border-color:#bbf7d0}
+.multi-dieta-chip.activo{
+  background:var(--green-100);border-color:#86efac;color:var(--green-900);
+}
+
 .plan-aviso{
   display:flex;align-items:center;gap:9px;margin-bottom:14px;padding:11px 13px;
   border:1px solid #bbf7d0;border-radius:12px;background:var(--green-100);
@@ -1168,6 +1206,104 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
 }
 .plan-aviso .icon{width:18px;height:18px;flex-shrink:0}
 .plan-aviso.error{border-color:#fecaca;background:#fef2f2;color:#b91c1c}
+.plan-aviso.alerta{border-color:#fde68a;background:#fffbeb;color:#92400e}
+
+/* Tarjeta de meta diaria: replica la información del prototipo */
+.dieta-meta{
+  position:relative;overflow:hidden;margin-top:18px;padding:22px;border-radius:var(--radius);
+  background:linear-gradient(155deg,#14532d 0%,#0f3d24 62%,#0b3020 100%);
+  color:#fff;box-shadow:var(--shadow);
+}
+.dieta-meta::after{
+  content:"";position:absolute;right:-70px;top:-70px;width:170px;height:170px;
+  border:1px solid rgba(200,241,105,.18);border-radius:50%;pointer-events:none;
+}
+.dieta-meta-cabeza{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.dieta-meta-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;color:#c8f169;
+  font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+}
+.dieta-meta-eyebrow .icon{width:15px;height:15px}
+.dieta-meta-chip{
+  padding:4px 9px;border:0;border-radius:999px;background:#c8f169;color:#153f34;
+  font-size:.64rem;font-weight:800;white-space:nowrap;
+}
+.dieta-meta-numero{
+  position:relative;z-index:1;display:flex;align-items:baseline;gap:7px;margin:8px 0 2px;
+  font-variant-numeric:tabular-nums;
+}
+.dieta-meta-numero strong{font-size:2.4rem;line-height:1;letter-spacing:-.04em}
+.dieta-meta-numero span{color:rgba(255,255,255,.72);font-size:.8rem;font-weight:600}
+.dieta-meta-detalle{position:relative;z-index:1;margin:6px 0 10px;color:rgba(255,255,255,.76);font-size:.72rem;line-height:1.5}
+.dieta-meta-formula{position:relative;z-index:1;margin:0 0 12px;color:rgba(255,255,255,.62);font-size:.66rem;line-height:1.5}
+.dieta-meta-formula strong{color:#c8f169}
+.dieta-meta-macros{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px}
+.dieta-meta-macro{
+  min-width:0;padding:9px 10px;border:1px solid rgba(255,255,255,.13);
+  border-radius:12px;background:rgba(255,255,255,.07);
+}
+.dieta-meta-macro span{display:block;color:rgba(255,255,255,.66);font-size:.56rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.dieta-meta-macro strong{display:block;margin-top:2px;color:#fff;font-size:1rem;font-variant-numeric:tabular-nums}
+.dieta-meta-macro small{display:block;margin-top:2px;color:rgba(255,255,255,.55);font-size:.56rem;font-weight:600}
+.dieta-meta-macro.prot{background:rgba(200,241,105,.1);border-color:rgba(200,241,105,.38)}
+.dieta-meta-macro.prot strong{color:#ddff9c}
+.dieta-meta-pct{
+  display:inline-block;margin-right:3px;padding:1px 5px;border-radius:999px;
+  background:rgba(255,255,255,.13);color:#fff;font-size:.56rem;font-weight:800;
+}
+.dieta-meta-macro.prot .dieta-meta-pct{background:rgba(200,241,105,.18);color:#ddff9c}
+.dieta-meta-bloque{
+  position:relative;z-index:1;margin-top:10px;padding:11px 12px;
+  border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.08);
+}
+.dieta-meta-bloque-cabeza{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.7rem}
+.dieta-meta-bloque-cabeza span{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.82);font-weight:800}
+.dieta-meta-bloque-cabeza .icon{width:14px;height:14px}
+.dieta-meta-bloque-cabeza strong{color:#c8f169;font-size:.8rem;font-variant-numeric:tabular-nums}
+.dieta-meta-barra{
+  position:relative;height:10px;margin-top:9px;border-radius:999px;
+  background:linear-gradient(90deg,#63b3ed 0%,#63b3ed 14%,#68d391 14%,#68d391 40%,#f6e05e 40%,#f6e05e 60%,#ed8936 60%,#ed8936 80%,#f56565 80%,#f56565 100%);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.22);
+}
+.dieta-meta-marcador{
+  position:absolute;top:50%;width:16px;height:16px;margin-left:-8px;
+  border:3px solid #153f34;border-radius:50%;background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.35);transform:translateY(-50%);
+}
+.dieta-meta-escala{position:relative;height:16px;margin-top:4px;color:rgba(255,255,255,.55);font-size:.54rem;font-weight:700}
+.dieta-meta-escala span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.dieta-meta-escala span.fin{transform:translateX(-100%)}
+.dieta-meta-texto{margin:6px 0 0;color:rgba(255,255,255,.72);font-size:.66rem;line-height:1.5}
+.dieta-meta-texto strong{color:#fff}
+.dieta-dist-barra{display:flex;height:14px;margin-top:9px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.12)}
+.dieta-dist-barra span{display:block;height:100%}
+.dieta-dist-carb{background:#c8f169}
+.dieta-dist-prot{background:#7ee0c8}
+.dieta-dist-grasa{background:#f6c85f}
+.dieta-dist-leyenda{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;color:rgba(255,255,255,.72);font-size:.62rem}
+.dieta-dist-leyenda span{display:inline-flex;align-items:center;gap:5px}
+.dieta-dist-leyenda strong{color:#fff;font-variant-numeric:tabular-nums}
+.dieta-dist-leyenda i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dieta-punto-carb{background:#c8f169}
+.dieta-punto-prot{background:#7ee0c8}
+.dieta-punto-grasa{background:#f6c85f}
+.dieta-eq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.dieta-eq-item{padding:6px 4px;border-radius:8px;background:rgba(255,255,255,.06);text-align:center}
+.dieta-eq-item span{display:block;color:rgba(255,255,255,.6);font-size:.54rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.dieta-eq-item strong{display:block;margin-top:1px;color:#c8f169;font-size:.86rem;font-variant-numeric:tabular-nums}
+.dieta-eq-item small{display:block;color:rgba(255,255,255,.55);font-size:.56rem;font-weight:700}
+.dieta-badges{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.dieta-badge{
+  display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;
+  border:1px solid rgba(200,241,105,.28);background:rgba(200,241,105,.12);
+  color:#ddff9c;font-size:.62rem;font-weight:800;
+}
+.dieta-meta-avisos{position:relative;z-index:1;display:grid;gap:5px;margin-top:10px}
+.dieta-meta-aviso{
+  display:flex;align-items:flex-start;gap:6px;margin:0;color:rgba(255,255,255,.82);
+  font-size:.64rem;line-height:1.45;
+}
+.dieta-meta-aviso .icon{width:13px;height:13px;flex-shrink:0;color:#fde68a;margin-top:1px}
 .plan-semana{margin-top:18px;padding:22px}
 .plan-cabecera{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 .plan-cabecera h2{display:flex;align-items:center;gap:8px;margin-top:5px;font-size:1.25rem;color:var(--green-900)}
@@ -1221,7 +1357,8 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
   display:flex;align-items:center;justify-content:space-between;gap:10px;
   padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--line);
 }
-.plan-alimento-nombre{font-size:.8rem;font-weight:700;color:var(--ink);line-height:1.3}
+.plan-alimento-info{min-width:0;flex:1}
+.plan-alimento-nombre{display:block;font-size:.8rem;font-weight:700;color:var(--ink);line-height:1.3}
 .plan-alimento-nombre small{display:block;font-size:.68rem;font-weight:600;color:var(--muted);margin-top:2px}
 .plan-alimento-kcal{
   flex:0 0 auto;color:var(--green-900);font-size:.74rem;font-weight:800;
@@ -1249,6 +1386,7 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
   margin-top:16px;padding:14px;border:1px dashed #bbf7d0;border-radius:14px;background:var(--surface-2);
 }
 .plan-tecnico h4{font-size:.86rem;color:var(--green-900);margin-bottom:10px}
+.plan-tecnico h5{font-size:.72rem;color:var(--muted);margin:0 0 8px}
 .plan-tecnico-tabla{overflow-x:auto}
 .plan-tecnico table{width:100%;border-collapse:collapse;min-width:430px;font-size:.72rem}
 .plan-tecnico th,.plan-tecnico td{padding:7px 8px;text-align:left;border-bottom:1px solid var(--line)}
@@ -1256,6 +1394,57 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
 .plan-tecnico td{color:var(--ink)}
 .plan-tecnico td:nth-child(2),.plan-tecnico td:nth-child(3){white-space:nowrap;font-weight:800;color:var(--green-700)}
 .plan-tecnico .perfil-ayuda{margin-top:10px}
+.plan-tecnico h4 + h4{margin-top:16px}
+.plan-tecnico-notas{display:grid;gap:6px;margin:8px 0 0;padding-left:18px}
+.plan-tecnico-notas li{color:var(--muted);font-size:.7rem;line-height:1.5}
+.plan-tecnico-notas strong{color:var(--green-900)}
+.plan-tecnico-pasos{display:grid;gap:8px;margin-top:10px}
+.plan-tecnico-pasos article{padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.plan-tecnico-pasos h5{margin:0 0 4px;font-size:.76rem;color:var(--green-900)}
+.plan-tecnico-pasos p{margin:0;color:var(--muted);font-size:.68rem;line-height:1.45}
+.plan-tecnico-pasos code{display:inline-block;margin-top:6px;color:var(--green-700);font-size:.64rem}
+
+.dieta-acordeon{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.dieta-acordeon-boton{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  padding:11px 13px;border:0;background:var(--surface-2);color:var(--green-900);
+  font-size:.76rem;font-weight:800;cursor:pointer;text-align:left;
+}
+.dieta-acordeon-boton span:first-child{display:inline-flex;align-items:center;gap:7px}
+.dieta-acordeon-boton > span:last-child{display:inline-flex;align-items:center;gap:7px}
+.dieta-acordeon-boton .icon{width:15px;height:15px}
+.dieta-acordeon-boton small{color:var(--muted);font-size:.64rem;font-weight:700}
+.dieta-acordeon-boton .dieta-acordeon-flecha{transition:transform .18s ease}
+.dieta-acordeon-boton[aria-expanded="true"] .dieta-acordeon-flecha{transform:rotate(180deg)}
+.dieta-acordeon-contenido{padding:12px 13px;border-top:1px solid var(--line)}
+.dieta-acordeon-ayuda{margin:0 0 10px;color:var(--muted);font-size:.68rem;line-height:1.45}
+.dieta-eq-plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:6px}
+.dieta-eq-plan-item{padding:8px;border-radius:10px;background:var(--surface-2);text-align:center}
+.dieta-eq-plan-item span{display:block;color:var(--muted);font-size:.58rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.dieta-eq-plan-item strong{display:block;margin-top:2px;color:var(--green-900);font-size:.9rem;font-variant-numeric:tabular-nums}
+.dieta-eq-plan-item small{display:block;margin-top:1px;font-size:.6rem;font-weight:800}
+.dieta-eq-plan-item.ok small{color:var(--green-700)}
+.dieta-eq-plan-item.medio small{color:#b45309}
+.dieta-eq-plan-item.mal small{color:#b91c1c}
+
+.dieta-spec-toggle{
+  display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 8px;
+  border:1px dashed #86efac;border-radius:999px;background:var(--green-100);
+  color:var(--green-700);font-size:.62rem;font-weight:800;cursor:pointer;
+}
+.dieta-spec-toggle .icon{width:12px;height:12px}
+.dieta-spec-panel{
+  display:block;margin-top:5px;padding:7px 9px;border-radius:9px;
+  background:var(--surface-2);color:var(--muted);font-size:.64rem;line-height:1.45;
+}
+.plan-menu-nota{margin:8px 0 0 !important;color:var(--muted);font-size:.68rem;line-height:1.45}
+.plan-avisos{display:grid;gap:6px;margin-top:12px}
+.plan-nota{margin:14px 0 0;color:var(--muted);font-size:.66rem;line-height:1.5}
+.plan-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:.68rem;font-weight:700;
+}
 
 .dialogo-cambio{
   width:min(440px,calc(100vw - 28px));max-height:86vh;border:0;border-radius:20px;
@@ -1311,6 +1500,12 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
 }
 
 @media (max-width:640px){
+  .dieta-meta{padding:17px}
+  .dieta-meta-numero strong{font-size:2rem}
+  .dieta-meta-macros{grid-template-columns:1fr}
+  .dieta-meta-macro{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 8px}
+  .dieta-meta-macro small{grid-column:1 / -1}
+  .dieta-eq-grid{grid-template-columns:repeat(2,1fr)}
   .plan-semana{padding:16px}
   .plan-cabecera{flex-direction:column}
   .plan-cabecera-acciones{width:100%;justify-content:flex-start}
@@ -1321,6 +1516,7 @@ body.tema-actual .stage.movil .stats .stat:last-child{grid-column:auto}
   .plan-kpis{justify-content:flex-start}
   .plan-kpi{flex:1 1 28%;min-width:0}
   .plan-alimento{align-items:flex-start;flex-direction:column}
+  .plan-alimento-info{width:100%}
   .plan-alimento-kcal{align-self:flex-end;margin-top:-18px}
   .plan-alimento-acciones{width:100%;justify-content:flex-end}
   .dieta-recordatorio{align-items:flex-start;flex-wrap:wrap}
