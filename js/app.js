@@ -1020,6 +1020,23 @@ function actualizarRecordatorioDieta() {
     const oculta = document.getElementById('dietaOculta');
     if (!head || !tarjeta || !oculta || !window.VA || !VA.dietas) return;
 
+    const ocultar = document.getElementById('ocultarRecordatorio');
+    const mostrar = document.getElementById('mostrarRecordatorio');
+    if (ocultar && !ocultar.getAttribute('data-va-dieta')) {
+        ocultar.setAttribute('data-va-dieta', '1');
+        ocultar.addEventListener('click', function () {
+            banderaRecordatorioDieta(true);
+            actualizarRecordatorioDieta();
+        });
+    }
+    if (mostrar && !mostrar.getAttribute('data-va-dieta')) {
+        mostrar.setAttribute('data-va-dieta', '1');
+        mostrar.addEventListener('click', function () {
+            banderaRecordatorioDieta(false);
+            actualizarRecordatorioDieta();
+        });
+    }
+
     const plan = VA.datos.plan.obtener();
     const indice = (new Date().getDay() + 6) % 7;
     const resumen = VA.datos.plan.tieneMenu()
@@ -1061,23 +1078,6 @@ function actualizarRecordatorioDieta() {
         }).map(function (clave) {
             return '<span>' + escaparHTML(horarios[clave]) + '</span>';
         }).join('');
-    }
-
-    const ocultar = document.getElementById('ocultarRecordatorio');
-    const mostrar = document.getElementById('mostrarRecordatorio');
-    if (ocultar && !ocultar.getAttribute('data-va-dieta')) {
-        ocultar.setAttribute('data-va-dieta', '1');
-        ocultar.addEventListener('click', function () {
-            banderaRecordatorioDieta(true);
-            actualizarRecordatorioDieta();
-        });
-    }
-    if (mostrar && !mostrar.getAttribute('data-va-dieta')) {
-        mostrar.setAttribute('data-va-dieta', '1');
-        mostrar.addEventListener('click', function () {
-            banderaRecordatorioDieta(false);
-            actualizarRecordatorioDieta();
-        });
     }
 }
 
