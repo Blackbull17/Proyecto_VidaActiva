@@ -32,37 +32,76 @@
                     <section class="card">
                         <h3><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg> Condiciones de salud</h3>
 
-                        <label for="tieneEnfermedad">¿Tienes alguna enfermedad o condición de salud?</label>
-                        <select id="tieneEnfermedad" onchange="mostrarOtrasEnfermedades()">
-                            <option value="no">No, no tengo ninguna enfermedad</option>
+                        <label for="condicionesDieta">¿Tienes alguna condición de salud?</label>
+                        <select id="condicionesDieta" multiple size="5" aria-describedby="ayudaCondiciones">
                             <option value="diabetes">Diabetes</option>
                             <option value="hipertension">Hipertensión arterial</option>
-                            <option value="gastritis">Gastritis / Reflujo</option>
+                            <option value="gastritis">Gastritis / reflujo</option>
                             <option value="colesterol">Colesterol alto</option>
                             <option value="tiroides">Problemas de tiroides</option>
                             <option value="celiaquia">Celíaquia</option>
                             <option value="intolerancia_lactosa">Intolerancia a la lactosa</option>
-                            <option value="otra">Otra enfermedad...</option>
+                        </select>
+                        <small id="ayudaCondiciones" class="perfil-ayuda">Elige todas las que apliquen.</small>
+
+                        <label for="alergiasDieta" style="margin-top:15px;">¿Tienes alergias alimentarias?</label>
+                        <select id="alergiasDieta" multiple size="5" onchange="mostrarOtrasAlergias()">
+                            <option value="gluten">Gluten</option>
+                            <option value="lactosa">Lactosa</option>
+                            <option value="frutos_secos">Frutos secos</option>
+                            <option value="mariscos">Mariscos</option>
+                            <option value="huevo">Huevo</option>
+                            <option value="soya">Soya</option>
+                            <option value="pescado">Pescado</option>
+                            <option value="otros">Otros</option>
                         </select>
 
-                        <div id="otraEnfermedadDiv" style="display:none; margin-top:10px;">
-                            <label for="otraEnfermedad">Especifica qué enfermedad</label>
-                            <input type="text" id="otraEnfermedad" placeholder="Ej: Asma, Anemia...">
+                        <div id="otraAlergiaDiv" hidden style="margin-top:10px;">
+                            <label for="otraAlergia">¿Cuál otra alergia?</label>
+                            <input type="text" id="otraAlergia" placeholder="Ej: melón, kiwi..." maxlength="60">
                         </div>
+                    </section>
 
-                        <label for="tieneAlergia" style="margin-top:15px;">¿Tienes alguna alergia alimentaria?</label>
-                        <select id="tieneAlergia" onchange="mostrarOtrasAlergias()">
-                            <option value="no">No, no tengo alergias</option>
-                            <option value="frutos_secos">Alergia a frutos secos</option>
-                            <option value="mariscos">Alergia a mariscos</option>
-                            <option value="huevo">Alergia al huevo</option>
-                            <option value="otra">Otra alergia...</option>
+                    <section class="card">
+                        <h3><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg> Tus preferencias</h3>
+
+                        <label for="etapaDieta">Etapa</label>
+                        <select id="etapaDieta">
+                            <option value="ninguna">Ninguna</option>
+                            <option value="embarazo">Embarazo</option>
+                            <option value="lactancia">Lactancia</option>
+                            <option value="menopausia">Menopausia</option>
+                            <option value="somp">SOMP</option>
                         </select>
 
-                        <div id="otraAlergiaDiv" style="display:none; margin-top:10px;">
-                            <label for="otraAlergia">Especifica qué alergia</label>
-                            <input type="text" id="otraAlergia" placeholder="Ej: Alergia al gluten...">
-                        </div>
+                        <label for="medicamentoDieta">¿Tomas algún medicamento?</label>
+                        <select id="medicamentoDieta">
+                            <option value="ninguno">Ninguno</option>
+                            <option value="anticoagulante">Anticoagulante</option>
+                            <option value="levotiroxina">Levotiroxina</option>
+                            <option value="antibiotico">Antibiótico</option>
+                            <option value="antidiabetico">Antidiabético</option>
+                            <option value="diuretico">Diurético o antihipertensivo</option>
+                            <option value="estatina">Estatina</option>
+                            <option value="antidepresivo">Antidepresivo</option>
+                            <option value="otro">Otro medicamento</option>
+                        </select>
+
+                        <label for="regionDieta">Estilo de comida</label>
+                        <select id="regionDieta">
+                            <option value="todas">Sin preferencia</option>
+                            <option value="norte">Norte</option>
+                            <option value="centro">Centro</option>
+                            <option value="sur">Sur</option>
+                            <option value="costa">Costa</option>
+                        </select>
+
+                        <label for="gustosDieta">Alimentos que te gustan</label>
+                        <select id="gustosDieta" multiple size="5"></select>
+
+                        <label for="despensaDieta" style="margin-top:15px;">Alimentos que tienes en casa</label>
+                        <select id="despensaDieta" multiple size="5"></select>
+                        <small class="perfil-ayuda">Elige todas las opciones que quieras.</small>
                     </section>
 
                     <section class="card">
@@ -74,9 +113,7 @@
                             <option value="amplio">$1,000 - $2,000 MXN</option>
                             <option value="generoso">Más de $2,000 MXN</option>
                         </select>
-                        <p class="perfil-ayuda">
-                            Se generará una dieta adaptada a tu presupuesto disponible.
-                        </p>
+                        <p class="perfil-ayuda">Se generará una dieta adaptada a tu presupuesto disponible.</p>
                     </section>
 
                     <section class="card">
@@ -91,25 +128,25 @@
                         <label for="horarioCena">Cena</label>
                         <input type="time" id="horarioCena" value="20:00">
 
-                        <label for="colaciones" style="margin-top:15px;">¿Te gustaría agregar colaciones (comidas entre horas)?</label>
+                        <label for="colaciones" style="margin-top:15px;">¿Te gustaría agregar colaciones?</label>
                         <select id="colaciones" onchange="mostrarColaciones()">
                             <option value="no">No, prefiero 3 comidas al día</option>
                             <option value="una">Solo 1 colación al día</option>
-                            <option value="dos">2 colaciones al día (mañana y tarde)</option>
+                            <option value="dos">2 colaciones al día</option>
                         </select>
 
-                        <div id="colacionesDiv" style="display:none; margin-top:10px;">
+                        <div id="colacionesDiv" hidden style="margin-top:10px;">
                             <label for="horarioColacion1">Colación de media mañana</label>
                             <input type="time" id="horarioColacion1" value="10:30">
 
-                            <label id="etiquetaColacion2" for="horarioColacion2" style="display:none;">Colación de media tarde</label>
-                            <input type="time" id="horarioColacion2" value="17:00" style="display:none;">
+                            <label id="etiquetaColacion2" for="horarioColacion2" hidden>Colación de media tarde</label>
+                            <input type="time" id="horarioColacion2" value="17:00" hidden>
                         </div>
                     </section>
 
                     <p class="nota-profesional">
-                        Tus condiciones de salud y alergias se usan solo para generar el menú en esta pantalla.
-                        No se guardan en la base de datos. Sí guardamos tu presupuesto y horarios para no tener que escribirlos otra vez.
+                        Tus condiciones de salud, alergias y medicamentos se usan solo para preparar el menú en esta pantalla.
+                        No se guardan en la base de datos. Guardamos tu presupuesto y horarios para no tener que escribirlos otra vez.
                     </p>
 
                     <button type="button" class="btn btn-principal btn-grande" onclick="generarDieta()" style="margin-top:16px;">
@@ -117,17 +154,35 @@
                     </button>
                 </form>
 
-                <div id="resultadoDieta" style="display:none; margin-top:25px;">
-                    <!-- Se llena con JavaScript -->
-                </div>
+                <div id="resultadoDieta" hidden></div>
             </main>
         </div>
     </div>
+
+    <dialog id="dialogoCambio" class="dialogo-cambio" aria-labelledby="cambioTitulo">
+        <div class="plan-dialogo-cabecera">
+            <h3 id="cambioTitulo">Cambiar alimento</h3>
+            <button type="button" class="cerrar-hoja" onclick="cerrarDialogoCambio()" aria-label="Cerrar">
+                <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+            </button>
+        </div>
+        <p id="cambioTexto" class="perfil-ayuda">Elige otra opción parecida.</p>
+        <div id="cambioMotivos" class="motivos-cambio" role="group" aria-label="Motivo del cambio">
+            <button type="button" class="motivo activo" data-motivo="gusto" aria-pressed="true">No me gusta</button>
+            <button type="button" class="motivo" data-motivo="alergia" aria-pressed="false">Alergia</button>
+            <button type="button" class="motivo" data-motivo="presupuesto" aria-pressed="false">Presupuesto</button>
+            <button type="button" class="motivo" data-motivo="tiempo" aria-pressed="false">Tiempo</button>
+        </div>
+        <div id="cambioLista" class="opciones-cambio"></div>
+        <p id="cambioVacio" class="lista-vacia" hidden>No hay otra opción compatible en este momento.</p>
+    </dialog>
 
     <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
     <script src="js/config.js"></script>
     <script src="js/datos.js"></script>
+    <script src="js/dietas-datos.js"></script>
+    <script src="js/dietas-motor.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>

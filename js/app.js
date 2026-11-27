@@ -1,197 +1,502 @@
-// ===== CAMBIO FÍSICO Y GENERACIÓN DE DIETA =====
-function mostrarOtrasEnfermedades() {
-    const select = document.getElementById('tieneEnfermedad');
-    const div = document.getElementById('otraEnfermedadDiv');
-    div.style.display = select.value === 'otra' ? 'block' : 'none';
+// ===== PLAN DE ALIMENTACIÓN =====
+const CLAVE_OCULTA_DIETA = 'vidaactiva.inicio.recordatorio-dieta-oculto';
+const VERSION_PLAN_DIETA = 3;
+
+let planDietaActual = null;
+let perfilDietaActual = null;
+let diaDietaActual = 0;
+let cambioDietaActual = null;
+let detalleTecnicoAbierto = false;
+
+function valorCampo(id) {
+    const campo = document.getElementById(id);
+    return campo ? campo.value : '';
+}
+
+function seleccionCampo(id) {
+    const campo = document.getElementById(id);
+    if (!campo || !campo.selectedOptions) return [];
+    return Array.prototype.map.call(campo.selectedOptions, function (opcion) { return opcion.value; });
+}
+
+function marcarSeleccionCampo(id, seleccionados) {
+    const campo = document.getElementById(id);
+    if (!campo || !campo.options || !Array.isArray(seleccionados)) return;
+    Array.prototype.forEach.call(campo.options, function (opcion) {
+        opcion.selected = seleccionados.indexOf(opcion.value) >= 0;
+    });
 }
 
 function mostrarOtrasAlergias() {
-    const select = document.getElementById('tieneAlergia');
     const div = document.getElementById('otraAlergiaDiv');
-    div.style.display = select.value === 'otra' ? 'block' : 'none';
+    if (!div) return;
+    div.hidden = seleccionCampo('alergiasDieta').indexOf('otros') < 0;
 }
 
 function mostrarColaciones() {
-    const select = document.getElementById('colaciones');
     const div = document.getElementById('colacionesDiv');
     const etiqueta2 = document.getElementById('etiquetaColacion2');
     const horario2 = document.getElementById('horarioColacion2');
-    
-    div.style.display = select.value !== 'no' ? 'block' : 'none';
-    
-    if (select.value === 'dos') {
-        etiqueta2.style.display = 'block';
-        horario2.style.display = 'block';
-    } else {
-        etiqueta2.style.display = 'none';
-        horario2.style.display = 'none';
-    }
+    const colaciones = valorCampo('colaciones');
+
+    if (div) div.hidden = colaciones === 'no';
+    if (etiqueta2) etiqueta2.hidden = colaciones !== 'dos';
+    if (horario2) horario2.hidden = colaciones !== 'dos';
+}
+
+function horariosDelFormulario() {
+    const campos = {
+        horarioDesayuno: 'desayuno',
+        horarioComida: 'comida',
+        horarioCena: 'cena',
+        horarioColacion1: 'colacion1',
+        horarioColacion2: 'colacion2'
+    };
+    const horarios = {};
+
+    Object.keys(campos).forEach(function (id) {
+        const valor = valorCampo(id);
+        if (valor) horarios[campos[id]] = valor;
+    });
+    return horarios;
+}
+
+function leerOpcionesDieta() {
+    return {
+        condiciones: seleccionCampo('condicionesDieta'),
+        alergias: seleccionCampo('alergiasDieta'),
+        alergiaOtra: valorCampo('otraAlergia').trim(),
+        etapa: valorCampo('etapaDieta') || 'ninguna',
+        medicamento: valorCampo('medicamentoDieta') || 'ninguno',
+        region: valorCampo('regionDieta') || 'todas',
+        gustos: seleccionCampo('gustosDieta'),
+        despensa: seleccionCampo('despensaDieta'),
+        presupuesto: valorCampo('presupuesto') || 'medio',
+        colaciones: valorCampo('colaciones') || 'no',
+        horarios: horariosDelFormulario()
+    };
+}
+
+function icoPlan(id) {
+    return window.VA && VA.icono ? VA.icono(id) : '';
+}
+
+function mensajePlanDieta(texto, esError) {
+    const resultado = document.getElementById('resultadoDieta');
+    if (!resultado) return;
+    resultado.hidden = false;
+    resultado.innerHTML = '<div class="card plan-aviso' + (esError ? ' error' : '') + '">' +
+        icoPlan(esError ? 'i-alert' : 'i-check') + '<span>' + escaparHTML(texto) + '</span></div>';
+}
+
+function guardarPlanDieta(perfil, menu, meta) {
+    return VA.datos.plan.guardar({
+        presupuesto: perfil.presupuesto,
+        colaciones: perfil.colaciones,
+        horarios: perfil.horarios,
+        menu_semana: menu,
+        huella_filtros: VA.dietas.firma(perfil),
+        distribucion: perfil.distribucion,
+        kcal_objetivo: meta.kcal,
+        version: VERSION_PLAN_DIETA,
+        updated_at: VA.datos.ahoraISO()
+    });
 }
 
 function generarDieta() {
-    const enfermedad = document.getElementById('tieneEnfermedad').value;
-    const otraEnfermedad = document.getElementById('otraEnfermedad').value;
-    const alergia = document.getElementById('tieneAlergia').value;
-    const presupuesto = document.getElementById('presupuesto').value;
-    const colaciones = document.getElementById('colaciones').value;
-    const hDesayuno = document.getElementById('horarioDesayuno').value;
-    const hComida = document.getElementById('horarioComida').value;
-    const hCena = document.getElementById('horarioCena').value;
-    const hCol1 = document.getElementById('horarioColacion1').value;
-    const hCol2 = document.getElementById('horarioColacion2').value;
-
-    // Definir dietas según condición médica
-    let recomendaciones = obtenerRecomendaciones(enfermedad);
-    let opcionesComida = obtenerMenuPorPresupuesto(presupuesto, enfermedad, alergia);
-    let mensajePresupuesto = obtenerMensajePresupuesto(presupuesto);
-    let indicadorPresupuesto = construirIndicadorPresupuesto(presupuesto, colaciones);
-
-    guardarPlanDieta(presupuesto, colaciones);
-
-    function icoDieta(id) {
-        return window.VA && VA.icono ? VA.icono(id) : '';
+    if (!window.VA || !VA.dietas || !VA.datos) {
+        mensajePlanDieta('No se pudo preparar tu menú. Recarga la página e inténtalo de nuevo.', true);
+        return;
     }
 
-    // Construir horarios
-    let horariosHTML = '<p><strong>Desayuno:</strong> ' + hDesayuno + '</p>' +
-        '<p><strong>Comida:</strong> ' + hComida + '</p>' +
-        '<p><strong>Cena:</strong> ' + hCena + '</p>';
-    if (colaciones === 'una') {
-        horariosHTML += '<p><strong>Colación:</strong> ' + hCol1 + '</p>';
-    } else if (colaciones === 'dos') {
-        horariosHTML += '<p><strong>Colación mañana:</strong> ' + hCol1 + '</p>' +
-            '<p><strong>Colación tarde:</strong> ' + hCol2 + '</p>';
+    const perfilReal = VA.datos.perfil.obtener();
+    if (!perfilReal) {
+        mensajePlanDieta('Completa tu perfil en la sección Mi perfil para poder generar tu menú.', true);
+        return;
     }
 
-    // Mostrar resultado
+    const opciones = leerOpcionesDieta();
+    const perfil = VA.dietas.normalizarPerfil(perfilReal, opciones);
+    const error = VA.dietas.validar(perfil);
+    if (error) {
+        mensajePlanDieta(error, true);
+        return;
+    }
+
+    const generado = VA.dietas.generarPlan(perfil);
+    if (!generado.plan.length) {
+        mensajePlanDieta(generado.mensaje || 'No se pudo preparar tu menú. Revisa tus preferencias.', true);
+        return;
+    }
+
+    guardarPlanDieta(perfil, generado.plan, VA.dietas.calcularMeta(perfil));
+    planDietaActual = generado.plan;
+    perfilDietaActual = perfil;
+    diaDietaActual = 0;
+    renderizarPlanDieta(generado.mensaje);
+
     const resultado = document.getElementById('resultadoDieta');
-    resultado.style.display = 'block';
-    resultado.innerHTML =
-        '<div class="card" style="border-left:4px solid var(--green-500);">' +
-            '<h2>' + icoDieta('i-check') + ' Tu dieta está lista</h2>' +
-            '<h3>' + icoDieta('i-shield') + ' Consideraciones de salud</h3>' +
-            '<p>' + recomendaciones + '</p>' +
-            '<h3>' + icoDieta('i-scale') + ' Tu presupuesto</h3>' +
-            '<p>' + mensajePresupuesto + '</p>' +
-            '<h3>' + icoDieta('i-chart') + ' Indicador de presupuesto</h3>' +
-            indicadorPresupuesto +
-            '<h3>' + icoDieta('i-clock') + ' Horarios de comida</h3>' +
-            horariosHTML +
-            '<h3>' + icoDieta('i-food') + ' Menú sugerido del día</h3>' +
-            '<div class="recomendacion-comida card" style="margin-top:10px;">' +
-                '<p><strong>Desayuno</strong><br>' + opcionesComida.desayuno + '</p>' +
-                (colaciones !== 'no' ? '<p><strong>Colación mañana</strong><br>' + opcionesComida.colacion1 + '</p>' : '') +
-                '<p><strong>Comida</strong><br>' + opcionesComida.comida + '</p>' +
-                (colaciones === 'dos' ? '<p><strong>Colación tarde</strong><br>' + opcionesComida.colacion2 + '</p>' : '') +
-                '<p><strong>Cena</strong><br>' + opcionesComida.cena + '</p>' +
+    if (resultado && typeof resultado.scrollIntoView === 'function') {
+        resultado.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function numeroDecimalDieta(valor) {
+    const numero = Math.round((Number(valor) || 0) * 10) / 10;
+    return numero % 1 === 0 ? String(numero) : numero.toFixed(1).replace('.', ',');
+}
+
+function perfilParaDetalle() {
+    if (perfilDietaActual) return perfilDietaActual;
+    const perfilReal = VA.datos.perfil.obtener();
+    if (!perfilReal) return null;
+    const plan = VA.datos.plan.obtener();
+    return VA.dietas.normalizarPerfil(perfilReal, {
+        distribucion: plan.distribucion,
+        colaciones: plan.colaciones
+    });
+}
+
+function renderizarDetalleTecnico(colaciones) {
+    if (!detalleTecnicoAbierto) return '';
+
+    const perfil = perfilParaDetalle();
+    const objetivo = perfil ? VA.dietas.calcularMeta(perfil).equivalentes : {};
+    const real = VA.dietas.equivalentesDia(planDietaActual, diaDietaActual, colaciones);
+    const info = VA.dietas.infoFamilias();
+
+    const filas = Object.keys(info).map(function (clave) {
+        return '<tr>' +
+            '<td>' + escaparHTML(info[clave].nombre) + '</td>' +
+            '<td>' + numeroDecimalDieta(objetivo[clave]) + '</td>' +
+            '<td>' + numeroDecimalDieta(real[clave]) + '</td>' +
+            '<td>' + escaparHTML(info[clave].referencia) + '</td>' +
+        '</tr>';
+    }).join('');
+
+    return '<section class="plan-tecnico" id="planTecnico">' +
+        '<h4>Equivalentes por día</h4>' +
+        '<div class="plan-tecnico-tabla">' +
+            '<table>' +
+                '<thead><tr><th>Grupo</th><th>Objetivo</th><th>Este día</th><th>Referencia</th></tr></thead>' +
+                '<tbody>' + filas + '</tbody>' +
+            '</table>' +
+        '</div>' +
+        '<p class="perfil-ayuda">Referencias del Sistema Mexicano de Alimentos Equivalentes.</p>' +
+    '</section>';
+}
+
+function alternarDetalleTecnico() {
+    detalleTecnicoAbierto = !detalleTecnicoAbierto;
+    renderizarPlanDieta();
+}
+
+function renderizarPlanDieta(aviso) {
+    const resultado = document.getElementById('resultadoDieta');
+    if (!resultado || !planDietaActual || !window.VA || !VA.dietas) return;
+
+    const planGuardado = VA.datos.plan.obtener();
+    const indice = Math.max(0, Math.min(6, diaDietaActual));
+    const dia = planDietaActual[indice];
+    const resumen = VA.dietas.resumenDia(planDietaActual, indice, perfilDietaActual ? perfilDietaActual.colaciones : planGuardado.colaciones);
+    if (!dia || !resumen) return;
+
+    const puedeCambiar = !!perfilDietaActual;
+    const desactivado = puedeCambiar ? '' : ' disabled title="Genera tu plan para cambiar alimentos"';
+    const pestanas = VA.dietas.dias.map(function (nombre, i) {
+        return '<button type="button" class="plan-dia' + (i === indice ? ' activo' : '') + '"' +
+            ' aria-pressed="' + (i === indice ? 'true' : 'false') + '"' +
+            ' aria-label="' + escaparHTML(nombre) + '"' +
+            ' onclick="seleccionarDiaDieta(' + i + ')">' +
+            escaparHTML(nombre.slice(0, 3)) + '</button>';
+    }).join('');
+
+    const comidas = resumen.comidas.map(function (comida) {
+        const hora = (planGuardado.horarios || {})[comida.clave];
+        const alimentos = (dia.comidas[comida.clave] || []).map(function (id, posicion) {
+            const alimento = VA.dietas.alimento(id);
+            if (!alimento) return '';
+            const clave = comida.clave + ':' + posicion;
+            const tieneCambio = !!(dia.cambios && dia.cambios[clave]);
+            return '<li class="plan-alimento">' +
+                '<span class="plan-alimento-nombre">' + escaparHTML(alimento.nombre) +
+                    '<small>' + escaparHTML(alimento.porcion) + '</small></span>' +
+                '<span class="plan-alimento-acciones">' +
+                    (tieneCambio
+                        ? '<button type="button" class="plan-mini" onclick="restaurarAlimentoDieta(' + indice + ',\'' + comida.clave + '\',' + posicion + ')"' + desactivado + '>Restaurar</button>'
+                        : '') +
+                    '<button type="button" class="plan-mini" onclick="abrirDialogoCambio(' + indice + ',\'' + comida.clave + '\',' + posicion + ')"' + desactivado +
+                        ' aria-label="Cambiar ' + escaparHTML(alimento.nombre) + '">' +
+                        icoPlan('i-swap') + ' Cambiar</button>' +
+                '</span></li>';
+        }).join('');
+
+        return '<div class="plan-comida">' +
+            '<div class="plan-comida-head">' +
+                '<span class="plan-comida-icono">' + icoPlan(comida.icono) + '</span>' +
+                '<div><strong>' + escaparHTML(comida.nombre) + '</strong>' +
+                    (hora ? '<span>' + escaparHTML(hora) + '</span>' : '') +
+                '</div>' +
             '</div>' +
-            '<p class="perfil-ayuda" style="margin-top:15px;">' +
-                'Recuerda: Esta es una sugerencia general. Si tienes condiciones médicas específicas, ' +
-                'consulta siempre con un nutricionista profesional.' +
-            '</p>' +
+            '<ul class="plan-lista">' + alimentos + '</ul>' +
         '</div>';
-    resultado.scrollIntoView({ behavior: 'smooth' });
+    }).join('');
+
+    const cambios = Object.keys(dia.cambios || {}).length;
+    resultado.hidden = false;
+    resultado.innerHTML =
+        '<section class="card plan-semana" aria-label="Menú semanal">' +
+            '<div class="plan-cabecera">' +
+                '<div><span class="eyebrow">Tu semana</span><h2>' + icoPlan('i-apple') + ' Menú semanal</h2></div>' +
+                '<div class="plan-cabecera-acciones">' +
+                    '<button type="button" class="plan-tecnico-boton" onclick="alternarDetalleTecnico()" aria-expanded="' +
+                        (detalleTecnicoAbierto ? 'true' : 'false') + '">' +
+                        icoPlan('i-chart') + (detalleTecnicoAbierto ? ' Ocultar detalle' : ' Detalle técnico') +
+                    '</button>' +
+                    '<span class="pill verde">' + escaparHTML(resumen.nombreMenu) + '</span>' +
+                '</div>' +
+            '</div>' +
+            (aviso ? '<p class="plan-aviso">' + icoPlan('i-check') + '<span>' + escaparHTML(aviso) + '</span></p>' : '') +
+            '<div class="plan-dias" role="tablist" aria-label="Días de la semana">' + pestanas + '</div>' +
+            '<h3 class="plan-dia-titulo">' + escaparHTML(resumen.dia) + '</h3>' +
+            '<div class="plan-comidas">' + comidas + '</div>' +
+            '<div class="plan-acciones">' +
+                '<button type="button" class="btn btn-secundario" onclick="otroMenuDieta()"' + desactivado + '>' +
+                    icoPlan('i-refresh') + ' Otra opción</button>' +
+                '<button type="button" class="btn btn-secundario" onclick="restaurarDiaDieta()"' +
+                    (puedeCambiar && cambios ? '' : ' disabled') + '>' +
+                    icoPlan('i-undo') + ' Restaurar día</button>' +
+            '</div>' +
+            renderizarDetalleTecnico(perfilDietaActual ? perfilDietaActual.colaciones : planGuardado.colaciones) +
+        '</section>';
 }
 
-function obtenerRecomendaciones(enfermedad) {
-    switch(enfermedad) {
-        case 'diabetes':
-            return 'Se ha diseñado una dieta baja en azúcares simples y carbohidratos refinados, con énfasis en vegetales, proteínas magras y porciones controladas de cereales integrales. Distribuiremos los alimentos para mantener estables tus niveles de glucosa.';
-        case 'hipertension':
-            return 'Tu dieta será baja en sal y sodio. Evitaremos alimentos procesados y enlatados, priorizando alimentos frescos. Se recomienda incluir alimentos ricos en potasio como plátano, espinaca y aguacate.';
-        case 'gastritis':
-            return 'Se han evitado alimentos irritantes como picantes, café, grasas abundantes y alimentos muy ácidos. Optaremos por preparaciones suaves: al vapor, cocidas, al horno, sin exceso de condimentos.';
-        case 'colesterol':
-            return 'Dieta baja en grasas saturadas y colesterol. Incluiremos más fibra, legumbres, pescado y aceite de oliva. Reduciremos carnes rojas, embutidos y productos lácteos enteros.';
-        case 'tiroides':
-            return 'Se han incluido alimentos ricos en yodo como pescados, mariscos y sal yodada, además de proteínas y vegetales. Algunos vegetales como coliflor o repollo se consumirán cocidos y en moderación.';
-        case 'celiaquia':
-            return 'Todos los alimentos sugeridos son libres de trigo, centeno y cebada. Revisa siempre las etiquetas de los productos empaquetados.';
-        case 'intolerancia_lactosa':
-            return 'Se han sustituido los lácteos por alternativas como leche de almendras, soya o avena, y quesos y yogures sin lactosa.';
-        case 'otra':
-            return 'Se ha tomado en cuenta tu condición especial. Recuerda que estas recomendaciones son generales y complementarias a lo que indique tu médico tratante.';
-        default:
-            return '¡Excelente! Sin condiciones médicas especiales. Seguiremos una dieta equilibrada y variada que incluya todos los grupos de alimentos.';
+function seleccionarDiaDieta(indice) {
+    diaDietaActual = Math.max(0, Math.min(6, Number(indice) || 0));
+    renderizarPlanDieta();
+}
+
+function abrirDialogoCambio(indiceDia, comida, posicion) {
+    if (!perfilDietaActual || !planDietaActual) return;
+    const dia = planDietaActual[indiceDia];
+    const id = dia && dia.comidas[comida] ? dia.comidas[comida][posicion] : null;
+    const alimento = VA.dietas.alimento(id);
+    if (!alimento) return;
+
+    cambioDietaActual = { dia: indiceDia, comida: comida, posicion: posicion, motivo: 'gusto' };
+    const titulo = document.getElementById('cambioTitulo');
+    const texto = document.getElementById('cambioTexto');
+    if (titulo) titulo.textContent = 'Cambiar ' + alimento.nombre;
+    if (texto) texto.textContent = 'Elige otra opción parecida.';
+    actualizarOpcionesCambio();
+
+    const dialogo = document.getElementById('dialogoCambio');
+    if (!dialogo) return;
+    if (typeof dialogo.showModal === 'function') dialogo.showModal();
+    else dialogo.setAttribute('open', '');
+}
+
+function cerrarDialogoCambio() {
+    const dialogo = document.getElementById('dialogoCambio');
+    if (!dialogo) return;
+    if (typeof dialogo.close === 'function' && dialogo.open) dialogo.close();
+    else dialogo.removeAttribute('open');
+}
+
+function actualizarOpcionesCambio() {
+    if (!cambioDietaActual || !perfilDietaActual || !planDietaActual) return;
+    const lista = document.getElementById('cambioLista');
+    const vacio = document.getElementById('cambioVacio');
+    const botones = document.querySelectorAll('#cambioMotivos .motivo');
+
+    Array.prototype.forEach.call(botones, function (boton) {
+        const activo = boton.getAttribute('data-motivo') === cambioDietaActual.motivo;
+        boton.classList.toggle('activo', activo);
+        boton.setAttribute('aria-pressed', activo ? 'true' : 'false');
+    });
+
+    const opciones = VA.dietas.candidatosCambio(
+        planDietaActual,
+        cambioDietaActual.dia,
+        cambioDietaActual.comida,
+        cambioDietaActual.posicion,
+        perfilDietaActual,
+        cambioDietaActual.motivo
+    );
+
+    if (lista) {
+        lista.innerHTML = opciones.map(function (opcion) {
+            return '<button type="button" class="opcion-cambio" onclick="elegirCambioDieta(\'' + opcion.id + '\')">' +
+                '<strong>' + escaparHTML(opcion.nombre) + '</strong>' +
+                '<span>' + escaparHTML(opcion.porcion) + '</span></button>';
+        }).join('');
     }
+    if (vacio) vacio.hidden = opciones.length > 0;
 }
 
-function obtenerMensajePresupuesto(presupuesto) {
-    switch(presupuesto) {
-        case 'economico':
-            return 'Has elegido un presupuesto ajustado. Se priorizarán alimentos económicos pero nutritivos: legumbres, huevos, frutas y verduras de temporada, arroz y avena. Comprar al mayoreo y evitar productos procesados te ayudará a ahorrar más.';
-        case 'medio':
-            return 'Con tu presupuesto puedes comprar una buena variedad de alimentos frescos: pollo, pescado, frutas, verduras, cereales y lácteos. Una buena distribución te permitirá comer muy bien sin gastar de más.';
-        case 'amplio':
-            return 'Tienes un buen presupuesto disponible. Puedes incluir mayor variedad de proteínas, frutas variadas, y alimentos de mejor calidad nutricional.';
-        case 'generoso':
-            return 'Excelente presupuesto. Puedes elegir alimentos orgánicos, cortes de carne de mejor calidad, una amplia variedad de frutas, verduras y opciones saludables para cada momento del día.';
-    }
+function cambiarMotivoDieta(motivo) {
+    if (!cambioDietaActual) return;
+    cambioDietaActual.motivo = motivo;
+    actualizarOpcionesCambio();
 }
 
-function obtenerMenuPorPresupuesto(presupuesto, enfermedad, alergia) {
-    // Menús base
-    const menus = {
-        economico: {
-            desayuno: 'Avena con agua o leche sin lactosa • 1 plátano • 1 rebanada de pan integral',
-            colacion1: '1 fruta de temporada (manzana, pera o plátano) • 1 vaso de agua simple',
-            comida: 'Arroz • Frijoles • Huevo revuelto con nopales o espinaca • Ensalada de lechuga y jitomate • 1 tortilla',
-            colacion2: 'Un puñado de zanahoria o pepino • 1 vaso de agua simple',
-            cena: 'Sopa de verduras • Pan integral o tortillas • Fruta picada'
-        },
-        medio: {
-            desayuno: '2 huevos (revueltos o cocidos) • 1 rebanada de pan integral o tortilla • 1 taza de fruta picada • Café o té sin azúcar',
-            colacion1: '1 yogur natural • 1 manzana o pera',
-            comida: 'Arroz integral • Pechuga de pollo a la plancha • Ensalada grande de lechuga, pepino, jitomate y aguacate • 2 tortillas',
-            colacion2: 'Un puñado de nueces o almendras • 1 fruta',
-            cena: 'Pescado o atún • Verduras al vapor • 1 porción pequeña de arroz o papa cocida'
-        },
-        amplio: {
-            desayuno: 'Yogur griego con granola y fruta fresca • 1 rebanada de pan integral con aguacate • Café o té',
-            colacion1: 'Batido de fruta con leche o bebida vegetal • 1 puñado de frutos secos',
-            comida: 'Quinoa o arroz integral • Salmón o pechuga de pollo • Ensalada variada con aguacate y semillas • 1 fruta',
-            colacion2: 'Hummus con bastones de zanahoria y apio • 1 té o infusión',
-            cena: 'Tacos de pescado o ensalada de pollo • Sopa de verduras • Gelatina sin azúcar'
-        },
-        generoso: {
-            desayuno: 'Tostada integral con aguacate y huevo pochado • Frutas variadas (fresas, arándanos, plátano) • Café con leche o té verde',
-            colacion1: 'Smoothie bowl con frutas y semillas • 1 barra de cereal integral sin azúcar',
-            comida: 'Arroz salvaje o quinoa • Salmón a la plancha con limón y eneldo • Verduras asadas • Ensalada verde con semillas • Postre: fruta fresca',
-            colacion2: 'Yogur con miel y nueces • Galletas integrales sin azúcar • Infusión de hierbas',
-            cena: 'Pechuga de pollo a las hierbas • Puré de papa natural • Brócoli al vapor • Ensalada fresca • 1 té de manzanilla'
+function elegirCambioDieta(id) {
+    if (!cambioDietaActual || !perfilDietaActual || !planDietaActual) return;
+    const aplicado = VA.dietas.aplicarCambio(
+        planDietaActual,
+        cambioDietaActual.dia,
+        cambioDietaActual.comida,
+        cambioDietaActual.posicion,
+        id,
+        cambioDietaActual.motivo,
+        perfilDietaActual
+    );
+    cerrarDialogoCambio();
+    if (!aplicado) return;
+    diaDietaActual = cambioDietaActual.dia;
+    guardarPlanDieta(perfilDietaActual, planDietaActual, VA.dietas.calcularMeta(perfilDietaActual));
+    renderizarPlanDieta();
+}
+
+function restaurarAlimentoDieta(indiceDia, comida, posicion) {
+    if (!perfilDietaActual || !planDietaActual) return;
+    if (!VA.dietas.restaurarAlimento(planDietaActual, indiceDia, comida, posicion)) return;
+    diaDietaActual = indiceDia;
+    guardarPlanDieta(perfilDietaActual, planDietaActual, VA.dietas.calcularMeta(perfilDietaActual));
+    renderizarPlanDieta();
+}
+
+function restaurarDiaDieta() {
+    if (!perfilDietaActual || !planDietaActual) return;
+    if (!VA.dietas.restaurarDia(planDietaActual, diaDietaActual)) return;
+    guardarPlanDieta(perfilDietaActual, planDietaActual, VA.dietas.calcularMeta(perfilDietaActual));
+    renderizarPlanDieta();
+}
+
+function otroMenuDieta() {
+    if (!perfilDietaActual || !planDietaActual) return;
+    if (!VA.dietas.otroMenu(planDietaActual, diaDietaActual, perfilDietaActual)) {
+        const semana = document.querySelector('.plan-semana');
+        const dias = semana && semana.querySelector('.plan-dias');
+        let aviso = semana && semana.querySelector('.plan-aviso');
+        if (dias && !aviso) {
+            aviso = document.createElement('p');
+            aviso.className = 'plan-aviso';
+            dias.parentNode.insertBefore(aviso, dias);
         }
-    };
+        if (aviso) aviso.textContent = 'No hay otra opción compatible con tus preferencias.';
+        return;
+    }
+    guardarPlanDieta(perfilDietaActual, planDietaActual, VA.dietas.calcularMeta(perfilDietaActual));
+    renderizarPlanDieta();
+}
 
-    let menu = {...menus[presupuesto]};
+function banderaRecordatorioDieta(valor) {
+    try {
+        if (valor === undefined) return localStorage.getItem(CLAVE_OCULTA_DIETA) === '1';
+        if (valor) localStorage.setItem(CLAVE_OCULTA_DIETA, '1');
+        else localStorage.removeItem(CLAVE_OCULTA_DIETA);
+    } catch (error) {
+        return false;
+    }
+    return false;
+}
 
-    // Ajustes según enfermedades
-    if (enfermedad === 'diabetes') {
-        Object.keys(menu).forEach(k => {
-            menu[k] = menu[k].replace(/azúcar/g, '').replace('pan integral', 'pan integral en porción moderada').replace('arroz ', 'arroz integral en porción moderada ');
-        });
-    }
-    if (enfermedad === 'hipertension') {
-        Object.keys(menu).forEach(k => {
-            menu[k] = menu[k] + ' • Sin sal añadida';
-        });
-    }
-    if (enfermedad === 'gastritis') {
-        Object.keys(menu).forEach(k => {
-            menu[k] = menu[k].replace('café', 'té de manzanilla o té suave').replace('picante', 'sin condimentos picantes');
-        });
-    }
-    if (alergia === 'intolerancia_lactosa') {
-        Object.keys(menu).forEach(k => {
-            menu[k] = menu[k].replace('leche', 'leche sin lactosa o bebida vegetal').replace('yogur', 'yogur sin lactosa');
-        });
-    }
-    if (alergia === 'frutos_secos') {
-        Object.keys(menu).forEach(k => {
-            menu[k] = menu[k].replace(/nueces|almendras|frutos secos/g, 'semillas de calabaza o girasol');
-        });
+function actualizarRecordatorioDieta() {
+    const head = document.getElementById('dietaCardHead');
+    const tarjeta = document.getElementById('dietaRecordatorio');
+    const oculta = document.getElementById('dietaOculta');
+    if (!head || !tarjeta || !oculta || !window.VA || !VA.dietas) return;
+
+    const plan = VA.datos.plan.obtener();
+    const indice = (new Date().getDay() + 6) % 7;
+    const resumen = VA.datos.plan.tieneMenu()
+        ? VA.dietas.resumenDia(plan.menu_semana, indice, plan.colaciones)
+        : null;
+
+    if (!resumen) {
+        head.hidden = true;
+        tarjeta.hidden = true;
+        oculta.hidden = true;
+        return;
     }
 
-    return menu;
+    const escondido = banderaRecordatorioDieta();
+    head.hidden = escondido;
+    tarjeta.hidden = escondido;
+    oculta.hidden = !escondido;
+
+    if (escondido) return;
+
+    const principales = resumen.comidas.filter(function (comida) {
+        return comida.clave === 'desayuno' || comida.clave === 'comida' || comida.clave === 'cena';
+    });
+    const texto = principales.map(function (comida) {
+        const nombres = comida.alimentos.slice(0, 2).map(function (alimento) { return alimento.nombre; });
+        return comida.nombre + ': ' + (nombres.join(', ') || 'Sin alimentos');
+    }).join(' · ');
+
+    const titulo = document.getElementById('dietaTitulo');
+    const detalle = document.getElementById('dietaResumen');
+    const chips = document.getElementById('dietaChips');
+    const horarios = plan.horarios || {};
+
+    if (titulo) titulo.textContent = resumen.nombreMenu;
+    if (detalle) detalle.textContent = texto;
+    if (chips) {
+        chips.innerHTML = ['desayuno', 'comida', 'cena'].filter(function (clave) {
+            return !!horarios[clave];
+        }).map(function (clave) {
+            return '<span>' + escaparHTML(horarios[clave]) + '</span>';
+        }).join('');
+    }
+
+    const ocultar = document.getElementById('ocultarRecordatorio');
+    const mostrar = document.getElementById('mostrarRecordatorio');
+    if (ocultar && !ocultar.getAttribute('data-va-dieta')) {
+        ocultar.setAttribute('data-va-dieta', '1');
+        ocultar.addEventListener('click', function () {
+            banderaRecordatorioDieta(true);
+            actualizarRecordatorioDieta();
+        });
+    }
+    if (mostrar && !mostrar.getAttribute('data-va-dieta')) {
+        mostrar.setAttribute('data-va-dieta', '1');
+        mostrar.addEventListener('click', function () {
+            banderaRecordatorioDieta(false);
+            actualizarRecordatorioDieta();
+        });
+    }
+}
+
+function inicializarDialogoCambio() {
+    const motivos = document.getElementById('cambioMotivos');
+    if (!motivos || motivos.getAttribute('data-va-dieta')) return;
+    motivos.setAttribute('data-va-dieta', '1');
+    motivos.addEventListener('click', function (evento) {
+        const boton = evento.target.closest ? evento.target.closest('.motivo') : null;
+        if (boton) cambiarMotivoDieta(boton.getAttribute('data-motivo'));
+    });
+}
+
+function cargarListasDieta() {
+    if (!window.VA_DIETAS) return;
+    const gustos = document.getElementById('gustosDieta');
+    const despensa = document.getElementById('despensaDieta');
+    const opciones = VA_DIETAS.COMUNES.map(function (id) {
+        const alimento = VA.dietas && typeof VA.dietas.alimento === 'function'
+            ? VA.dietas.alimento(id)
+            : null;
+        const nombre = alimento ? alimento.nombre : id;
+        return '<option value="' + escaparHTML(id) + '">' + escaparHTML(nombre) + '</option>';
+    }).join('');
+
+    if (gustos && !gustos.options.length) gustos.innerHTML = opciones;
+    if (despensa && !despensa.options.length) despensa.innerHTML = opciones;
+}
+
+function leerPlanDieta() {
+    return VA.datos.plan.obtener();
 }
 
 // ===== ALIMENTACIÓN: CALCULADORA Y REGISTRO DE COMIDAS =====
@@ -208,59 +513,6 @@ const PRESUPUESTOS = {
 
 function formatearPesos(cantidad) {
     return '$' + Math.round(Number(cantidad) || 0).toLocaleString('es-MX');
-}
-
-function guardarPlanDieta(presupuesto, colaciones) {
-    const horarios = {};
-    const campos = {
-        horarioDesayuno: 'desayuno',
-        horarioComida: 'comida',
-        horarioCena: 'cena',
-        horarioColacion1: 'colacion1',
-        horarioColacion2: 'colacion2'
-    };
-
-    Object.keys(campos).forEach(function (id) {
-        const campo = document.getElementById(id);
-        if (campo && campo.value) horarios[campos[id]] = campo.value;
-    });
-
-    return VA.datos.plan.guardar({
-        presupuesto: presupuesto,
-        colaciones: colaciones,
-        horarios: horarios,
-        updated_at: VA.datos.ahoraISO()
-    });
-}
-
-function leerPlanDieta() {
-    return VA.datos.plan.obtener();
-}
-
-function construirIndicadorPresupuesto(presupuesto, colaciones) {
-    const datos = PRESUPUESTOS[presupuesto] || PRESUPUESTOS.medio;
-    const comidas = 3 + (colaciones === 'dos' ? 2 : (colaciones === 'una' ? 1 : 0));
-
-    const semanal = datos.abierto
-        ? 'más de ' + formatearPesos(datos.minimo)
-        : formatearPesos(datos.minimo) + ' a ' + formatearPesos(datos.maximo);
-
-    const diario = datos.abierto
-        ? 'más de ' + formatearPesos(datos.minimo / 7)
-        : formatearPesos(datos.minimo / 7) + ' a ' + formatearPesos(datos.maximo / 7);
-
-    const porComida = datos.abierto
-        ? 'más de ' + formatearPesos(datos.minimo / 7 / comidas)
-        : formatearPesos(datos.minimo / 7 / comidas) + ' a ' + formatearPesos(datos.maximo / 7 / comidas);
-
-    return '<div class="recomendacion-comida card" style="margin-top:10px;">' +
-            '<p><strong>Presupuesto semanal:</strong> ' + semanal + '</p>' +
-            '<p><strong>Equivalente por día:</strong> ' + diario + ' (entre 7 días)</p>' +
-            '<p><strong>Repartido en ' + comidas + ' comidas:</strong> ' + porComida + ' por comida</p>' +
-            '<p class="perfil-ayuda" style="margin-top:8px;">' +
-                'Es una estimación a partir del rango que elegiste. Los precios reales cambian según la tienda y la región.' +
-            '</p>' +
-        '</div>';
 }
 
 function calcularGasto(registro) {
@@ -571,6 +823,11 @@ function iniciarAlimentacion() {
         const select = document.getElementById(id);
         if (select) select.value = sugerida;
     });
+
+    const enlacePlan = document.getElementById('enlacePlan');
+    if (enlacePlan && VA.datos.plan.tieneMenu()) {
+        enlacePlan.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#i-apple"/></svg> Ver mi plan';
+    }
 
     renderizarComidas();
     actualizarResumenCalorias();
@@ -2051,6 +2308,7 @@ function iniciarPanelPrincipal() {
     }
 
     renderizarSemanaPrincipal();
+    actualizarRecordatorioDieta();
 }
 
 function renderizarSemanaPrincipal() {
@@ -2211,25 +2469,36 @@ document.addEventListener('DOMContentLoaded', iniciarPerfil);
 function cargarPlanDieta() {
     if (!document.getElementById('formularioDieta')) return;
 
+    cargarListasDieta();
+    inicializarDialogoCambio();
+    mostrarOtrasAlergias();
+
     const plan = VA.datos.plan.obtener();
-    if (!plan || !plan.presupuesto) return;
+    if (plan && plan.presupuesto) {
+        const asignar = function (id, valor) {
+            const campo = document.getElementById(id);
+            if (campo && valor) campo.value = valor;
+        };
 
-    const asignar = function (id, valor) {
-        const campo = document.getElementById(id);
-        if (campo && valor) campo.value = valor;
-    };
-
-    asignar('presupuesto', plan.presupuesto);
-    asignar('colaciones', plan.colaciones);
-    if (plan.horarios) {
-        asignar('horarioDesayuno', plan.horarios.desayuno);
-        asignar('horarioComida', plan.horarios.comida);
-        asignar('horarioCena', plan.horarios.cena);
-        asignar('horarioColacion1', plan.horarios.colacion1);
-        asignar('horarioColacion2', plan.horarios.colacion2);
+        asignar('presupuesto', plan.presupuesto);
+        asignar('colaciones', plan.colaciones);
+        if (plan.horarios) {
+            asignar('horarioDesayuno', plan.horarios.desayuno);
+            asignar('horarioComida', plan.horarios.comida);
+            asignar('horarioCena', plan.horarios.cena);
+            asignar('horarioColacion1', plan.horarios.colacion1);
+            asignar('horarioColacion2', plan.horarios.colacion2);
+        }
     }
 
-    if (typeof mostrarColaciones === 'function') mostrarColaciones();
+    mostrarColaciones();
+
+    if (plan && Array.isArray(plan.menu_semana) && plan.menu_semana.length) {
+        planDietaActual = plan.menu_semana;
+        perfilDietaActual = null;
+        diaDietaActual = 0;
+        renderizarPlanDieta();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', cargarPlanDieta);

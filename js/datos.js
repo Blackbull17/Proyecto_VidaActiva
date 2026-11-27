@@ -20,8 +20,18 @@
         propietario: 'vidaActivaPropietario'
     };
 
-    const VERSION_DATOS = 2;
+    const VERSION_DATOS = 3;
+    const PLAN_VERSION = 3;
+    const PLAN_VERSION_ANTERIOR = 2;
     const COMIDAS_DIA = ['desayuno', 'almuerzo', 'cena'];
+    const COMIDAS_PLAN = ['desayuno', 'colacion1', 'comida', 'colacion2', 'cena'];
+    const DISTRIBUCIONES_PLAN = [
+        'equilibrada', 'proteica', 'baja_grasa', 'diabetes',
+        'hipertension', 'colesterol', 'somp'
+    ];
+    const MOTIVOS_CAMBIO = ['gusto', 'alergia', 'presupuesto', 'tiempo'];
+    const ID_PLAN_SEGURO = /^[a-z0-9_-]{1,64}$/;
+    const HUELLA_SEGURA = /^[0-9a-f]{1,32}$/;
     const FACTORES_ACTIVIDAD = {
         sedentario: 1.2,
         ligero: 1.375,
@@ -93,6 +103,21 @@
     function numero(valor) {
         const n = Number(valor);
         return Number.isFinite(n) ? n : 0;
+    }
+
+    // Huella corta y sin sentido inverso para comparar filtros sin guardar
+    // condiciones de salud, alergias ni medicamentos en texto plano.
+    function huellaTexto(valor) {
+        const cadena = texto(valor);
+        let fnv = 0x811c9dc5;
+        let djb = 5381;
+        for (let i = 0; i < cadena.length; i += 1) {
+            const caracter = cadena.charCodeAt(i);
+            fnv ^= caracter;
+            fnv = Math.imul(fnv, 0x01000193) >>> 0;
+            djb = ((djb << 5) + djb + caracter) >>> 0;
+        }
+        return fnv.toString(16).padStart(8, '0') + djb.toString(16).padStart(8, '0');
     }
 
     function avisarError(mensaje) {
@@ -490,6 +515,61 @@
         };
     }
 
+    function idPlan(valor) {
+        const id = texto(valor);
+        return ID_PLAN_SEGURO.test(id) ? id : '';
+    }
+
+    function huellaPlan(valor) {
+        const huella = texto(valor).toLowerCase();
+        return HUELLA_SEGURA.test(huella) ? huella : '';
+    }
+
+    function normalizarCambiosPlan(valor) {
+        const cambios = {};
+        const datos = valor && typeof valor === 'object' && !Array.isArray(valor) ? valor : {};
+        Object.keys(datos).forEach(function (clave) {
+            if (!/^(desayuno|colacion1|comida|colacion2|cena):\d{1,2}$/.test(clave)) return;
+            const cambio = datos[clave] && typeof datos[clave] === 'object' ? datos[clave] : {};
+            const original = idPlan(cambio.original);
+            if (!original) return;
+            cambios[clave] = {
+                original: original,
+                motivo: MOTIVOS_CAMBIO.indexOf(texto(cambio.motivo)) >= 0
+                    ? texto(cambio.motivo)
+                    : 'gusto'
+            };
+        });
+        return cambios;
+    }
+
+    // Solo ids del catálogo. Nunca se guarda texto libre, HTML ni notas técnicas.
+    function normalizarMenuSemana(valor) {
+        if (!Array.isArray(valor) || !valor.length || valor.length > 7) return {};
+
+        const dias = [];
+        valor.slice(0, 7).forEach(function (diaCrudo) {
+            const dia = diaCrudo && typeof diaCrudo === 'object' ? diaCrudo : {};
+            const menuId = idPlan(dia.menuId || dia.menu_id);
+            if (!menuId) return;
+
+            const comidasCrudas = dia.comidas && typeof dia.comidas === 'object' ? dia.comidas : {};
+            const comidas = {};
+            COMIDAS_PLAN.forEach(function (clave) {
+                const lista = Array.isArray(comidasCrudas[clave]) ? comidasCrudas[clave] : [];
+                comidas[clave] = lista.slice(0, 12).map(idPlan).filter(Boolean);
+            });
+
+            dias.push({
+                menuId: menuId,
+                comidas: comidas,
+                cambios: normalizarCambiosPlan(dia.cambios)
+            });
+        });
+
+        return dias.length ? dias : {};
+    }
+
     function normalizarPlan(plan) {
         const datos = plan && typeof plan === 'object' ? plan : null;
         if (!datos) return {};
@@ -497,6 +577,10 @@
         const horarios = datos.horarios && typeof datos.horarios === 'object'
             ? datos.horarios
             : {};
+        const distribucion = texto(datos.distribucion) || 'equilibrada';
+        const kcal = numero(datos.kcal_objetivo);
+        const version = numero(datos.version);
+        const menuSemana = normalizarMenuSemana(datos.menu_semana);
 
         return {
             presupuesto: texto(datos.presupuesto) || 'medio',
@@ -508,6 +592,13 @@
                 colacion1: texto(horarios.colacion1) || '10:30',
                 colacion2: texto(horarios.colacion2) || '17:00'
             },
+            menu_semana: menuSemana,
+            huella_filtros: huellaPlan(datos.huella_filtros),
+            distribucion: DISTRIBUCIONES_PLAN.indexOf(distribucion) >= 0 ? distribucion : 'equilibrada',
+            kcal_objetivo: kcal > 0 ? Math.max(1200, Math.min(4000, Math.round(kcal))) : null,
+            version: version > 0
+                ? Math.min(10, Math.round(version))
+                : (Array.isArray(menuSemana) ? PLAN_VERSION : PLAN_VERSION_ANTERIOR),
             updated_at: texto(datos.updated_at || datos.actualizado_en) || ahoraISO()
         };
     }
@@ -555,7 +646,16 @@
 
     function planFirma(plan) {
         const normalizado = normalizarPlan(plan);
-        return [normalizado.presupuesto, normalizado.colaciones, JSON.stringify(normalizado.horarios)].join('|');
+        return [
+            normalizado.presupuesto,
+            normalizado.colaciones,
+            JSON.stringify(normalizado.horarios),
+            normalizado.version,
+            normalizado.huella_filtros,
+            normalizado.distribucion,
+            normalizado.kcal_objetivo || 0,
+            JSON.stringify(normalizado.menu_semana)
+        ].join('|');
     }
 
     function recordatorioFirma(recordatorio) {
@@ -639,6 +739,11 @@
             presupuesto: normalizado.presupuesto,
             colaciones: normalizado.colaciones,
             horarios: normalizado.horarios,
+            menu_semana: normalizado.menu_semana,
+            huella_filtros: normalizado.huella_filtros,
+            distribucion: normalizado.distribucion,
+            kcal_objetivo: normalizado.kcal_objetivo,
+            version: normalizado.version,
             activo: true
         };
 
@@ -1339,6 +1444,7 @@
         fechaLocalISO: fechaLocalISO,
         ahoraISO: ahoraISO,
         calcularCaloriasObjetivo: calcularCaloriasObjetivo,
+        huella: huellaTexto,
         avisarError: avisarError,
         sincronizar: sincronizarTodo,
         subirTodo: subirTodoLocalARemoto,
@@ -1397,7 +1503,11 @@
                 return normalizado;
             },
             guardarRemoto: guardarPlanRemoto,
-            sincronizar: sincronizarPlanRemoto
+            sincronizar: sincronizarPlanRemoto,
+            tieneMenu: function () {
+                const plan = normalizarPlan(leerJSON(CLAVES.plan, null));
+                return Array.isArray(plan.menu_semana) && plan.menu_semana.length > 0;
+            }
         },
 
         comidas: {

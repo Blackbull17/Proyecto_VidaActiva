@@ -30,10 +30,13 @@ En **SQL Editor**, en este orden:
 1. `migrations/202610230001_init.sql` (solo si la base es nueva).
 2. `migrations/202610270001_habit_days_update.sql`.
 3. `migrations/202610280001_exercise_substitutions.sql`.
+4. `migrations/202611260001_diet_plan_menu.sql`.
 
 La segunda migración es necesaria porque la app hace `upsert` sobre `habit_days(habit_id, fecha)`. Si la fila ya existe, PostgreSQL requiere una política `UPDATE` además de `INSERT`.
 
 La tercera crea `exercise_substitutions` para recordar qué ejercicio cambió cada usuario en cada rutina. Usa una clave por `(user_id, rutina_id, ejercicio_original_id)` y un `deleted_at` para que un cambio borrado no reaparezca al sincronizar otro dispositivo.
+
+La cuarta añade a `diet_plans` el menú semanal generado (`menu_semana`), una huella de los filtros (`huella_filtros`), la distribución, las kcal objetivo y la versión del plan. Los planes anteriores quedan con `menu_semana = {}` y `version = 2`; la app los marca para regenerar sin borrarlos. No se crean tablas ni políticas nuevas: las RLS actuales ya cubren las columnas. **No guarda condiciones de salud, alergias ni medicamentos.**
 
 Opción con CLI:
 
@@ -96,7 +99,7 @@ Con dos cuentas distintas:
 
 ## 7. Orden recomendado antes de publicar
 
-- [ ] Ejecutar la migración inicial, la de `habit_days` y la de `exercise_substitutions`.
+- [ ] Ejecutar la migración inicial, la de `habit_days`, la de `exercise_substitutions` y la de `diet_plan_menu`.
 - [ ] Configurar Site URL y Redirect URLs.
 - [ ] Desactivar registro público.
 - [ ] Probar la sincronización real con una cuenta.
@@ -111,7 +114,7 @@ Con dos cuentas distintas:
 | Tabla | Uso |
 | --- | --- |
 | `profiles` | Perfil del usuario. `id = auth.users.id`. |
-| `diet_plans` | Un plan activo por usuario. |
+| `diet_plans` | Un plan activo por usuario, con su menú semanal generado. |
 | `meal_logs` | Un alimento registrado por fila. |
 | `workouts` | Un entrenamiento completado por fila. |
 | `exercise_substitutions` | Ejercicio elegido por el usuario para una rutina concreta. |

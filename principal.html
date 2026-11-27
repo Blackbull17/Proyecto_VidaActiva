@@ -102,6 +102,24 @@
                 <div class="section-head"><h2>Tu semana</h2><span class="muted" id="semanaResumen"></span></div>
                 <div class="week" id="semanaPrincipal"></div>
 
+                <div class="section-head" id="dietaCardHead" hidden><h2>Tu plan de alimentación</h2></div>
+                <section class="card dieta-recordatorio" id="dietaRecordatorio" hidden>
+                    <span class="dieta-icono"><svg class="icon" aria-hidden="true"><use href="#i-food"/></svg></span>
+                    <div class="dieta-copy">
+                        <span class="dieta-eyebrow">Menú de hoy</span>
+                        <strong id="dietaTitulo">Tu menú está listo</strong>
+                        <p id="dietaResumen"></p>
+                        <div class="dieta-chips" id="dietaChips"></div>
+                    </div>
+                    <div class="dieta-acciones">
+                        <a class="btn btn-verde" href="cambio_fisico.html">Ver mi dieta</a>
+                        <button type="button" class="btn-secundario" id="ocultarRecordatorio">Ocultar</button>
+                    </div>
+                </section>
+                <p class="dieta-oculta" id="dietaOculta" hidden>
+                    <button type="button" id="mostrarRecordatorio">Mostrar mi plan de alimentación</button>
+                </p>
+
                 <div class="section-head"><h2>Rutina recomendada</h2></div>
                 <div class="card routine">
                     <span class="routine-icon"><svg class="icon" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
@@ -122,6 +140,8 @@
 
     <script src="js/config.js"></script>
     <script src="js/datos.js"></script>
+    <script src="js/dietas-datos.js"></script>
+    <script src="js/dietas-motor.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
