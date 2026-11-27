@@ -27,6 +27,26 @@ function marcarSeleccionCampo(id, seleccionados) {
     });
 }
 
+function perfilActualRegistrado() {
+    return window.VA && VA.datos && VA.datos.perfil ? VA.datos.perfil.obtener() : null;
+}
+
+function sexoPerfilActual() {
+    const perfil = perfilActualRegistrado();
+    return perfil && perfil.sexo ? String(perfil.sexo).toLowerCase() : '';
+}
+
+function actualizarCamposPorSexo() {
+    const grupo = document.getElementById('etapaDietaGrupo');
+    const campo = document.getElementById('etapaDieta');
+    if (!grupo || !campo) return;
+
+    const esHombre = sexoPerfilActual() === 'masculino';
+    grupo.hidden = esHombre;
+    campo.disabled = esHombre;
+    if (esHombre) campo.value = 'ninguna';
+}
+
 function mostrarOtrasAlergias() {
     const div = document.getElementById('otraAlergiaDiv');
     if (!div) return;
@@ -66,7 +86,7 @@ function leerOpcionesDieta() {
         condiciones: seleccionCampo('condicionesDieta'),
         alergias: seleccionCampo('alergiasDieta'),
         alergiaOtra: valorCampo('otraAlergia').trim(),
-        etapa: valorCampo('etapaDieta') || 'ninguna',
+        etapa: sexoPerfilActual() === 'masculino' ? 'ninguna' : (valorCampo('etapaDieta') || 'ninguna'),
         medicamento: valorCampo('medicamentoDieta') || 'ninguno',
         region: valorCampo('regionDieta') || 'todas',
         gustos: seleccionCampo('gustosDieta'),
@@ -146,6 +166,54 @@ function numeroDecimalDieta(valor) {
     return numero % 1 === 0 ? String(numero) : numero.toFixed(1).replace('.', ',');
 }
 
+function numeroEnteroDieta(valor) {
+    return Math.round(Number(valor) || 0).toLocaleString('es-MX');
+}
+
+function alimentoDelCatalogo(id) {
+    if (!window.VA_DIETAS || !Array.isArray(VA_DIETAS.ALIMENTOS)) return null;
+    for (let i = 0; i < VA_DIETAS.ALIMENTOS.length; i += 1) {
+        if (VA_DIETAS.ALIMENTOS[i].id === id) return VA_DIETAS.ALIMENTOS[i];
+    }
+    return null;
+}
+
+function totalesComidaDieta(ids) {
+    const total = { kcal: 0, prot: 0, grasa: 0, carb: 0 };
+    (ids || []).forEach(function (id) {
+        const alimento = alimentoDelCatalogo(id);
+        if (!alimento) return;
+        total.kcal += Number(alimento.kcal) || 0;
+        total.prot += Number(alimento.prot) || 0;
+        total.grasa += Number(alimento.grasa) || 0;
+        total.carb += Number(alimento.carb) || 0;
+    });
+    return total;
+}
+
+function totalesDietaDelDia(colaciones) {
+    const dia = planDietaActual && planDietaActual[diaDietaActual];
+    const total = { kcal: 0, prot: 0, grasa: 0, carb: 0 };
+    if (!dia || !window.VA || !VA.dietas || typeof VA.dietas.comidasVisibles !== 'function') return total;
+
+    VA.dietas.comidasVisibles(colaciones || 'no').forEach(function (clave) {
+        const parcial = totalesComidaDieta(dia.comidas[clave]);
+        total.kcal += parcial.kcal;
+        total.prot += parcial.prot;
+        total.grasa += parcial.grasa;
+        total.carb += parcial.carb;
+    });
+    return total;
+}
+
+function metaDietaActual() {
+    const perfil = perfilParaDetalle();
+    if (!perfil || !window.VA || !VA.dietas) {
+        return { kcal: 0, macros: { prot: 0, grasa: 0, carb: 0 } };
+    }
+    return VA.dietas.calcularMeta(perfil);
+}
+
 function perfilParaDetalle() {
     if (perfilDietaActual) return perfilDietaActual;
     const perfilReal = VA.datos.perfil.obtener();
@@ -196,31 +264,69 @@ function renderizarPlanDieta(aviso) {
     if (!resultado || !planDietaActual || !window.VA || !VA.dietas) return;
 
     const planGuardado = VA.datos.plan.obtener();
+    const colaciones = perfilDietaActual ? perfilDietaActual.colaciones : planGuardado.colaciones;
     const indice = Math.max(0, Math.min(6, diaDietaActual));
     const dia = planDietaActual[indice];
-    const resumen = VA.dietas.resumenDia(planDietaActual, indice, perfilDietaActual ? perfilDietaActual.colaciones : planGuardado.colaciones);
+    const resumen = VA.dietas.resumenDia(planDietaActual, indice, colaciones);
     if (!dia || !resumen) return;
 
+    const catalogo = window.VA_DIETAS || {};
+    const infoMenu = typeof VA.dietas.menu === 'function' ? VA.dietas.menu(resumen.menuId) : null;
+    const meta = metaDietaActual();
+    const totales = totalesDietaDelDia(colaciones);
+    const adecuacion = meta.kcal ? Math.round(totales.kcal / meta.kcal * 100) : 0;
     const puedeCambiar = !!perfilDietaActual;
     const desactivado = puedeCambiar ? '' : ' disabled title="Genera tu plan para cambiar alimentos"';
+
+    const chips = [];
+    if (infoMenu && catalogo.PRESUPUESTOS && catalogo.PRESUPUESTOS[infoMenu.presupuesto]) {
+        chips.push(catalogo.PRESUPUESTOS[infoMenu.presupuesto].nombre);
+    }
+    if (infoMenu && infoMenu.region && infoMenu.region !== 'todas' && catalogo.REGIONES && catalogo.REGIONES[infoMenu.region]) {
+        chips.push('Cocina ' + catalogo.REGIONES[infoMenu.region].nombre);
+    }
+    if (perfilDietaActual && perfilDietaActual.etapa && perfilDietaActual.etapa !== 'ninguna' &&
+        catalogo.ETAPAS && catalogo.ETAPAS[perfilDietaActual.etapa]) {
+        chips.push(catalogo.ETAPAS[perfilDietaActual.etapa].nombre);
+    }
+
+    const kpis = '<div class="plan-kpis">' +
+        '<div class="plan-kpi"><span>Energía</span><strong>' + numeroEnteroDieta(totales.kcal) + ' kcal</strong><small>meta ' + numeroEnteroDieta(meta.kcal) + '</small></div>' +
+        '<div class="plan-kpi"><span>Proteína</span><strong>' + numeroEnteroDieta(totales.prot) + ' g</strong><small>meta ' + numeroEnteroDieta(meta.macros.prot) + ' g</small></div>' +
+        '<div class="plan-kpi"><span>Lípidos</span><strong>' + numeroEnteroDieta(totales.grasa) + ' g</strong><small>meta ' + numeroEnteroDieta(meta.macros.grasa) + ' g</small></div>' +
+        '<div class="plan-kpi"><span>Carbohidratos</span><strong>' + numeroEnteroDieta(totales.carb) + ' g</strong><small>meta ' + numeroEnteroDieta(meta.macros.carb) + ' g</small></div>' +
+        '<div class="plan-kpi"><span>Adecuación</span><strong>' + numeroEnteroDieta(adecuacion) + ' %</strong><small>energía vs. meta</small></div>' +
+    '</div>';
+
     const pestanas = VA.dietas.dias.map(function (nombre, i) {
+        const infoDia = typeof VA.dietas.menu === 'function' && planDietaActual[i]
+            ? VA.dietas.menu(planDietaActual[i].menuId)
+            : null;
+        const corto = infoDia ? infoDia.nombre : 'Sin menú';
+        const cortoVisible = corto.length > 13 ? corto.slice(0, 12) + '…' : corto;
         return '<button type="button" class="plan-dia' + (i === indice ? ' activo' : '') + '"' +
             ' aria-pressed="' + (i === indice ? 'true' : 'false') + '"' +
-            ' aria-label="' + escaparHTML(nombre) + '"' +
+            ' aria-label="' + escaparHTML(nombre) + ': ' + escaparHTML(corto) + '"' +
             ' onclick="seleccionarDiaDieta(' + i + ')">' +
-            escaparHTML(nombre.slice(0, 3)) + '</button>';
+            '<span>' + escaparHTML(nombre) + '</span>' +
+            '<small>' + escaparHTML(cortoVisible) + '</small>' +
+            '</button>';
     }).join('');
 
     const comidas = resumen.comidas.map(function (comida) {
+        const ids = dia.comidas[comida.clave] || [];
         const hora = (planGuardado.horarios || {})[comida.clave];
-        const alimentos = (dia.comidas[comida.clave] || []).map(function (id, posicion) {
+        const kcalComida = totalesComidaDieta(ids).kcal;
+        const alimentos = ids.map(function (id, posicion) {
             const alimento = VA.dietas.alimento(id);
             if (!alimento) return '';
+            const detalle = alimentoDelCatalogo(id) || alimento;
             const clave = comida.clave + ':' + posicion;
             const tieneCambio = !!(dia.cambios && dia.cambios[clave]);
             return '<li class="plan-alimento">' +
                 '<span class="plan-alimento-nombre">' + escaparHTML(alimento.nombre) +
                     '<small>' + escaparHTML(alimento.porcion) + '</small></span>' +
+                '<span class="plan-alimento-kcal">' + numeroEnteroDieta(detalle.kcal) + ' kcal</span>' +
                 '<span class="plan-alimento-acciones">' +
                     (tieneCambio
                         ? '<button type="button" class="plan-mini" onclick="restaurarAlimentoDieta(' + indice + ',\'' + comida.clave + '\',' + posicion + ')"' + desactivado + '>Restaurar</button>'
@@ -235,7 +341,7 @@ function renderizarPlanDieta(aviso) {
             '<div class="plan-comida-head">' +
                 '<span class="plan-comida-icono">' + icoPlan(comida.icono) + '</span>' +
                 '<div><strong>' + escaparHTML(comida.nombre) + '</strong>' +
-                    (hora ? '<span>' + escaparHTML(hora) + '</span>' : '') +
+                    '<span>' + (hora ? escaparHTML(hora) + ' · ' : '') + numeroEnteroDieta(kcalComida) + ' kcal</span>' +
                 '</div>' +
             '</div>' +
             '<ul class="plan-lista">' + alimentos + '</ul>' +
@@ -253,11 +359,20 @@ function renderizarPlanDieta(aviso) {
                         (detalleTecnicoAbierto ? 'true' : 'false') + '">' +
                         icoPlan('i-chart') + (detalleTecnicoAbierto ? ' Ocultar detalle' : ' Detalle técnico') +
                     '</button>' +
-                    '<span class="pill verde">' + escaparHTML(resumen.nombreMenu) + '</span>' +
+                    '<span class="pill verde">7 días</span>' +
                 '</div>' +
             '</div>' +
             (aviso ? '<p class="plan-aviso">' + icoPlan('i-check') + '<span>' + escaparHTML(aviso) + '</span></p>' : '') +
             '<div class="plan-dias" role="tablist" aria-label="Días de la semana">' + pestanas + '</div>' +
+            '<div class="plan-menu-cabecera">' +
+                '<div class="plan-menu-titulo">' +
+                    '<h3>' + escaparHTML(resumen.nombreMenu) + '</h3>' +
+                    (chips.length ? '<div class="plan-menu-chips">' + chips.map(function (chip) {
+                        return '<span class="plan-chip">' + escaparHTML(chip) + '</span>';
+                    }).join('') + '</div>' : '') +
+                '</div>' +
+                kpis +
+            '</div>' +
             '<h3 class="plan-dia-titulo">' + escaparHTML(resumen.dia) + '</h3>' +
             '<div class="plan-comidas">' + comidas + '</div>' +
             '<div class="plan-acciones">' +
@@ -267,7 +382,7 @@ function renderizarPlanDieta(aviso) {
                     (puedeCambiar && cambios ? '' : ' disabled') + '>' +
                     icoPlan('i-undo') + ' Restaurar día</button>' +
             '</div>' +
-            renderizarDetalleTecnico(perfilDietaActual ? perfilDietaActual.colaciones : planGuardado.colaciones) +
+            renderizarDetalleTecnico(colaciones) +
         '</section>';
 }
 
@@ -2471,6 +2586,7 @@ function cargarPlanDieta() {
 
     cargarListasDieta();
     inicializarDialogoCambio();
+    actualizarCamposPorSexo();
     mostrarOtrasAlergias();
 
     const plan = VA.datos.plan.obtener();

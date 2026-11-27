@@ -31,10 +31,13 @@
         if (modo) {
             if (configurado) {
                 const email = VA.auth.usuarioEmail();
+                const sinSync = Boolean(window.VA && VA.sincronizacionFallida);
                 modo.textContent = (email
                     ? 'Sesión de Supabase: ' + email + '. '
                     : 'Sesión de Supabase activa. ') +
-                    'Tus datos se sincronizan con Supabase.';
+                    (sinSync
+                        ? 'Ahora mismo algunos datos están solo en este dispositivo. Cierra sesión y vuelve a entrar para reintentar.'
+                        : 'Tus datos se sincronizan con Supabase.');
             } else {
                 modo.textContent = 'Modo local: los datos están solo en este dispositivo. Configura Supabase en js/config.js para activar el inicio de sesión y la sincronización.';
             }
@@ -54,16 +57,21 @@
     }
 
     document.addEventListener('DOMContentLoaded', async function () {
-        mostrarResumen();
-
         if (VA.auth.configurado()) {
             try {
                 await VA.auth.obtenerSesion();
-                mostrarResumen();
+                try {
+                    await VA.datos.sincronizar();
+                    window.VA.sincronizacionFallida = false;
+                } catch (error) {
+                    window.VA.sincronizacionFallida = true;
+                }
             } catch (error) {
-                // La protección de auth.js ya muestra el error de conexión.
+                window.VA.sincronizacionFallida = true;
             }
         }
+
+        mostrarResumen();
 
         const btnExportar = document.getElementById('btnExportar');
         if (btnExportar) {

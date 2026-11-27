@@ -7,9 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/estilos.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="css/app.css?v=3">
+    <link rel="stylesheet" href="css/estilos.css?v=4">
+    <link rel="stylesheet" href="css/auth.css?v=4">
+    <link rel="stylesheet" href="css/app.css?v=4">
 </head>
 <body data-page="alimentacion">
     <div class="app">
@@ -65,14 +65,16 @@
                     <section class="card">
                         <h3><svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg> Tus preferencias</h3>
 
-                        <label for="etapaDieta">Etapa</label>
-                        <select id="etapaDieta">
-                            <option value="ninguna">Ninguna</option>
-                            <option value="embarazo">Embarazo</option>
-                            <option value="lactancia">Lactancia</option>
-                            <option value="menopausia">Menopausia</option>
-                            <option value="somp">SOMP</option>
-                        </select>
+                        <div id="etapaDietaGrupo" hidden>
+                            <label for="etapaDieta">Etapa</label>
+                            <select id="etapaDieta">
+                                <option value="ninguna">Ninguna</option>
+                                <option value="embarazo">Embarazo</option>
+                                <option value="lactancia">Lactancia</option>
+                                <option value="menopausia">Menopausia</option>
+                                <option value="somp">SOMP</option>
+                            </select>
+                        </div>
 
                         <label for="medicamentoDieta">¿Tomas algún medicamento?</label>
                         <select id="medicamentoDieta">
@@ -179,12 +181,12 @@
 
     <nav class="bottom-nav" data-va-bottom-nav aria-label="Navegación inferior"></nav>
 
-    <script src="js/config.js"></script>
-    <script src="js/datos.js?v=3"></script>
-    <script src="js/dietas-datos.js?v=3"></script>
-    <script src="js/dietas-motor.js?v=3"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/ui.js?v=3"></script>
-    <script src="js/app.js?v=3"></script>
+    <script src="js/config.js?v=4"></script>
+    <script src="js/datos.js?v=4"></script>
+    <script src="js/dietas-datos.js?v=4"></script>
+    <script src="js/dietas-motor.js?v=4"></script>
+    <script src="js/auth.js?v=4"></script>
+    <script src="js/ui.js?v=4"></script>
+    <script src="js/app.js?v=4"></script>
 </body>
 </html>

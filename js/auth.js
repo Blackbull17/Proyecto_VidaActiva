@@ -185,6 +185,8 @@
         if (window.VA && VA.datos && typeof VA.datos.sincronizar === 'function') {
             try {
                 const sincronizacion = await VA.datos.sincronizar();
+                window.VA = window.VA || {};
+                window.VA.sincronizacionFallida = false;
 
                 if (sincronizacion && sincronizacion.cambioLocal) {
                     let yaRecargo = false;
@@ -218,10 +220,9 @@
                 }
             } catch (error) {
                 errorSincronizacion = true;
+                window.VA = window.VA || {};
+                window.VA.sincronizacionFallida = true;
                 console.warn('VidaActiva: no se pudieron sincronizar los datos con Supabase.', error);
-                if (window.VA && VA.datos && typeof VA.datos.avisarError === 'function') {
-                    VA.datos.avisarError('No se pudieron sincronizar todos los datos. Se muestran los datos guardados en este dispositivo.');
-                }
             }
         }
 

@@ -639,8 +639,9 @@
         if (!id) return;
 
         Promise.resolve().then(tarea).catch(function (error) {
+            window.VA = window.VA || {};
+            window.VA.sincronizacionFallida = true;
             console.error('VidaActiva: no se pudo sincronizar con Supabase.', error);
-            avisarError('Se guardó en este dispositivo, pero no se pudo sincronizar con la nube. Revisa tu conexión.');
         });
     }
 
